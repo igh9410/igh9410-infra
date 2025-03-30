@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: gramnuri-api
-        image: asia-northeast3-docker.pkg.dev/gramnuri-dev/gramnuri-repo/gramnuri-api:d10e7ca9a8da01ea7fbe27803138b9c8b79736fc
+        image: asia-northeast3-docker.pkg.dev/gramnuri-dev/gramnuri-repo/gramnuri-api
         ports:
         - containerPort: 8080
         resources:

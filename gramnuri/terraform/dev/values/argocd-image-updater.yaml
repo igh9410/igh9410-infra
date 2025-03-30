@@ -4,3 +4,17 @@ image:
 
 metrics:
   enabled: true
+
+config:
+  registries:
+  - name: "asia-northeast3-docker.pkg.dev"
+    prefix: "asia-northeast3-docker.pkg.dev"
+    api_url: "https://asia-northeast3-docker.pkg.dev"
+    credentials: "workloadidentity"
+    defaultns: "gramnuri-dev/gramnuri-repo"
+    insecure: false
+    default: true
+
+serviceAccount:
+  annotations:
+    iam.gke.io/gcp-service-account: argocd-image-updater@gramnuri-dev.iam.gserviceaccount.com
