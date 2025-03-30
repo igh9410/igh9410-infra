@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gramnuri-api
+spec:
+  template:
+    spec:
+      containers:
+      - name: gramnuri-api
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: gramnuri-secrets
+              key: database_url
+        - name: FIREBASE_PROJECT_ID
+          valueFrom:
+            secretKeyRef:
+              name: gramnuri-secrets
+              key: firebase_project_id
+        - name: FIREBASE_CLIENT_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: gramnuri-secrets
+              key: firebase_client_email
+        - name: FIREBASE_CLIENT_CERT_URL
+          valueFrom:
+            secretKeyRef:
+              name: gramnuri-secrets
+              key: firebase_client_cert_url
+        - name: ENVIRONMENT
+          valueFrom:
+            secretKeyRef:
+              name: gramnuri-secrets
+              key: environment

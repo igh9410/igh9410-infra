@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namePrefix: dev-
+namespace: default
+resources:
+- ../../base
+patches:
+- path: deployment-patch.yaml
+  target:
+    kind: Deployment
+    name: gramnuri-api
+images:
+- name: asia-northeast3-docker.pkg.dev/gramnuri-dev/gramnuri-repo/gramnuri-api
+  newTag: latest # This will be updated by ArgoCD Image Updater
