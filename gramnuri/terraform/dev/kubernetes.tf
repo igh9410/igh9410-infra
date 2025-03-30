@@ -162,9 +162,8 @@ data "kubernetes_service" "argocd_server" {
   ]
 }
 
-# Comment out the ArgoCD Application for now
-# We'll create it in a separate step after ArgoCD is installed
 
+/*
 resource "kubernetes_manifest" "argocd_application_dev" {
   manifest = {
     apiVersion = "argoproj.io/v1alpha1"
@@ -172,6 +171,21 @@ resource "kubernetes_manifest" "argocd_application_dev" {
     metadata = {
       name      = "gramnuri-dev"
       namespace = "argocd"
+    }
+    annotations = {
+      # 1. Define the image to track
+      # Alias 'gramnuri-api' maps to the full GAR path constructed from main.tf resources/variables
+      "argocd-image-updater.argoproj.io/image-list" = "gramnuri-api=${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.gramnuri_repo.repository_id}/gramnuri-api"
+
+      # 2. Define the update strategy for the 'gramnuri-api' alias
+      "argocd-image-updater.argoproj.io/gramnuri-api.update-strategy" = "latest" # Use the most recently pushed tag
+
+      # 3. (Optional) Allow specific tags (e.g., using regex)
+      "argocd-image-updater.argoproj.io/gramnuri-api.allow-tags" = "regexp:^.*$" # Allow any tag for now
+
+      # 4. Define how to write the update back to Git
+      # Use the 'github_access' secret (ensure token has write access)
+      "argocd-image-updater.argoproj.io/write-back-method" = "git:secret:argocd/github_access"
     }
     spec = {
       project = "default"
@@ -212,7 +226,7 @@ resource "kubernetes_manifest" "argocd_application_dev" {
     helm_release.argocd,
     kubernetes_secret.github_access
   ]
-}
+} */
 
 # Create a secret for GitHub credentials
 resource "kubernetes_secret" "github_access" {
@@ -242,11 +256,11 @@ resource "helm_release" "argocd_image_updater" {
   name       = "argocd-image-updater"
   repository = "https://argoproj.github.io/argo-helm"
   chart      = "argocd-image-updater"
-  namespace = "argocd"
+  namespace  = "argocd"
   version    = "0.12.0"
 
   values = [file("values/argocd-image-updater.yaml")]
   depends_on = [
     helm_release.argocd
   ]
-} 
+}

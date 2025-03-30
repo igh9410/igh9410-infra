@@ -1,0 +1,133 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  creationTimestamp: "2025-03-30T09:23:22Z"
+  generation: 123
+  name: gramnuri-dev
+  namespace: argocd
+  resourceVersion: "7060407"
+  uid: 3b5f4332-6d45-46cb-820a-76c2fd4c68a1
+  annotations:
+    # 1. Define the image to track
+    argocd-image-updater.argoproj.io/image-list: gramnuri-api=asia-northeast3-docker.pkg.dev/gramnuri-dev/gramnuri-repo/gramnuri-api
+    # 2. Define the update strategy
+    argocd-image-updater.argoproj.io/gramnuri-api.update-strategy: latest
+    # 3. Allow tags using regex
+    argocd-image-updater.argoproj.io/gramnuri-api.allow-tags: regexp:^.*$
+    # 4. Define Git write-back method
+    argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/github-access
+    # 5. Define Kustomize image name to update
+    argocd-image-updater.argoproj.io/gramnuri-api.kustomize.image-name: asia-northeast3-docker.pkg.dev/gramnuri-dev/gramnuri-repo/gramnuri-api
+spec:
+  destination:
+    namespace: default
+    server: https://kubernetes.default.svc
+  ignoreDifferences:
+  - group: ""
+    jsonPointers:
+    - /*
+    kind: Secret
+    name: gramnuri-secrets
+    namespace: default
+  project: default
+  source:
+    path: gramnuri/k8s/overlays/dev
+    repoURL: https://github.com/igh9410/igh9410-infra.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+status:
+  controllerNamespace: argocd
+  health:
+    lastTransitionTime: "2025-03-30T12:43:41Z"
+    status: Healthy
+  history:
+  - deployStartedAt: "2025-03-30T12:43:35Z"
+    deployedAt: "2025-03-30T12:43:36Z"
+    id: 0
+    initiatedBy:
+      automated: true
+    revision: e1346adc8ade36d9b521edaba1d6b8084172362e
+    source:
+      path: gramnuri/k8s/overlays/dev
+      repoURL: https://github.com/igh9410/igh9410-infra.git
+      targetRevision: HEAD
+  operationState:
+    finishedAt: "2025-03-30T12:43:36Z"
+    message: successfully synced (all tasks run)
+    operation:
+      initiatedBy:
+        automated: true
+      retry:
+        limit: 5
+      sync:
+        prune: true
+        revision: e1346adc8ade36d9b521edaba1d6b8084172362e
+    phase: Succeeded
+    startedAt: "2025-03-30T12:43:35Z"
+    syncResult:
+      resources:
+      - group: ""
+        hookPhase: Running
+        kind: Service
+        message: service/dev-gramnuri-api unchanged
+        name: dev-gramnuri-api
+        namespace: default
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      - group: apps
+        hookPhase: Running
+        kind: Deployment
+        message: deployment.apps/dev-gramnuri-api configured
+        name: dev-gramnuri-api
+        namespace: default
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      revision: e1346adc8ade36d9b521edaba1d6b8084172362e
+      source:
+        path: gramnuri/k8s/overlays/dev
+        repoURL: https://github.com/igh9410/igh9410-infra.git
+        targetRevision: HEAD
+  reconciledAt: "2025-03-30T14:49:32Z"
+  resources:
+  - health:
+      status: Healthy
+    kind: Service
+    name: dev-gramnuri-api
+    namespace: default
+    status: Synced
+    version: v1
+  - group: apps
+    health:
+      status: Healthy
+    kind: Deployment
+    name: dev-gramnuri-api
+    namespace: default
+    status: Synced
+    version: v1
+  sourceHydrator: {}
+  sourceType: Kustomize
+  summary:
+    images:
+    - asia-northeast3-docker.pkg.dev/gramnuri-dev/gramnuri-repo/gramnuri-api:d10e7ca9a8da01ea7fbe27803138b9c8b79736fc
+  sync:
+    comparedTo:
+      destination:
+        namespace: default
+        server: https://kubernetes.default.svc
+      ignoreDifferences:
+      - jsonPointers:
+        - /*
+        kind: Secret
+        name: gramnuri-secrets
+        namespace: default
+      source:
+        path: gramnuri/k8s/overlays/dev
+        repoURL: https://github.com/igh9410/igh9410-infra.git
+        targetRevision: HEAD
+    revision: c57ca2fee061de74a5b1ccc346f34e0190733762
+    status: Synced
