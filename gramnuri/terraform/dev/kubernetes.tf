@@ -235,37 +235,18 @@ resource "kubernetes_secret" "github_access" {
     kubernetes_namespace.argocd
   ]
 }
-/*
 
-# Install ArgoCD Image Updater
+
+
 resource "helm_release" "argocd_image_updater" {
   name       = "argocd-image-updater"
   repository = "https://argoproj.github.io/argo-helm"
   chart      = "argocd-image-updater"
-  version    = "0.9.1"
-  namespace  = kubernetes_namespace.argocd.metadata[0].name
+  namespace = "argocd"
+  version    = "0.12.0"
 
-  set {
-    name  = "config.argocd.serverAddress"
-    value = "argocd-server.argocd.svc"
-  }
-
-  set {
-    name  = "config.argocd.insecure"
-    value = "true"
-  }
-
-  set {
-    name  = "config.registries.gcr.prefix"
-    value = "asia-northeast3-docker.pkg.dev"
-  }
-
-  set {
-    name  = "config.registries.gcr.api_url"
-    value = "https://asia-northeast3-docker.pkg.dev"
-  }
-
+  values = [file("values/argocd-image-updater.yaml")]
   depends_on = [
     helm_release.argocd
   ]
-} */
+} 
