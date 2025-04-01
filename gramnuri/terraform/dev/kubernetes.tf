@@ -23,7 +23,7 @@ provider "helm" {
 # Keep this data source to get the LoadBalancer IP for Cloudflare
 data "kubernetes_service" "gramnuri_api" {
   metadata {
-    name      = "gramnuri-dev-api"
+    name      = "dev-gramnuri-api"
     namespace = "default" # Update if you change the namespace
   }
   depends_on = [
