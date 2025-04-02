@@ -17,7 +17,8 @@ metadata:
     # 4. Define Git write-back method
     argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/github-access
     # 5. Define Kustomize image name to update
-    argocd-image-updater.argoproj.io/gramnuri-api.kustomize.image-name: asia-northeast3-docker.pkg.dev/gramnuri-dev/gramnuri-repo/gramnuri-api
+    argocd-image-updater.argoproj.io/gramnuri-api.kustomize.image-name: asia-northeast3-docker.pkg.dev/gramnuri-dev/gramnuri-repo/gramnuri-api # Add this new annotation to specify the branch
+    argocd-image-updater.argoproj.io/git-branch: main
 spec:
   destination:
     namespace: default
@@ -33,7 +34,7 @@ spec:
   source:
     path: gramnuri/k8s/overlays/dev
     repoURL: https://github.com/igh9410/igh9410-infra.git
-    targetRevision: HEAD
+    targetRevision: main
   syncPolicy:
     automated:
       prune: true
@@ -53,7 +54,7 @@ status:
     source:
       path: gramnuri/k8s/overlays/dev
       repoURL: https://github.com/igh9410/igh9410-infra.git
-      targetRevision: HEAD
+      targetRevision: main
   operationState:
     finishedAt: "2025-03-30T12:43:36Z"
     message: successfully synced (all tasks run)
@@ -91,7 +92,7 @@ status:
       source:
         path: gramnuri/k8s/overlays/dev
         repoURL: https://github.com/igh9410/igh9410-infra.git
-        targetRevision: HEAD
+        targetRevision: main
   reconciledAt: "2025-03-30T14:49:32Z"
   resources:
   - health:
@@ -128,6 +129,6 @@ status:
       source:
         path: gramnuri/k8s/overlays/dev
         repoURL: https://github.com/igh9410/igh9410-infra.git
-        targetRevision: HEAD
+        targetRevision: main
     revision: c57ca2fee061de74a5b1ccc346f34e0190733762
     status: Synced
