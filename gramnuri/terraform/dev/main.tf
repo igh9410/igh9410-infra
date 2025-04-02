@@ -43,9 +43,14 @@ resource "google_container_cluster" "primary" {
   remove_default_node_pool = true
   initial_node_count       = 1
 
-  # Disable various features to minimize cost
-  monitoring_service = "none"
-  logging_service    = "none"
+  # Replace the deprecated monitoring_service with logging_config and monitoring_config
+  logging_config {
+    enable_components = ["SYSTEM_COMPONENTS", "WORKLOADS"]
+  }
+  
+  monitoring_config {
+    enable_components = ["SYSTEM_COMPONENTS"]
+  }
 
   # Wait for APIs to be enabled
   depends_on = [

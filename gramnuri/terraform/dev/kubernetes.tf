@@ -222,3 +222,4 @@ resource "google_service_account_iam_binding" "argocd_image_updater_workload_ide
     "serviceAccount:${var.project_id}.svc.id.goog[argocd/argocd-image-updater]"
   ]
 }
+
