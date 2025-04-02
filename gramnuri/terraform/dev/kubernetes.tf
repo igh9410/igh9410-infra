@@ -163,71 +163,6 @@ data "kubernetes_service" "argocd_server" {
 }
 
 
-/*
-resource "kubernetes_manifest" "argocd_application_dev" {
-  manifest = {
-    apiVersion = "argoproj.io/v1alpha1"
-    kind       = "Application"
-    metadata = {
-      name      = "gramnuri-dev"
-      namespace = "argocd"
-    }
-    annotations = {
-      # 1. Define the image to track
-      # Alias 'gramnuri-api' maps to the full GAR path constructed from main.tf resources/variables
-      "argocd-image-updater.argoproj.io/image-list" = "gramnuri-api=${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.gramnuri_repo.repository_id}/gramnuri-api"
-
-      # 2. Define the update strategy for the 'gramnuri-api' alias
-      "argocd-image-updater.argoproj.io/gramnuri-api.update-strategy" = "latest" # Use the most recently pushed tag
-
-      # 3. (Optional) Allow specific tags (e.g., using regex)
-      "argocd-image-updater.argoproj.io/gramnuri-api.allow-tags" = "regexp:^.*$" # Allow any tag for now
-
-      # 4. Define how to write the update back to Git
-      # Use the 'github_access' secret (ensure token has write access)
-      "argocd-image-updater.argoproj.io/write-back-method" = "git:secret:argocd/github_access"
-    }
-    spec = {
-      project = "default"
-      source = {
-        repoURL        = "https://github.com/igh9410/igh9410-infra.git"
-        targetRevision = "HEAD"
-        path           = "gramnuri/k8s/overlays/dev"
-      }
-      destination = {
-        server    = "https://kubernetes.default.svc"
-        namespace = "default"
-      }
-      syncPolicy = {
-        automated = {
-          prune    = true
-          selfHeal = true
-        }
-      }
-      ignoreDifferences = [
-        {
-          group     = ""
-          kind      = "Secret"
-          name      = "gramnuri-secrets"
-          namespace = "default"
-          jsonPointers = [
-            "/*"
-          ]
-        }
-      ]
-    }
-  }
-
-  field_manager {
-    force_conflicts = true
-  }
-
-  depends_on = [
-    helm_release.argocd,
-    kubernetes_secret.github_access
-  ]
-} */
-
 # Create a secret for GitHub credentials
 resource "kubernetes_secret" "github_access" {
   metadata {
@@ -262,5 +197,28 @@ resource "helm_release" "argocd_image_updater" {
   values = [file("values/argocd-image-updater.yaml")]
   depends_on = [
     helm_release.argocd
+  ]
+}
+
+# Create a Google service account for Argo CD Image Updater
+resource "google_service_account" "argocd_image_updater" {
+  account_id   = "argocd-image-updater"
+  display_name = "Service Account for Argo CD Image Updater"
+  project      = var.project_id
+}
+
+# Grant the service account access to Artifact Registry
+resource "google_project_iam_member" "argocd_image_updater_artifact_registry" {
+  project = var.project_id
+  role    = "roles/artifactregistry.reader"
+  member  = "serviceAccount:${google_service_account.argocd_image_updater.email}"
+}
+
+# Allow the Kubernetes service account to impersonate the Google service account
+resource "google_service_account_iam_binding" "argocd_image_updater_workload_identity" {
+  service_account_id = google_service_account.argocd_image_updater.name
+  role               = "roles/iam.workloadIdentityUser"
+  members = [
+    "serviceAccount:${var.project_id}.svc.id.goog[argocd/argocd-image-updater]"
   ]
 }

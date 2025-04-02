@@ -52,6 +52,10 @@ resource "google_container_cluster" "primary" {
     google_project_service.container,
     google_project_service.artifactregistry,
   ]
+
+  workload_identity_config {
+    workload_pool = "${var.project_id}.svc.id.goog"
+  }
 }
 
 # Create a separately managed node pool with e2-micro instances (free tier)
