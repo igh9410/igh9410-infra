@@ -35,10 +35,10 @@ resource "cloudflare_record" "argocd" {
 # TikTok Developer Site Verification TXT Record
 resource "cloudflare_record" "tiktok_verification" {
   zone_id = var.cloudflare_zone_id
-  name    = "@"  # Root domain
+  name    = "@" # Root domain
   type    = "TXT"
   value   = "tiktok-developers-site-verification=YwePFWSAWYnljIRZTaLXKQqFVNjtGahq"
-  ttl     = 1    # Automatic TTL
+  ttl     = 1 # Automatic TTL
 }
 
 # Output the full domain URLs
