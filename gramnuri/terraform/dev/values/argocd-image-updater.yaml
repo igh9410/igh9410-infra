@@ -14,6 +14,7 @@ config:
     insecure: false
     default: true
     credentials: "ext:/scripts/gke-workload-identity-auth.sh" # Use external script
+    credsexpire: "59m"
 
 serviceAccount:
   create: true
@@ -26,5 +27,6 @@ authScripts:
   scripts:
     gke-workload-identity-auth.sh: |
       #!/bin/sh
+      # Always fetch a fresh token
       ACCESS_TOKEN=$(wget --header 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token -q -O - | grep -Eo '"access_token":.*?[^\\]",' | cut -d '"' -f 4)
       echo "oauth2accesstoken:$ACCESS_TOKEN"

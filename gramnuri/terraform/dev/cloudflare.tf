@@ -32,6 +32,15 @@ resource "cloudflare_record" "argocd" {
   proxied = true # Enable Cloudflare proxy for SSL
 }
 
+# TikTok Developer Site Verification TXT Record
+resource "cloudflare_record" "tiktok_verification" {
+  zone_id = var.cloudflare_zone_id
+  name    = "@"  # Root domain
+  type    = "TXT"
+  value   = "tiktok-developers-site-verification=YwePFWSAWYnljIRZTaLXKQqFVNjtGahq"
+  ttl     = 1    # Automatic TTL
+}
+
 # Output the full domain URLs
 output "api_domain_url" {
   value = "https://${cloudflare_record.dev_api.name}.${var.domain_name}"
