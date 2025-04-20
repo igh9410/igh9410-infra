@@ -32,6 +32,18 @@ resource "cloudflare_record" "argocd" {
   proxied = true # Enable Cloudflare proxy for SSL
 }
 
+# Cloudflare Worker DNS Record for dev.gramnuri.com
+resource "cloudflare_record" "web" {
+  zone_id = var.cloudflare_zone_id
+  name    = "dev" # Subdomain for the dev website
+  # Change content to the worker's hostname (remove https:// and trailing /)
+  content = "gramnuri-web.athanasia9410.workers.dev"
+  # Change type from A to CNAME
+  type    = "CNAME"
+  ttl     = 1    # Auto TTL
+  proxied = true # Keep proxied enabled for Cloudflare benefits
+}
+
 # TikTok Developer Site Verification TXT Record
 resource "cloudflare_record" "tiktok_verification" {
   zone_id = var.cloudflare_zone_id
