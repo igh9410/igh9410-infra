@@ -36,3 +36,8 @@ spec:
             secretKeyRef:
               name: gramnuri-secrets
               key: environment
+        - name: CLIENT_DOMAIN
+          valueFrom:
+            secretKeyRef:
+              name: gramnuri-secrets
+              key: client_domain
