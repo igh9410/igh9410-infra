@@ -3,6 +3,9 @@ kind: Deployment
 metadata:
   name: gramnuri-api
 spec:
+  selector:
+    matchLabels:
+      app: gramnuri-api
   template:
     spec:
       containers:
