@@ -1,3 +1,3 @@
 kustomize:
   images:
-  - asia-northeast3-docker.pkg.dev/gramnuri-dev/gramnuri-repo/gramnuri-api=asia-northeast3-docker.pkg.dev/gramnuri-dev/gramnuri-repo/gramnuri-api:db949ae4b83faaa5698402baa8dfcf349c0d85fc
+  - asia-northeast3-docker.pkg.dev/gramnuri-dev/gramnuri-repo/gramnuri-api=asia-northeast3-docker.pkg.dev/gramnuri-dev/gramnuri-repo/gramnuri-api:68fbbf339ee0afe4902c255e5aee8adb11d42588
