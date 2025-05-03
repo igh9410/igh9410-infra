@@ -10,5 +10,5 @@ patches:
     kind: Deployment
     name: gramnuri-api
 images:
-- name: asia-northeast3-docker.pkg.dev/gramnuri-dev/gramnuri-repo/gramnuri-api
-  newTag: d10e7ca9a8da01ea7fbe27803138b9c8b79736fc
+- name: icn.vultrcr.com/gramnuri/gramnuri-api
+  newTag: 0.0.1
