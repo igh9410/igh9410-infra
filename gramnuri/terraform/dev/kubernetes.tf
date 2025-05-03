@@ -31,7 +31,7 @@ resource "vultr_kubernetes" "vke_cluster" {
 }
 
 provider "kubernetes" {
-  host                   = "https://${vultr_kubernetes.vke_cluster.endpoint}"
+  host                   = "https://${vultr_kubernetes.vke_cluster.endpoint}:6443"
   cluster_ca_certificate = base64decode(vultr_kubernetes.vke_cluster.cluster_ca_certificate)
   client_key             = base64decode(vultr_kubernetes.vke_cluster.client_key)
   client_certificate     = base64decode(vultr_kubernetes.vke_cluster.client_certificate)
@@ -40,7 +40,7 @@ provider "kubernetes" {
 # Configure Helm provider to connect to the new VKE cluster
 provider "helm" {
   kubernetes {
-    host                   = vultr_kubernetes.vke_cluster.endpoint
+    host                   = "https://${vultr_kubernetes.vke_cluster.endpoint}:6443"
     cluster_ca_certificate = base64decode(vultr_kubernetes.vke_cluster.cluster_ca_certificate)
     client_key             = base64decode(vultr_kubernetes.vke_cluster.client_key)
     client_certificate     = base64decode(vultr_kubernetes.vke_cluster.client_certificate)
@@ -51,7 +51,7 @@ provider "helm" {
 # They are now managed by ArgoCD
 
 # Keep this data source to get the LoadBalancer IP for Cloudflare
-/*
+
 data "kubernetes_service" "gramnuri_api" {
   metadata {
     name      = "dev-gramnuri-api"
@@ -62,7 +62,7 @@ data "kubernetes_service" "gramnuri_api" {
     # Ensure the cluster is ready before querying services (dependency updated)
     vultr_kubernetes.vke_cluster
   ]
-} */
+} 
 
 # Create ArgoCD namespace
 
