@@ -1,19 +1,19 @@
-output "kubernetes_cluster_name" {
-  value = google_container_cluster.primary.name
+# Optional: Output ArgoCD server URL
+/*
+
+# Output the full domain URLs
+output "api_domain_url" {
+  value = "https://${cloudflare_record.dev_api.name}.${var.domain_name}"
 }
 
-output "kubernetes_cluster_host" {
-  value     = google_container_cluster.primary.endpoint
-  sensitive = true
-}
+output "argocd_server_url" {
+  value = "https://${data.kubernetes_service.argocd_server.status.0.load_balancer.0.ingress.0.ip}"
+  /
+output "argocd_domain_url" {
+  value = "https://${cloudflare_record.argocd.name}.${var.domain_name}"
+} 
 
-output "load_balancer_ip" {
-  value = data.kubernetes_service.gramnuri_api.status.0.load_balancer.0.ingress.0.ip
-  depends_on = [
-    null_resource.configure_kubectl
-  ]
+output "argocd_ip" {
+  value = data.kubernetes_service.argocd_server.status.0.load_balancer.0.ingress.0.ip
 }
-
-output "load_balancer_url" {
-  value = "https://${google_container_cluster.primary.endpoint}/docs"
-}
+} */

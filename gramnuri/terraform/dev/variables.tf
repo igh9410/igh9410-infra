@@ -1,22 +1,5 @@
-variable "project_id" {
-  description = "GCP Project ID"
-  type        = string
-}
-
-variable "region" {
-  description = "GCP region"
-  type        = string
-  default     = "asia-northeast3"
-}
-
-variable "zone" {
-  description = "GCP zone for zonal resources"
-  type        = string
-  default     = "asia-northeast3-a"
-}
-
 variable "cluster_name" {
-  description = "Name of the GKE cluster"
+  description = "Name of the Vultr Kubernetes cluster"
   type        = string
   default     = "gramnuri-dev-cluster"
 }
@@ -81,14 +64,63 @@ variable "github_token" {
   sensitive   = true
 }
 
-variable "project_number" {
-  description = "GCP Project Number (not the project ID)"
-  type        = string
-}
-
 variable "github_repo" {
   description = "GitHub repository in format: OWNER/REPO"
   type        = string
-  default     = "your-org/your-repo"
+  default     = "igh9410/igh9410-infra"
+}
+
+variable "vultr_api_key" {
+  description = "Vultr API Key"
+  type        = string
+  sensitive   = true
+}
+
+variable "vultr_region" {
+  description = "Vultr region for resources"
+  type        = string
+  default     = "icn" # Seoul
+}
+
+variable "vke_version" {
+  description = "Vultr Kubernetes Engine (VKE) version"
+  type        = string
+  default     = "v1.32.2+1" # Updated to a more recent patch. Check Vultr UI/CLI for the latest available.
+}
+
+variable "vke_node_plan" {
+  description = "Vultr instance plan for worker nodes"
+  type        = string
+  default     = "vc2-1c-2gb" # Example: 1 vCPU, 2GB RAM
+}
+
+variable "vke_node_count" {
+  description = "Initial number of worker nodes in the default pool"
+  type        = number
+  default     = 2
+}
+
+variable "cloudflare_account_id" {
+  description = "Cloudflare Account ID"
+  type        = string
+  sensitive   = true
+}
+
+variable "r2_access_token" {
+  description = "R2 Access Token"
+  type        = string
+  sensitive   = true
+}
+
+variable "r2_access_key_id" {
+  description = "R2 Access Key ID"
+  type        = string
+  sensitive   = true
+}
+
+variable "r2_secret_access_key" {
+  description = "R2 Secret Access Key"
+  type        = string
+  sensitive   = true
 }
 

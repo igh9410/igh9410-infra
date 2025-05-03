@@ -1,19 +1,49 @@
-provider "kubernetes" {
-  # Keep this provider configuration for data sources
-  host                   = "https://${google_container_cluster.primary.endpoint}"
-  token                  = data.google_client_config.default.access_token
-  cluster_ca_certificate = base64decode(google_container_cluster.primary.master_auth.0.cluster_ca_certificate)
+# Define the Vultr Kubernetes Engine (VKE) Cluster
+resource "vultr_kubernetes" "vke_cluster" {
+  label   = var.cluster_name
+  region  = var.vultr_region
+  version = var.vke_version
+
+  # High availability is recommended for production, but might add cost.
+  # Set to true if needed.
+  # high_availability = false 
+
+  # Define the Default Node Pool inline
+  node_pools {
+    node_quantity = var.vke_node_count
+    plan          = var.vke_node_plan
+    label         = "default-pool" # Label for the node pool
+    auto_scaler   = true
+    min_nodes     = 1
+    max_nodes     = 3 # Adjust as needed
+
+    # Optional: Add Kubernetes taints or labels if needed
+    # taints {
+    #   key = "key"
+    #   value = "value"
+    #   effect = "NoSchedule"
+    # }
+    # label = {
+    #   key1 = "value1"
+    #   key2 = "value2"
+    # }
+  }
 }
 
-# Add this data source
-data "google_client_config" "default" {}
+provider "kubernetes" {
+  host                   = "https://${vultr_kubernetes.vke_cluster.endpoint}"
+  cluster_ca_certificate = base64decode(vultr_kubernetes.vke_cluster.cluster_ca_certificate)
+  client_key             = base64decode(vultr_kubernetes.vke_cluster.client_key)
+  client_certificate     = base64decode(vultr_kubernetes.vke_cluster.client_certificate)
+}
 
-# Add Helm provider for ArgoCD installation
+# Configure Helm provider to connect to the new VKE cluster
 provider "helm" {
   kubernetes {
-    host                   = "https://${google_container_cluster.primary.endpoint}"
-    token                  = data.google_client_config.default.access_token
-    cluster_ca_certificate = base64decode(google_container_cluster.primary.master_auth.0.cluster_ca_certificate)
+    host                   = vultr_kubernetes.vke_cluster.endpoint
+    cluster_ca_certificate = base64decode(vultr_kubernetes.vke_cluster.cluster_ca_certificate)
+    client_key             = base64decode(vultr_kubernetes.vke_cluster.client_key)
+    client_certificate     = base64decode(vultr_kubernetes.vke_cluster.client_certificate)
   }
 }
 
@@ -21,26 +51,28 @@ provider "helm" {
 # They are now managed by ArgoCD
 
 # Keep this data source to get the LoadBalancer IP for Cloudflare
+/*
 data "kubernetes_service" "gramnuri_api" {
   metadata {
     name      = "dev-gramnuri-api"
     namespace = "default" # Update if you change the namespace
   }
   depends_on = [
-    null_resource.configure_kubectl,
-    # Add a dependency on ArgoCD setup
-    helm_release.argocd
+    
+    # Ensure the cluster is ready before querying services (dependency updated)
+    vultr_kubernetes.vke_cluster
   ]
-}
+} */
 
 # Create ArgoCD namespace
+
 resource "kubernetes_namespace" "argocd" {
   metadata {
     name = "argocd"
   }
 }
 
-# Install ArgoCD using Helm with optimized settings
+# Install ArgoCD using Helm
 resource "helm_release" "argocd" {
   name       = "argocd"
   repository = "https://argoproj.github.io/argo-helm"
@@ -54,14 +86,11 @@ resource "helm_release" "argocd" {
     value = "LoadBalancer"
   }
 
-
   # Enable insecure mode for Cloudflare Flexible SSL
   set {
     name  = "server.insecure"
     value = "true"
   }
-
-
 
   # Add resource limits to prevent OOM issues
   set {
@@ -140,16 +169,13 @@ resource "helm_release" "argocd" {
     value = "true"
   }
 
+  # Ensure Helm release depends on the cluster and namespace (dependency updated)
   depends_on = [
-    google_container_node_pool.primary_nodes,
-    null_resource.configure_kubectl
+    vultr_kubernetes.vke_cluster,
+    kubernetes_namespace.argocd
   ]
 }
 
-# Optional: Output ArgoCD server URL
-output "argocd_server_url" {
-  value = "https://${data.kubernetes_service.argocd_server.status.0.load_balancer.0.ingress.0.ip}"
-}
 
 # Optional: Data source for ArgoCD server service
 data "kubernetes_service" "argocd_server" {
@@ -161,7 +187,6 @@ data "kubernetes_service" "argocd_server" {
     helm_release.argocd
   ]
 }
-
 
 # Create a secret for GitHub credentials
 resource "kubernetes_secret" "github_access" {
@@ -185,8 +210,7 @@ resource "kubernetes_secret" "github_access" {
   ]
 }
 
-
-
+/*
 resource "helm_release" "argocd_image_updater" {
   name       = "argocd-image-updater"
   repository = "https://argoproj.github.io/argo-helm"
@@ -197,29 +221,11 @@ resource "helm_release" "argocd_image_updater" {
   values = [file("values/argocd-image-updater.yaml")]
   depends_on = [
     helm_release.argocd
+    # Add dependency on Vultr Container Registry credentials secret if needed later
   ]
-}
+} */
 
-# Create a Google service account for Argo CD Image Updater
-resource "google_service_account" "argocd_image_updater" {
-  account_id   = "argocd-image-updater"
-  display_name = "Service Account for Argo CD Image Updater"
-  project      = var.project_id
-}
-
-# Grant the service account access to Artifact Registry
-resource "google_project_iam_member" "argocd_image_updater_artifact_registry" {
-  project = var.project_id
-  role    = "roles/artifactregistry.reader"
-  member  = "serviceAccount:${google_service_account.argocd_image_updater.email}"
-}
-
-# Allow the Kubernetes service account to impersonate the Google service account
-resource "google_service_account_iam_binding" "argocd_image_updater_workload_identity" {
-  service_account_id = google_service_account.argocd_image_updater.name
-  role               = "roles/iam.workloadIdentityUser"
-  members = [
-    "serviceAccount:${var.project_id}.svc.id.goog[argocd/argocd-image-updater]"
-  ]
-}
-
+# TODO: If argocd-image-updater needs to access the private Vultr Container Registry,
+# create a Kubernetes secret (type: kubernetes.io/dockerconfigjson) 
+# with the registry credentials obtained from vultr_container_registry.gramnuri_repo
+# and configure the image updater to use it.
