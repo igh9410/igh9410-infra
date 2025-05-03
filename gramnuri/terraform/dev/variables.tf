@@ -124,3 +124,15 @@ variable "r2_secret_access_key" {
   sensitive   = true
 }
 
+variable "vcr_username" {
+  description = "Vultr Container Registry User"
+  type        = string
+  sensitive   = true
+}
+
+variable "vcr_password" {
+  description = "Vultr Container Registry Password"
+  type        = string
+  sensitive   = true
+}
+

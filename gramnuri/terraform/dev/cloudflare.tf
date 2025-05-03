@@ -1,7 +1,7 @@
 provider "cloudflare" {
   api_token = var.cloudflare_api_token
 }
-/*
+
 # Create an A record for your domain pointing to the load balancer IP
 resource "cloudflare_record" "dev_api" {
   zone_id = var.cloudflare_zone_id
@@ -10,7 +10,7 @@ resource "cloudflare_record" "dev_api" {
   type    = "A"
   ttl     = 1    # Auto TTL
   proxied = true # Set to false if you don't want to use Cloudflare's proxy
-} */
+} 
 
 # Add a new record for ArgoCD
 resource "cloudflare_record" "argocd" {

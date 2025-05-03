@@ -210,7 +210,8 @@ resource "kubernetes_secret" "github_access" {
   ]
 }
 
-/*
+
+# Uncomment and ensure dependencies are correct
 resource "helm_release" "argocd_image_updater" {
   name       = "argocd-image-updater"
   repository = "https://argoproj.github.io/argo-helm"
@@ -221,9 +222,8 @@ resource "helm_release" "argocd_image_updater" {
   values = [file("values/argocd-image-updater.yaml")]
   depends_on = [
     helm_release.argocd
-    # Add dependency on Vultr Container Registry credentials secret if needed later
   ]
-} */
+}
 
 # TODO: If argocd-image-updater needs to access the private Vultr Container Registry,
 # create a Kubernetes secret (type: kubernetes.io/dockerconfigjson) 

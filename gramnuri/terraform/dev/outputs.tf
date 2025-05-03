@@ -7,6 +7,10 @@ output "api_domain_url" {
   value = "https://${cloudflare_record.dev_api.name}.${var.domain_name}"
 } */
 
+output "load_balancer_ip" {
+  value = data.kubernetes_service.gramnuri_api.status.0.load_balancer.0.ingress.0.ip
+}
+
 output "argocd_server_url" {
   value = "https://${data.kubernetes_service.argocd_server.status.0.load_balancer.0.ingress.0.ip}"
 }
