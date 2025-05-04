@@ -37,7 +37,7 @@ resource "cloudflare_record" "web" {
 # TikTok Developer Site Verification TXT Record
 resource "cloudflare_record" "tiktok_verification" {
   zone_id = var.cloudflare_zone_id
-  name    = "@" # Root domain
+  name    = "dev" 
   type    = "TXT"
   value   = "tiktok-developers-site-verification=uuYK4VKuqEC5wSbmq1klvqViJEiml8IC"
   ttl     = 1 # Automatic TTL
