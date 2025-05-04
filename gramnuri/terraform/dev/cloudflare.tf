@@ -39,6 +39,6 @@ resource "cloudflare_record" "tiktok_verification" {
   zone_id = var.cloudflare_zone_id
   name    = "@" # Root domain
   type    = "TXT"
-  value   = "tiktok-developers-site-verification=YwePFWSAWYnljIRZTaLXKQqFVNjtGahq"
+  value   = "tiktok-developers-site-verification=uuYK4VKuqEC5wSbmq1klvqViJEiml8IC"
   ttl     = 1 # Automatic TTL
 }

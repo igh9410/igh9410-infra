@@ -13,7 +13,7 @@ config:
     defaultns: "gramnuri/gramnuri-api"
     insecure: false
     default: true
-    credentials: "secret:default/vultr-cr-credentials"
+    credentials: "pullsecret:argocd/vultr-cr-credentials"
 
 serviceAccount:
   create: true

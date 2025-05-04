@@ -217,7 +217,7 @@ resource "helm_release" "argocd_image_updater" {
   repository = "https://argoproj.github.io/argo-helm"
   chart      = "argocd-image-updater"
   namespace  = "argocd"
-  version    = "0.12.0"
+  version    = "0.12.1"
 
   values = [file("values/argocd-image-updater.yaml")]
   depends_on = [
