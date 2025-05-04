@@ -11,4 +11,4 @@ patches:
     name: gramnuri-api
 images:
 - name: icn.vultrcr.com/gramnuri/gramnuri-api
-  newTag: 0.0.1
+  newTag: 4fd85c45882be8420ed3e6dfc4a2d938f77a7179
