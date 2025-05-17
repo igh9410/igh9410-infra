@@ -3,7 +3,6 @@ resource "vultr_kubernetes" "vke_cluster" {
   label   = var.cluster_name
   region  = var.vultr_region
   version = var.vke_version
-
   # High availability is recommended for production, but might add cost.
   # Set to true if needed.
   # high_availability = false 
@@ -16,6 +15,7 @@ resource "vultr_kubernetes" "vke_cluster" {
     auto_scaler   = true
     min_nodes     = 1
     max_nodes     = 3 # Adjust as needed
+    
 
     # Optional: Add Kubernetes taints or labels if needed
     # taints {
@@ -52,18 +52,6 @@ provider "helm" {
 
 # Keep this data source to get the LoadBalancer IP for Cloudflare
 
-data "kubernetes_service" "gramnuri_api" {
-  metadata {
-    name      = "dev-gramnuri-api"
-    namespace = "default" # Update if you change the namespace
-  }
-  depends_on = [
-    
-    # Ensure the cluster is ready before querying services (dependency updated)
-    vultr_kubernetes.vke_cluster
-  ]
-} 
-
 # Create ArgoCD namespace
 
 resource "kubernetes_namespace" "argocd" {
@@ -83,7 +71,7 @@ resource "helm_release" "argocd" {
   # Basic ArgoCD configuration
   set {
     name  = "server.service.type"
-    value = "LoadBalancer"
+    value = "ClusterIP"
   }
 
   # Enable insecure mode for Cloudflare Flexible SSL
@@ -176,18 +164,6 @@ resource "helm_release" "argocd" {
   ]
 }
 
-
-# Optional: Data source for ArgoCD server service
-data "kubernetes_service" "argocd_server" {
-  metadata {
-    name      = "argocd-server"
-    namespace = "argocd"
-  }
-  depends_on = [
-    helm_release.argocd
-  ]
-}
-
 # Create a secret for GitHub credentials
 resource "kubernetes_secret" "github_access" {
   metadata {
@@ -210,6 +186,77 @@ resource "kubernetes_secret" "github_access" {
   ]
 }
 
+# Install Traefik Ingress Controller
+resource "helm_release" "traefik" {
+  name       = "traefik"
+  repository = "https://helm.traefik.io/traefik"
+  chart      = "traefik"
+  version    = "35.2.0" # Specify a version for stability
+  namespace  = "kube-system" # Recommended namespace for Traefik
+  timeout    = 600      # Increased timeout to 10 minutes
+
+  set {
+    name  = "service.type"
+    value = "LoadBalancer"
+  }
+
+  set {
+    name  = "entryPoints.web.http.redirections.entryPoint.to"
+    value = "websecure"
+  }
+  set {
+    name  = "entryPoints.web.http.redirections.entryPoint.scheme"
+    value = "https"
+  }
+  set {
+    name  = "entryPoints.web.http.redirections.entryPoint.permanent"
+    value = "true"
+  }
+
+
+  
+  # If you are managing TLS directly on Traefik (e.g. Let's Encrypt)
+  # you would configure TLS options for websecure here.
+  # For example:
+  # set {
+  #   name = "entryPoints.websecure.http.tls.enabled"
+  #   value = "true"
+  # }
+  # set {
+  #   name = "entryPoints.websecure.http.tls.certResolver"
+  #   value = "myresolver" # Replace with your cert resolver name
+  # }
+
+  set {
+    name = "providers.kubernetesIngress.publishedService.enabled"
+    value = "true"
+  }
+
+  # Add resource limits/requests as needed
+  # set {
+  #   name = "resources.limits.cpu"
+  #   value = "500m"
+  # }
+  # set {
+  #   name = "resources.limits.memory"
+  #   value = "512Mi"
+  # }
+
+  depends_on = [
+    vultr_kubernetes.vke_cluster
+  ]
+}
+
+# Data source for Traefik LoadBalancer service
+data "kubernetes_service" "traefik_lb" {
+  metadata {
+    name      = "traefik" # Default service name for Traefik chart
+    namespace = "kube-system" 
+  }
+  depends_on = [
+    helm_release.traefik
+  ]
+}
 
 # Uncomment and ensure dependencies are correct
 resource "helm_release" "argocd_image_updater" {

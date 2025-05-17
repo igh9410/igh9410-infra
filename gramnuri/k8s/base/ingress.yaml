@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gramnuri-api-ingress
+  # If your service is not in the 'default' namespace, 
+  # ensure this Ingress is in the same namespace as your gramnuri-api service,
+  # or update the backend service reference to include the namespace.
+  # namespace: your-app-namespace 
+  annotations:
+    # This annotation is often used to explicitly specify the ingress controller.
+    # If Traefik is the default or only ingress controller, this might not be strictly necessary.
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+  - host: api.gramnuri.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix # or ImplementationSpecific if your Traefik version prefers
+        backend:
+          service:
+            name: gramnuri-api # This should match the name of your service in service.yaml
+            port:
+              number: 80 # This should match the 'port' exposed by your service in service.yaml 
