@@ -3,7 +3,6 @@ resource "vultr_kubernetes" "vke_cluster" {
   label   = var.cluster_name
   region  = var.vultr_region
   version = var.vke_version
-
   # High availability is recommended for production, but might add cost.
   # Set to true if needed.
   # high_availability = false 
@@ -16,6 +15,7 @@ resource "vultr_kubernetes" "vke_cluster" {
     auto_scaler   = true
     min_nodes     = 1
     max_nodes     = 3 # Adjust as needed
+    
 
     # Optional: Add Kubernetes taints or labels if needed
     # taints {
@@ -52,18 +52,6 @@ provider "helm" {
 
 # Keep this data source to get the LoadBalancer IP for Cloudflare
 
-data "kubernetes_service" "gramnuri_api" {
-  metadata {
-    name      = "dev-gramnuri-api"
-    namespace = "default" # Update if you change the namespace
-  }
-  depends_on = [
-    
-    # Ensure the cluster is ready before querying services (dependency updated)
-    vultr_kubernetes.vke_cluster
-  ]
-} 
-
 # Create ArgoCD namespace
 
 resource "kubernetes_namespace" "argocd" {
@@ -80,111 +68,86 @@ resource "helm_release" "argocd" {
   version    = "7.8.13"
   namespace  = kubernetes_namespace.argocd.metadata[0].name
 
-  # Basic ArgoCD configuration
-  set {
-    name  = "server.service.type"
-    value = "LoadBalancer"
-  }
+  values = [
+    yamlencode({
+      server = {
+        service = {
+          type = "ClusterIP"
+        }
+        insecure = true # For server's own endpoint being HTTP
+        extraArgs = [ # List of strings for server command line
+          "--insecure" # For insecure gRPC between components, if that was the intent
+        ]
+        config = { # Populates argocd-cm
+          url = "https://argo.${var.domain_name}"
+        }
+        resources = {
+          limits = {
+            cpu    = "300m"
+            memory = "512Mi"
+          }
+          requests = {
+            cpu    = "100m"
+            memory = "256Mi"
+          }
+        }
+        ingress = {
+          enabled = true
+          hosts   = ["argo.${var.domain_name}"] # Explicitly setting the host
+          paths   = ["/"]
+          pathType = "Prefix"
+          annotations = {
+            # Your test annotation, can be kept or removed
+            testDescription = "Terraform attempted to set this annotation for ArgoCD ingress"
+            # Add other necessary annotations for Traefik if required
+            # e.g., "traefik.ingress.kubernetes.io/router.entrypoints" = "websecure"
+          }
+          # If you need to specify an ingressClassName for Traefik (usually not needed if Traefik is default)
+          # ingressClassName = "traefik" 
+        }
+      } # end server block
 
-  # Enable insecure mode for Cloudflare Flexible SSL
-  set {
-    name  = "server.insecure"
-    value = "true"
-  }
+      configs = {
+        params = { # Populates argocd-cmd-params-cm
+          "server.insecure" = "true" # Corresponds to original configs.params.server\.insecure
+          # The original "server.config.admin.enabled" likely maps to here or configs.cm
+          # Default for admin user is enabled if Dex is not used and no static password set.
+          # If you had "server.config.admin.enabled = true", this might be:
+          "server.admin.enabled" = "true" # Ensure this is a valid param key if used
+        }
+        cm = { # Populates argocd-cm
+          # The original "server.config.admin.enabled = true" if it was meant for argocd-cm.
+          # "admin.enabled" = "true" # string value
+          # The original "server.config.proxy.enabled = true" is tricky as there's no direct boolean.
+          # It might have been intended for "server.trusted_proxies" or similar.
+          # For now, omitting direct proxy.enabled to avoid misconfiguration.
+        }
+      }
 
-  # Add resource limits to prevent OOM issues
-  set {
-    name  = "server.resources.limits.cpu"
-    value = "300m"
-  }
-  set {
-    name  = "server.resources.limits.memory"
-    value = "512Mi"
-  }
-  set {
-    name  = "server.resources.requests.cpu"
-    value = "100m"
-  }
-  set {
-    name  = "server.resources.requests.memory"
-    value = "256Mi"
-  }
+      repoServer = {
+        resources = {
+          limits = {
+            memory = "256Mi"
+          }
+          requests = {
+            memory = "128Mi"
+          }
+        }
+      }
 
-  # Limit repo server resources
-  set {
-    name  = "repoServer.resources.limits.memory"
-    value = "256Mi"
-  }
-  set {
-    name  = "repoServer.resources.requests.memory"
-    value = "128Mi"
-  }
-
-  # Disable unnecessary components to save resources
-  set {
-    name  = "applicationSet.enabled"
-    value = "false"
-  }
-  set {
-    name  = "notifications.enabled"
-    value = "false"
-  }
-
-  # Add these critical settings
-  set {
-    name  = "server.extraArgs"
-    value = "{--insecure}"
-  }
-
-  set {
-    name  = "configs.params.server\\.insecure"
-    value = "true"
-  }
-
-  # Configure external URL explicitly
-  set {
-    name  = "server.config.url"
-    value = "https://argo.${var.domain_name}"
-  }
-
-  set {
-    name  = "server.config.admin.enabled"
-    value = "true"
-  }
-
-  # Add ingress configuration
-  set {
-    name  = "server.ingress.enabled"
-    value = "true"
-  }
-
-  set {
-    name  = "server.ingress.hosts[0]"
-    value = "argo.${var.domain_name}"
-  }
-
-  # Proxy settings
-  set {
-    name  = "server.config.proxy.enabled"
-    value = "true"
-  }
+      applicationSet = { # This is a top-level key for the sub-chart
+        enabled = false
+      }
+      notifications = { # This is a top-level key for the sub-chart
+        enabled = false
+      }
+    })
+  ]
 
   # Ensure Helm release depends on the cluster and namespace (dependency updated)
   depends_on = [
     vultr_kubernetes.vke_cluster,
     kubernetes_namespace.argocd
-  ]
-}
-
-
-# Optional: Data source for ArgoCD server service
-data "kubernetes_service" "argocd_server" {
-  metadata {
-    name      = "argocd-server"
-    namespace = "argocd"
-  }
-  depends_on = [
-    helm_release.argocd
   ]
 }
 
@@ -210,6 +173,77 @@ resource "kubernetes_secret" "github_access" {
   ]
 }
 
+# Install Traefik Ingress Controller
+resource "helm_release" "traefik" {
+  name       = "traefik"
+  repository = "https://helm.traefik.io/traefik"
+  chart      = "traefik"
+  version    = "35.2.0" # Specify a version for stability
+  namespace  = "kube-system" # Recommended namespace for Traefik
+  timeout    = 600      # Increased timeout to 10 minutes
+
+  set {
+    name  = "service.type"
+    value = "LoadBalancer"
+  }
+
+  set {
+    name  = "entryPoints.web.http.redirections.entryPoint.to"
+    value = "websecure"
+  }
+  set {
+    name  = "entryPoints.web.http.redirections.entryPoint.scheme"
+    value = "https"
+  }
+  set {
+    name  = "entryPoints.web.http.redirections.entryPoint.permanent"
+    value = "true"
+  }
+
+
+  
+  # If you are managing TLS directly on Traefik (e.g. Let's Encrypt)
+  # you would configure TLS options for websecure here.
+  # For example:
+  # set {
+  #   name = "entryPoints.websecure.http.tls.enabled"
+  #   value = "true"
+  # }
+  # set {
+  #   name = "entryPoints.websecure.http.tls.certResolver"
+  #   value = "myresolver" # Replace with your cert resolver name
+  # }
+
+  set {
+    name = "providers.kubernetesIngress.publishedService.enabled"
+    value = "true"
+  }
+
+  # Add resource limits/requests as needed
+  # set {
+  #   name = "resources.limits.cpu"
+  #   value = "500m"
+  # }
+  # set {
+  #   name = "resources.limits.memory"
+  #   value = "512Mi"
+  # }
+
+  depends_on = [
+    vultr_kubernetes.vke_cluster
+  ]
+}
+
+# Data source for Traefik LoadBalancer service
+data "kubernetes_service" "traefik_lb" {
+  metadata {
+    name      = "traefik" # Default service name for Traefik chart
+    namespace = "kube-system" 
+  }
+  depends_on = [
+    helm_release.traefik
+  ]
+}
 
 # Uncomment and ensure dependencies are correct
 resource "helm_release" "argocd_image_updater" {

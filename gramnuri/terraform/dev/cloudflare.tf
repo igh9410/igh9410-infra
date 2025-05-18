@@ -6,7 +6,7 @@ provider "cloudflare" {
 resource "cloudflare_record" "dev_api" {
   zone_id = var.cloudflare_zone_id
   name    = "dev-api"
-  content = data.kubernetes_service.gramnuri_api.status.0.load_balancer.0.ingress.0.ip
+  content = data.kubernetes_service.traefik_lb.status.0.load_balancer.0.ingress.0.ip
   type    = "A"
   ttl     = 1    # Auto TTL
   proxied = true # Set to false if you don't want to use Cloudflare's proxy
@@ -16,7 +16,7 @@ resource "cloudflare_record" "dev_api" {
 resource "cloudflare_record" "argocd" {
   zone_id = var.cloudflare_zone_id
   name    = "argo"
-  content = data.kubernetes_service.argocd_server.status.0.load_balancer.0.ingress.0.ip
+  content = data.kubernetes_service.traefik_lb.status.0.load_balancer.0.ingress.0.ip
   type    = "A"
   ttl     = 1
   proxied = true # Enable Cloudflare proxy for SSL
@@ -39,6 +39,6 @@ resource "cloudflare_record" "tiktok_verification" {
   zone_id = var.cloudflare_zone_id
   name    = "dev" 
   type    = "TXT"
-  value   = "tiktok-developers-site-verification=uuYK4VKuqEC5wSbmq1klvqViJEiml8IC"
+  content   = "tiktok-developers-site-verification=uuYK4VKuqEC5wSbmq1klvqViJEiml8IC"
   ttl     = 1 # Automatic TTL
 }
