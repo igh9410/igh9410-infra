@@ -259,6 +259,16 @@ resource "helm_release" "argocd_image_updater" {
   ]
 }
 
+resource "helm_release" "sealed-secrets" {
+  name       = "sealed-secrets"
+  repository = "https://bitnami-labs.github.io/sealed-secrets"
+  chart      = "sealed-secrets"
+  namespace  = "kube-system"
+  version    = "2.17.2"
+
+  values = [file("values/sealed-secrets.yaml")]
+}
+
 # TODO: If argocd-image-updater needs to access the private Vultr Container Registry,
 # create a Kubernetes secret (type: kubernetes.io/dockerconfigjson) 
 # with the registry credentials obtained from vultr_container_registry.gramnuri_repo
