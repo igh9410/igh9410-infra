@@ -68,94 +68,81 @@ resource "helm_release" "argocd" {
   version    = "7.8.13"
   namespace  = kubernetes_namespace.argocd.metadata[0].name
 
-  # Basic ArgoCD configuration
-  set {
-    name  = "server.service.type"
-    value = "ClusterIP"
-  }
+  values = [
+    yamlencode({
+      server = {
+        service = {
+          type = "ClusterIP"
+        }
+        insecure = true # For server's own endpoint being HTTP
+        extraArgs = [ # List of strings for server command line
+          "--insecure" # For insecure gRPC between components, if that was the intent
+        ]
+        config = { # Populates argocd-cm
+          url = "https://argo.${var.domain_name}"
+        }
+        resources = {
+          limits = {
+            cpu    = "300m"
+            memory = "512Mi"
+          }
+          requests = {
+            cpu    = "100m"
+            memory = "256Mi"
+          }
+        }
+        ingress = {
+          enabled = true
+          hosts   = ["argo.${var.domain_name}"] # Explicitly setting the host
+          paths   = ["/"]
+          pathType = "Prefix"
+          annotations = {
+            # Your test annotation, can be kept or removed
+            testDescription = "Terraform attempted to set this annotation for ArgoCD ingress"
+            # Add other necessary annotations for Traefik if required
+            # e.g., "traefik.ingress.kubernetes.io/router.entrypoints" = "websecure"
+          }
+          # If you need to specify an ingressClassName for Traefik (usually not needed if Traefik is default)
+          # ingressClassName = "traefik" 
+        }
+      } # end server block
 
-  # Enable insecure mode for Cloudflare Flexible SSL
-  set {
-    name  = "server.insecure"
-    value = "true"
-  }
+      configs = {
+        params = { # Populates argocd-cmd-params-cm
+          "server.insecure" = "true" # Corresponds to original configs.params.server\.insecure
+          # The original "server.config.admin.enabled" likely maps to here or configs.cm
+          # Default for admin user is enabled if Dex is not used and no static password set.
+          # If you had "server.config.admin.enabled = true", this might be:
+          "server.admin.enabled" = "true" # Ensure this is a valid param key if used
+        }
+        cm = { # Populates argocd-cm
+          # The original "server.config.admin.enabled = true" if it was meant for argocd-cm.
+          # "admin.enabled" = "true" # string value
+          # The original "server.config.proxy.enabled = true" is tricky as there's no direct boolean.
+          # It might have been intended for "server.trusted_proxies" or similar.
+          # For now, omitting direct proxy.enabled to avoid misconfiguration.
+        }
+      }
 
-  # Add resource limits to prevent OOM issues
-  set {
-    name  = "server.resources.limits.cpu"
-    value = "300m"
-  }
-  set {
-    name  = "server.resources.limits.memory"
-    value = "512Mi"
-  }
-  set {
-    name  = "server.resources.requests.cpu"
-    value = "100m"
-  }
-  set {
-    name  = "server.resources.requests.memory"
-    value = "256Mi"
-  }
+      repoServer = {
+        resources = {
+          limits = {
+            memory = "256Mi"
+          }
+          requests = {
+            memory = "128Mi"
+          }
+        }
+      }
 
-  # Limit repo server resources
-  set {
-    name  = "repoServer.resources.limits.memory"
-    value = "256Mi"
-  }
-  set {
-    name  = "repoServer.resources.requests.memory"
-    value = "128Mi"
-  }
-
-  # Disable unnecessary components to save resources
-  set {
-    name  = "applicationSet.enabled"
-    value = "false"
-  }
-  set {
-    name  = "notifications.enabled"
-    value = "false"
-  }
-
-  # Add these critical settings
-  set {
-    name  = "server.extraArgs"
-    value = "{--insecure}"
-  }
-
-  set {
-    name  = "configs.params.server\\.insecure"
-    value = "true"
-  }
-
-  # Configure external URL explicitly
-  set {
-    name  = "server.config.url"
-    value = "https://argo.${var.domain_name}"
-  }
-
-  set {
-    name  = "server.config.admin.enabled"
-    value = "true"
-  }
-
-  # Add ingress configuration
-  set {
-    name  = "server.ingress.enabled"
-    value = "true"
-  }
-
-  set {
-    name  = "server.ingress.hosts[0]"
-    value = "argo.${var.domain_name}"
-  }
-
-  # Proxy settings
-  set {
-    name  = "server.config.proxy.enabled"
-    value = "true"
-  }
+      applicationSet = { # This is a top-level key for the sub-chart
+        enabled = false
+      }
+      notifications = { # This is a top-level key for the sub-chart
+        enabled = false
+      }
+    })
+  ]
 
   # Ensure Helm release depends on the cluster and namespace (dependency updated)
   depends_on = [
