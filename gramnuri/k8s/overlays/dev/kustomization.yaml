@@ -9,10 +9,10 @@ patches:
   target:
     kind: Deployment
     name: gramnuri-api
+- path: ingress-patch.yaml
+  target:
+    kind: Ingress
+    name: gramnuri-api-ingress
 images:
 - name: icn.vultrcr.com/gramnuri/gramnuri-api
   newTag: 4fd85c45882be8420ed3e6dfc4a2d938f77a7179
-
-# Add the new ingress patch here
-patchesStrategicMerge:
-- ingress-patch.yaml
