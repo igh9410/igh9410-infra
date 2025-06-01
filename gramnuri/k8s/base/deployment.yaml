@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: gramnuri-api
-        image: icn.vultrcr.com/gramnuri/gramnuri-api
+        image: ghcr.io/igh9410/gramnuri-api
         ports:
         - containerPort: 8080
         resources:

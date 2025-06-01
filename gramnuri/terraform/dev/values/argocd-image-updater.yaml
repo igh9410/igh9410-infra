@@ -7,13 +7,13 @@ metrics:
 
 config:
   registries:
-  - name: "vultr"
-    prefix: "icn.vultrcr.com"
-    api_url: "https://icn.vultrcr.com"
-    defaultns: "gramnuri/gramnuri-api"
+  - name: "ghcr"
+    prefix: ""
+    api_url: "https://ghcr.io"
+    defaultns: "igh9410"
     insecure: false
     default: true
-    credentials: "pullsecret:argocd/vultr-cr-credentials"
+    credentials: "pullsecret:argocd/ghcr-creds"
 
 serviceAccount:
   create: true

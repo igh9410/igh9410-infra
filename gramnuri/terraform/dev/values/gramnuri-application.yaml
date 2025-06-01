@@ -4,9 +4,9 @@ metadata:
   annotations:
     argocd-image-updater.argoproj.io/git-branch: main
     argocd-image-updater.argoproj.io/gramnuri-api.allow-tags: regexp:^.*$
-    argocd-image-updater.argoproj.io/gramnuri-api.kustomize.image-name: icn.vultrcr.com/gramnuri/gramnuri-api
+    argocd-image-updater.argoproj.io/gramnuri-api.kustomize.image-name: ghcr.io/igh9410/gramnuri-api
     argocd-image-updater.argoproj.io/gramnuri-api.update-strategy: latest
-    argocd-image-updater.argoproj.io/image-list: gramnuri-api=icn.vultrcr.com/gramnuri/gramnuri-api
+    argocd-image-updater.argoproj.io/image-list: gramnuri-api=ghcr.io/igh9410/gramnuri-api
     argocd-image-updater.argoproj.io/image-update: now
     argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/github-access
   creationTimestamp: "2025-05-03T16:58:21Z"
@@ -113,7 +113,7 @@ status:
   sourceType: Kustomize
   summary:
     images:
-    - icn.vultrcr.com/gramnuri/gramnuri-api:4fd85c45882be8420ed3e6dfc4a2d938f77a7179
+    - ghcr.io/igh9410/gramnuri-api:4fd85c45882be8420ed3e6dfc4a2d938f77a7179
   sync:
     comparedTo:
       destination:

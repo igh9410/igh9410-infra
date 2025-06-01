@@ -173,6 +173,53 @@ resource "kubernetes_secret" "github_access" {
   ]
 }
 
+# Secret for GHCR access for ArgoCD Image Updater and Kubelet
+# This secret's .dockerconfigjson data will be populated and refreshed by a separate mechanism (e.g., a CronJob)
+# that generates GitHub App installation tokens.
+resource "kubernetes_secret" "ghcr_creds" {
+  metadata {
+    name      = "ghcr-creds"
+    namespace = "argocd"
+  }
+  type = "kubernetes.io/dockerconfigjson"
+  data = {
+    # Placeholder data. The actual auth token will be managed by an external process.
+    ".dockerconfigjson" = jsonencode({
+      auths = {
+        "ghcr.io" = {
+          username = "x-access-token"
+          password = "placeholder-token" # This will be overwritten by the token refresh mechanism
+          auth     = base64encode("x-access-token:placeholder-token")
+        }
+      }
+    })
+  }
+  lifecycle {
+    ignore_changes = [
+      data, # Tell Terraform to ignore changes to the data field, as it's managed externally
+    ]
+  }
+  depends_on = [
+    # If you have a specific resource for creating the 'default' namespace managed by TF, depend on it.
+    # Otherwise, for the built-in 'default' namespace, no explicit dependency is usually needed here.
+    # For argocd-image-updater to access it from argocd namespace, ensure RBAC allows it or updater runs with broad permissions.
+    kubernetes_namespace.argocd # Keeping this dependency if image updater still needs to know argocd ns exists, though secret is now in default.
+  ]
+}
+
+# Secret to store the GitHub App's private key
+resource "kubernetes_secret" "github_app_private_key" {
+  metadata {
+    name      = "github-app-private-key"
+    namespace = "kube-system" # Choose a secure, appropriate namespace
+  }
+  data = {
+    # Ensure the key content does not have extra newlines before/after the BEGIN/END markers
+    # The provider will base64 encode this string data.
+    "privateKey.pem" = var.github_app_private_key_pem_content
+  }
+}
+
 # Install Traefik Ingress Controller
 resource "helm_release" "traefik" {
   name       = "traefik"
