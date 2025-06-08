@@ -1,34 +1,4 @@
-# Define the Vultr Kubernetes Engine (VKE) Cluster
-resource "vultr_kubernetes" "vke_cluster" {
-  label   = var.cluster_name
-  region  = var.vultr_region
-  version = var.vke_version
-  # High availability is recommended for production, but might add cost.
-  # Set to true if needed.
-  # high_availability = false 
 
-  # Define the Default Node Pool inline
-  node_pools {
-    node_quantity = var.vke_node_count
-    plan          = var.vke_node_plan
-    label         = "default-pool" # Label for the node pool
-    auto_scaler   = true
-    min_nodes     = 1
-    max_nodes     = 3 # Adjust as needed
-    
-
-    # Optional: Add Kubernetes taints or labels if needed
-    # taints {
-    #   key = "key"
-    #   value = "value"
-    #   effect = "NoSchedule"
-    # }
-    # label = {
-    #   key1 = "value1"
-    #   key2 = "value2"
-    # }
-  }
-}
 
 provider "kubernetes" {
   host                   = "https://${vultr_kubernetes.vke_cluster.endpoint}:6443"
@@ -146,7 +116,6 @@ resource "helm_release" "argocd" {
 
   # Ensure Helm release depends on the cluster and namespace (dependency updated)
   depends_on = [
-    vultr_kubernetes.vke_cluster,
     kubernetes_namespace.argocd
   ]
 }
@@ -275,10 +244,6 @@ resource "helm_release" "traefik" {
   #   name = "resources.limits.memory"
   #   value = "512Mi"
   # }
-
-  depends_on = [
-    vultr_kubernetes.vke_cluster
-  ]
 }
 
 # Data source for Traefik LoadBalancer service
@@ -320,3 +285,5 @@ resource "helm_release" "sealed-secrets" {
 # create a Kubernetes secret (type: kubernetes.io/dockerconfigjson) 
 # with the registry credentials obtained from vultr_container_registry.gramnuri_repo
 # and configure the image updater to use it.
+# helm_release.argocd
+#helm_release.argocd_image_updater helm_release.sealed-secrets helm_release.traefik kubernetes_namespace.argocd kubernetes_secret.ghcr_creds kubernetes_secret.github_access kubernetes_secret.github_app_private_key vultr_container_registry.gramnuri_repo

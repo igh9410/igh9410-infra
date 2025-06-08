@@ -70,36 +70,6 @@ variable "github_repo" {
   default     = "igh9410/igh9410-infra"
 }
 
-variable "vultr_api_key" {
-  description = "Vultr API Key"
-  type        = string
-  sensitive   = true
-}
-
-variable "vultr_region" {
-  description = "Vultr region for resources"
-  type        = string
-  default     = "icn" # Seoul
-}
-
-variable "vke_version" {
-  description = "Vultr Kubernetes Engine (VKE) version"
-  type        = string
-  default     = "v1.32.2+1" # Updated to a more recent patch. Check Vultr UI/CLI for the latest available.
-}
-
-variable "vke_node_plan" {
-  description = "Vultr instance plan for worker nodes"
-  type        = string
-  default     = "vc2-1c-2gb" # Example: 1 vCPU, 2GB RAM
-}
-
-variable "vke_node_count" {
-  description = "Initial number of worker nodes in the default pool"
-  type        = number
-  default     = 2
-}
-
 variable "cloudflare_account_id" {
   description = "Cloudflare Account ID"
   type        = string
@@ -126,12 +96,6 @@ variable "r2_secret_access_key" {
 
 variable "vcr_username" {
   description = "Vultr Container Registry User"
-  type        = string
-  sensitive   = true
-}
-
-variable "vcr_password" {
-  description = "Vultr Container Registry Password"
   type        = string
   sensitive   = true
 }

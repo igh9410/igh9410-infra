@@ -1,11 +1,5 @@
 terraform {
   required_providers {
-    vultr = {
-      source = "vultr/vultr"
-      # Pin to a specific version for stability
-      version = "~> 2.18"
-    }
-
     cloudflare = {
       source  = "cloudflare/cloudflare"
       version = "~> 4.0"

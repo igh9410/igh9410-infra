@@ -1,7 +1,7 @@
 provider "cloudflare" {
   api_token = var.cloudflare_api_token
 }
-
+/*
 # Create an A record for your domain pointing to the load balancer IP
 resource "cloudflare_record" "dev_api" {
   zone_id = var.cloudflare_zone_id
@@ -20,7 +20,7 @@ resource "cloudflare_record" "argocd" {
   type    = "A"
   ttl     = 1
   proxied = true # Enable Cloudflare proxy for SSL
-}
+} */
 
 # Cloudflare Worker DNS Record for dev.gramnuri.com
 resource "cloudflare_record" "web" {
