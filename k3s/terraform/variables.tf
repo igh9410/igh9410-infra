@@ -62,3 +62,15 @@ variable "cloudflare_zone_id" {
   description = "Cloudflare Zone ID"
   type        = string
 }
+
+variable "cloudflare_tunnel_credentials" {
+  description = "Cloudflare Tunnel Credentials"
+  type        = string
+  sensitive   = true
+}
+
+variable "cloudflare_tunnel_cert_pem" {
+  description = "Cloudflare Tunnel Certificate PEM"
+  type        = string
+  sensitive   = true
+}
