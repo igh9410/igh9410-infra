@@ -21,18 +21,7 @@ resource "kubernetes_secret" "github_app_private_key" {
     "privateKey.pem" = var.github_app_private_key_pem_content
   }
 }
-
-# Data source for Traefik LoadBalancer service
-data "kubernetes_service" "traefik_lb" {
-  metadata {
-    name      = "traefik" # Default service name for Traefik chart
-    namespace = "kube-system" 
-  }
-  depends_on = [
-    helm_release.traefik
-  ]
-}
-
+/*
 resource "helm_release" "sealed-secrets" {
   name       = "sealed-secrets"
   repository = "https://bitnami-labs.github.io/sealed-secrets"
@@ -68,7 +57,7 @@ resource "helm_release" "traefik" {
   set {
     name  = "entryPoints.web.http.redirections.entryPoint.permanent"
     value = "true"
-  }
+  } 
 
 
   
@@ -98,5 +87,5 @@ resource "helm_release" "traefik" {
   #   name = "resources.limits.memory"
   #   value = "512Mi"
   # }
-}
+} */
 
