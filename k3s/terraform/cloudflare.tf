@@ -33,14 +33,3 @@ resource "helm_release" "cloudflared" {
   
   depends_on = [kubernetes_secret.cloudflared_tunnel_secret]
 } */
-
-# Create CNAME record for lb.geonhyukim.com pointing to the tunnel
-resource "cloudflare_record" "lb_cname" {
-  zone_id = var.cloudflare_zone_id
-  name    = "lb"
-  content = "3975cdcd-ffa2-462d-8a88-202402a706ab.cfargotunnel.com"
-  type    = "CNAME"
-  proxied = false  # Set to true if you want Cloudflare proxy features
-  comment = "CNAME record for k3s cluster load balancer via Cloudflare Tunnel"
-}
-
