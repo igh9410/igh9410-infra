@@ -1,5 +1,7 @@
 ingress:
-- hostname: "*.geonhyukim.com" # or "*.example.com" (ensure a CNAME record for "*" is defined in your DNS)
+- hostname: "*.geonhyukim.com"
+  service: http://traefik.kube-system.svc.cluster.local:80
+- hostname: "*.gramnuri.com"
   service: http://traefik.kube-system.svc.cluster.local:80
 
 - service: http_status:404

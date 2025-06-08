@@ -1,26 +1,15 @@
 provider "cloudflare" {
   api_token = var.cloudflare_api_token
 }
-/*
-# Create an A record for your domain pointing to the load balancer IP
+
 resource "cloudflare_record" "dev_api" {
   zone_id = var.cloudflare_zone_id
   name    = "dev-api"
-  content = data.kubernetes_service.traefik_lb.status.0.load_balancer.0.ingress.0.ip
-  type    = "A"
+  content = "3975cdcd-ffa2-462d-8a88-202402a706ab.cfargotunnel.com"
+  type    = "CNAME"
   ttl     = 1    # Auto TTL
   proxied = true # Set to false if you don't want to use Cloudflare's proxy
 } 
-
-# Add a new record for ArgoCD
-resource "cloudflare_record" "argocd" {
-  zone_id = var.cloudflare_zone_id
-  name    = "argo"
-  content = data.kubernetes_service.traefik_lb.status.0.load_balancer.0.ingress.0.ip
-  type    = "A"
-  ttl     = 1
-  proxied = true # Enable Cloudflare proxy for SSL
-} */
 
 # Cloudflare Worker DNS Record for dev.gramnuri.com
 resource "cloudflare_record" "web" {
