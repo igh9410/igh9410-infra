@@ -8,6 +8,8 @@ spec:
       app: gramnuri-api
   template:
     spec:
+      imagePullSecrets:
+      - name: ghcr-secret
       containers:
       - name: gramnuri-api
         env:
