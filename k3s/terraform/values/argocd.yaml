@@ -1,0 +1,65 @@
+global:
+  domain: argocd.geonhyukim.com
+
+server:
+  service:
+    type: ClusterIP
+  insecure: true # For server's own endpoint being HTTP
+  extraArgs:
+  # List of strings for server command line
+  - "--insecure" # For insecure gRPC between components, if that was the intent
+  config:
+    # Populates argocd-cm
+    url: "https://argocd.geonhyukim.com"
+  resources:
+    limits:
+      cpu: "300m"
+      memory: "512Mi"
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+  ingress:
+    enabled: true
+    hosts:
+    - "argocd.geonhyukim.com" # Explicitly setting the host
+    paths:
+    - "/"
+    pathType: "Prefix"
+    annotations:
+      # Your test annotation, can be kept or removed
+      testDescription: "Terraform attempted to set this annotation for ArgoCD ingress"
+      # Add other necessary annotations for Traefik if required
+      # e.g., "traefik.ingress.kubernetes.io/router.entrypoints" = "websecure"
+      # If you need to specify an ingressClassName for Traefik (usually not needed if Traefik is default)
+      # ingressClassName: "traefik"
+
+configs:
+  params:
+    # Populates argocd-cmd-params-cm
+    "server.insecure": "true" # Corresponds to original configs.params.server\.insecure
+    # The original "server.config.admin.enabled" likely maps to here or configs.cm
+    # Default for admin user is enabled if Dex is not used and no static password set.
+    # If you had "server.config.admin.enabled = true", this might be:
+    "server.admin.enabled": "true" # Ensure this is a valid param key if used
+  cm:
+    # Populates argocd-cm
+    # Add minimal dex config to avoid template errors
+    dex.config: |
+      connectors: []
+    # Explicitly set the URL in the ConfigMap
+    url: "https://argocd.geonhyukim.com"
+
+repoServer:
+  resources:
+    limits:
+      memory: "256Mi"
+    requests:
+      memory: "128Mi"
+
+applicationSet:
+  # This is a top-level key for the sub-chart
+  enabled: false
+
+notifications:
+  # This is a top-level key for the sub-chart
+  enabled: false

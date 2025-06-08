@@ -1,0 +1,45 @@
+USER-SUPPLIED VALUES:
+applicationSet:
+  enabled: false
+configs:
+  cm:
+    dex.config: |
+      connectors: []
+    url: https://argocd.geonhyukim.com
+  params:
+    server.admin.enabled: "true"
+    server.insecure: "true"
+global:
+  domain: argocd.geonhyukim.com
+notifications:
+  enabled: false
+repoServer:
+  resources:
+    limits:
+      memory: 256Mi
+    requests:
+      memory: 128Mi
+server:
+  config:
+    url: https://argocd.geonhyukim.com
+  extraArgs:
+  - --insecure
+  ingress:
+    annotations:
+      testDescription: Terraform attempted to set this annotation for ArgoCD ingress
+    enabled: true
+    hosts:
+    - argocd.geonhyukim.com
+    pathType: Prefix
+    paths:
+    - /
+  insecure: true
+  resources:
+    limits:
+      cpu: 300m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+  service:
+    type: ClusterIP
