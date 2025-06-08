@@ -13,7 +13,7 @@ spec:
     path: gramnuri/k8s/overlays/dev
   destination:
     server: https://kubernetes.default.svc
-    namespace: dev-gramnuri
+    namespace: gramnuri
   syncPolicy:
     automated:
       prune: true

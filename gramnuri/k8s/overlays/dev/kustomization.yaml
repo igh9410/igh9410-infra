@@ -1,7 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namePrefix: dev-
-namespace: dev-gramnuri
+namespace: gramnuri
 resources:
 - ../../base
 patches:
@@ -15,5 +15,5 @@ patches:
     name: gramnuri-api-ingress
 images:
 - name: ghcr.io/igh9410/gramnuri-api
-  newName: ghcr.io/igh9410/gramnuri
-  newTag: latest
+  newName: ghcr.io/igh9410/gramnuri-api
+  newTag: 0d55e3052fc5b2e73db7755c8a92d0e2be36b891
