@@ -80,15 +80,8 @@ spec:
           ingress:
             enabled: true
             ingressClassName: "traefik"
-            annotations:
-              traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
-              traefik.ingress.kubernetes.io/router.tls: "true"
             hosts:
               - grafana.geonhyukim.com
-            tls:
-              - secretName: grafana-tls
-                hosts:
-                  - grafana.geonhyukim.com
           persistence:
             enabled: true
             storageClassName: local-path

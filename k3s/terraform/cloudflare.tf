@@ -32,12 +32,3 @@ resource "helm_release" "cloudflared" {
   
   depends_on = [kubernetes_secret.cloudflared_tunnel_secret]
 } */
-
-resource "cloudflare_record" "grafana" {
-  zone_id = var.cloudflare_zone_id
-  name    = "grafana"
-  content = "3975cdcd-ffa2-462d-8a88-202402a706ab.cfargotunnel.com"
-  type    = "CNAME"
-  proxied = false  # Set to false for tunnel, true if you want additional Cloudflare proxy features
-  comment = "CNAME record for Grafana via Cloudflare Tunnel"
-}
