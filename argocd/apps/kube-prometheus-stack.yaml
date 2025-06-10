@@ -73,7 +73,6 @@ spec:
         # Grafana configuration
         grafana:
           enabled: true
-          adminPassword: "admin123"  # TODO: Use proper secret management in production
           defaultDashboardsTimezone: "UTC"
           serviceMonitor:
             enabled: true
@@ -165,3 +164,9 @@ spec:
     - ServerSideApply=true
     - Replace=true # Useful for CRDs
   revisionHistoryLimit: 10
+  ignoreDifferences:
+  - group: ""
+    kind: Secret
+    name: kube-prometheus-stack-grafana
+    jsonPointers:
+    - /data/admin-password
