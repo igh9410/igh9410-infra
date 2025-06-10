@@ -115,6 +115,9 @@ spec:
         # Prometheus Operator
         prometheusOperator:
           enabled: true
+          # Temporarily disable admission controller to avoid RBAC conflicts
+          admissionWebhooks:
+            enabled: false
           resources:
             requests:
               memory: "128Mi"
