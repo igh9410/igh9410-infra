@@ -93,11 +93,3 @@ resource "kubernetes_secret" "ghcr_creds" {
 #   ]
 # }  
 
-resource "cloudflare_record" "argocd" {
-  zone_id = var.cloudflare_zone_id
-  name    = "argocd"
-  content = "3975cdcd-ffa2-462d-8a88-202402a706ab.cfargotunnel.com"
-  type    = "CNAME"
-  proxied = false  # Set to false for tunnel, true if you want additional Cloudflare proxy features
-  comment = "CNAME record for ArgoCD via Cloudflare Tunnel"
-} 
