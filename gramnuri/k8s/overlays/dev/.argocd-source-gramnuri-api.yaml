@@ -1,3 +1,0 @@
-kustomize:
-  images:
-  - icn.vultrcr.com/gramnuri/gramnuri-api=icn.vultrcr.com/gramnuri/gramnuri-api:8164e1449be3bb3bdecd6b790f29f5200180edf3
