@@ -70,6 +70,14 @@ grafana:
     enabled: true
     storageClassName: local-path
     size: 1Gi
+  # Disable init container that's causing permission issues
+  initChownData:
+    enabled: false
+  # Set proper security context for Grafana
+  securityContext:
+    runAsUser: 472
+    runAsGroup: 472
+    fsGroup: 472
   resources:
     requests:
       memory: "128Mi"
