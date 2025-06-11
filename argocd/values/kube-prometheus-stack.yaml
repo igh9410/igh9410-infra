@@ -60,12 +60,15 @@ alertmanager:
 # Grafana configuration
 grafana:
   enabled: true
-  adminPassword: "admin123" # TODO: Use proper secret management in production
   defaultDashboardsTimezone: "UTC"
   serviceMonitor:
     enabled: true
   ingress:
-    enabled: false # Configure ingress separately if needed
+    enabled: true
+    ingressClassName: "traefik"
+    hosts:
+    - grafana.geonhyukim.com
+    tls: false
   persistence:
     enabled: true
     storageClassName: local-path
@@ -80,11 +83,11 @@ grafana:
     fsGroup: 472
   resources:
     requests:
-      memory: "128Mi"
-      cpu: "100m"
-    limits:
       memory: "256Mi"
       cpu: "200m"
+    limits:
+      memory: "1024Mi"
+      cpu: "500m"
   sidecar:
     dashboards:
       enabled: true
