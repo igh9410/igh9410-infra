@@ -170,7 +170,7 @@ spec:
     syncOptions:
     - CreateNamespace=true
     - ServerSideApply=true
-    - Replace=true # Useful for CRDs
+    - RespectIgnoreDifferences=true
   revisionHistoryLimit: 10
   ignoreDifferences:
   - group: ""
@@ -178,3 +178,16 @@ spec:
     name: kube-prometheus-stack-grafana
     jsonPointers:
     - /data/admin-password
+  # Ignore PVC differences to prevent replacement attempts
+  - group: ""
+    kind: PersistentVolumeClaim
+    name: kube-prometheus-stack-grafana
+    jsonPointers:
+    - /spec/volumeName
+    - /spec/storageClassName
+  # Ignore deployment replica differences during rolling updates
+  - group: apps
+    kind: Deployment
+    name: kube-prometheus-stack-grafana
+    jsonPointers:
+    - /spec/replicas
