@@ -14,10 +14,7 @@ spec:
     helm:
       releaseName: cloudnative-pg-cluster
       valueFiles:
-      # Start with the defaults from the chart's values file
       - $values/argocd/values/cloudnative-pg-cluster.yaml
-      # Override with our custom, non-sensitive settings
-      - $values/argocd/values/cloudnative-pg-cluster-custom.yaml
   - repoURL: https://github.com/igh9410/igh9410-infra.git
     targetRevision: HEAD
     ref: values
