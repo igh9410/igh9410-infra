@@ -132,7 +132,7 @@ recovery:
         name: ""
         key: ""
 
-  # See: https://cloudnative-pg.io/documentation/current/cloudnative-pg.v1/#postgresql-cnpg-io-v1-Import
+  # See: https://cloudnative-pg.io/documentation/current/database_import/#how-it-works
   import:
     # -- One of `microservice` or `monolith.`
     # See: https://cloudnative-pg.io/documentation/current/database_import/#how-it-works
@@ -181,7 +181,7 @@ recovery:
 
 cluster:
   # -- Number of instances
-  instances: 3
+  instances: 1
 
   # -- Name of the container image, supporting both tags (<image>:<tag>) and digests for deterministic and repeatable deployments:
   # <image>:<tag>@sha256:<digestValue>
@@ -201,7 +201,7 @@ cluster:
   imagePullSecrets: []
 
   storage:
-    size: 8Gi
+    size: 30Gi
     storageClass: ""
 
   walStorage:
@@ -278,7 +278,7 @@ cluster:
 
   monitoring:
     # -- Whether to enable monitoring
-    enabled: false
+    enabled: true
     podMonitor:
       # -- Whether to enable the PodMonitor
       enabled: true
@@ -361,11 +361,11 @@ cluster:
 
 backups:
   # -- You need to configure backups manually, so backups are disabled by default.
-  enabled: false
+  enabled: true
 
   # -- Overrides the provider specific default endpoint. Defaults to:
   # S3: https://s3.<region>.amazonaws.com"
-  endpointURL: "" # Leave empty if using the default S3 endpoint
+  endpointURL: "https://c3b77c4aca2f20de101a1452ef946655.r2.cloudflarestorage.com/igh9410-backup" # Leave empty if using the default S3 endpoint
   # -- Specifies a CA bundle to validate a privately signed certificate.
   endpointCA:
     # -- Creates a secret with the given value if true, otherwise uses an existing secret.
@@ -382,9 +382,9 @@ backups:
   # -- One of `s3`, `azure` or `google`
   provider: s3
   s3:
-    region: ""
-    bucket: ""
-    path: "/"
+    region: "apac"
+    bucket: "igh9410-backup"
+    path: "/postgres"
     accessKey: ""
     secretKey: ""
     # -- Use the role based authentication without providing explicitly the keys
@@ -405,9 +405,9 @@ backups:
     applicationCredentials: ""
   secret:
     # -- Whether to create a secret for the backup credentials
-    create: true
+    create: false
     # -- Name of the backup credentials secret
-    name: ""
+    name: "cnpg-cluster-backup-credentials"
 
   wal:
     # -- WAL compression method. One of `` (for no compression), `gzip`, `bzip2` or `snappy`.
@@ -429,7 +429,7 @@ backups:
   # -- Scheduled backup name
   - name: daily-backup
     # -- Schedule in cron format
-    schedule: "0 0 0 * * *"
+    schedule: "0 0 18 * * *"
     # -- Backup owner reference
     backupOwnerReference: self
     # -- Backup method, can be `barmanObjectStore` (default) or `volumeSnapshot`
