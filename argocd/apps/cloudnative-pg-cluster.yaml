@@ -1,0 +1,28 @@
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: cloudnative-pg-cluster
+#   namespace: argocd
+#   finalizers:
+#   - resources-finalizer.argocd.argoproj.io
+# spec:
+#   project: default
+#   sources:
+#   - repoURL: https://cloudnative-pg.github.io/charts
+#     chart: cluster
+#     targetRevision: "0.24.0" # Match your values version
+#     helm:
+#       releaseName: cloudnative-pg
+#       valueFiles:
+#       - $values/argocd/values/cloudnative-pg-cluster.yaml
+#   destination:
+#     server: https://kubernetes.default.svc
+#     namespace: cnpg-database
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+#     syncOptions:
+#     - CreateNamespace=true
+#     - ServerSideApply=true
+#   revisionHistoryLimit: 10
