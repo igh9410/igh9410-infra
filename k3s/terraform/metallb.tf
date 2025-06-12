@@ -31,6 +31,7 @@ resource "kubernetes_manifest" "metallb_ip_pool" {
     "spec" = {
       "addresses" = [
         "192.168.45.200/32",
+        "192.168.45.244/32",
       ]
     }
   }
