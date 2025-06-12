@@ -103,3 +103,5 @@ gramnuri-dev-service-account.json
 
 # K8s secrets
 secrets.yaml
+
+db_credentials.txt
