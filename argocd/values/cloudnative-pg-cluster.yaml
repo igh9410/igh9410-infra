@@ -365,7 +365,7 @@ backups:
 
   # -- Overrides the provider specific default endpoint. Defaults to:
   # S3: https://s3.<region>.amazonaws.com"
-  endpointURL: "https://c3b77c4aca2f20de101a1452ef946655.r2.cloudflarestorage.com/igh9410-backup" # Leave empty if using the default S3 endpoint
+  endpointURL: "https://c3b77c4aca2f20de101a1452ef946655.r2.cloudflarestorage.com" # Leave empty if using the default S3 endpoint
   # -- Specifies a CA bundle to validate a privately signed certificate.
   endpointCA:
     # -- Creates a secret with the given value if true, otherwise uses an existing secret.
@@ -382,7 +382,7 @@ backups:
   # -- One of `s3`, `azure` or `google`
   provider: s3
   s3:
-    region: "apac"
+    region: "auto"
     bucket: "igh9410-backup"
     path: "/postgres"
     accessKey: ""
