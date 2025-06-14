@@ -1,3 +1,7 @@
+provider "kubernetes" {
+  config_path = var.kubeconfig_path
+}
+
 resource "kubernetes_secret" "gramnuri_secrets" {
   metadata {
     name      = "gramnuri-secrets"

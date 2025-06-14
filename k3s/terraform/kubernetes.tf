@@ -25,3 +25,15 @@ resource "kubernetes_secret" "github_app_private_key" {
     "privateKey.pem" = var.github_app_private_key_pem_content
   }
 }
+
+resource "kubernetes_namespace" "dev" {
+  metadata {
+    name = "dev"
+  }
+}
+
+resource "kubernetes_namespace" "prod" {
+  metadata {
+    name = "prod"
+  }
+}

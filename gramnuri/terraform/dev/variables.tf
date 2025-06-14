@@ -58,30 +58,6 @@ variable "cloudflare_account_id" {
   sensitive   = true
 }
 
-variable "r2_access_token" {
-  description = "R2 Access Token"
-  type        = string
-  sensitive   = true
-}
-
-variable "r2_access_key_id" {
-  description = "R2 Access Key ID"
-  type        = string
-  sensitive   = true
-}
-
-variable "r2_secret_access_key" {
-  description = "R2 Secret Access Key"
-  type        = string
-  sensitive   = true
-}
-
-variable "github_app_private_key_pem_content" {
-  description = "The content of the GitHub App's private key PEM file. Ensure no extra newlines."
-  type        = string
-  sensitive   = true
-}
-
 variable "tiktok_client_key" {
   description = "TikTok Client Key"
   type        = string
@@ -98,4 +74,10 @@ variable "tiktok_redirect_uri" {
   description = "TikTok Redirect URI"
   type        = string
   default     = "https://dev.gramnuri.com/oauth/callback/tiktok"
+}
+
+variable "kubeconfig_path" {
+  description = "Path to the kubeconfig file"
+  type        = string
+  default     = "~/.kube/config"
 }
