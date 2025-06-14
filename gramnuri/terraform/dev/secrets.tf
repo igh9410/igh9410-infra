@@ -11,14 +11,14 @@ resource "kubernetes_secret" "gramnuri_secrets" {
   type = "Opaque"
 
   data = {
-    client_domain            = var.client_domain
-    database_url             = var.database_url
-    environment              = var.environment
-    firebase_client_cert_url = var.firebase_client_cert_url
-    firebase_client_email    = var.firebase_client_email
-    firebase_project_id      = var.firebase_project_id
-    tiktok_client_key        = var.tiktok_client_key
-    tiktok_client_secret     = var.tiktok_client_secret
-    tiktok_redirect_uri      = var.tiktok_redirect_uri
+    DATABASE_URL             = var.database_url
+    FIREBASE_PROJECT_ID      = var.firebase_project_id
+    FIREBASE_CLIENT_EMAIL    = var.firebase_client_email
+    FIREBASE_CLIENT_CERT_URL = var.firebase_client_cert_url
+    ENVIRONMENT              = var.environment
+    CLIENT_DOMAIN            = var.client_domain
+    TIKTOK_CLIENT_KEY        = var.tiktok_client_key
+    TIKTOK_CLIENT_SECRET     = var.tiktok_client_secret
+    TIKTOK_REDIRECT_URI      = var.tiktok_redirect_uri
   }
 }

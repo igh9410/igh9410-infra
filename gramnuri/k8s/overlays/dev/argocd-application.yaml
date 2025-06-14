@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: dev-gramnuri-api
-  namespace: argocd
+  namespace: dev
   annotations:
     argocd-image-updater.argoproj.io/image-list: gramnuri-api=ghcr.io/igh9410/gramnuri-api
     argocd-image-updater.argoproj.io/gramnuri-api.update-strategy: latest
@@ -20,7 +20,7 @@ spec:
     path: gramnuri/k8s/overlays/dev
   destination:
     server: https://kubernetes.default.svc
-    namespace: gramnuri
+    namespace: dev
   syncPolicy:
     automated:
       prune: true
