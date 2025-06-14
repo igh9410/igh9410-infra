@@ -105,3 +105,6 @@ gramnuri-dev-service-account.json
 secrets.yaml
 
 db_credentials.txt
+
+# Ignore backend.conf
+backend.conf

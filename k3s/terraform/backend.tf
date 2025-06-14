@@ -17,8 +17,18 @@ terraform {
     skip_requesting_account_id  = true
     skip_s3_checksum            = true
     use_path_style              = true
-    endpoints                   = { s3 = "https://c3b77c4aca2f20de101a1452ef946655.r2.cloudflarestorage.com" }
-    # Credentials should be provided via AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables
-    # Endpoint should be provided via -backend-config flag or file during init
+    # The endpoint and credentials should be provided during 'terraform init'.
+    # This keeps sensitive data out of version control.
+    #
+    # Option 1 (Recommended): Use a backend configuration file.
+    # Create a 'backend.conf' file (and add it to .gitignore) with the following:
+    #   endpoints  = { s3 = "https://<YOUR_ACCOUNT_ID>.r2.cloudflarestorage.com" }
+    #   access_key = "..."
+    #   secret_key = "..."
+    # Then run: terraform init -backend-config=backend.conf
+    #
+    # Option 2: Use environment variables for credentials.
+    # Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in your shell,
+    # and provide only the endpoint in the config file.
   }
 }

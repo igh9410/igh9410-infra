@@ -1,21 +1,3 @@
-variable "cluster_name" {
-  description = "Name of the Vultr Kubernetes cluster"
-  type        = string
-  default     = "gramnuri-dev-cluster"
-}
-
-variable "image_name" {
-  description = "Name of the Docker image"
-  type        = string
-  default     = "gramnuri-api"
-}
-
-variable "image_tag" {
-  description = "Tag of the Docker image"
-  type        = string
-  default     = "latest"
-}
-
 variable "database_url" {
   description = "Database URL"
   type        = string
@@ -52,7 +34,7 @@ variable "cloudflare_zone_id" {
   type        = string
 }
 
-variable "domain_name" {
+variable "client_domain" {
   description = "Your domain name (e.g., gramnuri.com)"
   type        = string
   default     = "gramnuri.com"
@@ -94,16 +76,26 @@ variable "r2_secret_access_key" {
   sensitive   = true
 }
 
-variable "vcr_username" {
-  description = "Vultr Container Registry User"
-  type        = string
-  sensitive   = true
-}
-
-
 variable "github_app_private_key_pem_content" {
   description = "The content of the GitHub App's private key PEM file. Ensure no extra newlines."
   type        = string
   sensitive   = true
 }
 
+variable "tiktok_client_key" {
+  description = "TikTok Client Key"
+  type        = string
+  sensitive   = true
+}
+
+variable "tiktok_client_secret" {
+  description = "TikTok Client Secret"
+  type        = string
+  sensitive   = true
+}
+
+variable "tiktok_redirect_uri" {
+  description = "TikTok Redirect URI"
+  type        = string
+  default     = "https://dev.gramnuri.com/oauth/callback/tiktok"
+}
