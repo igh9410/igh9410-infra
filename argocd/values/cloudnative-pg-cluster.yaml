@@ -219,6 +219,7 @@ cluster:
   services:
     additional:
     - selectorType: rw
+      updateStrategy: patch
       serviceTemplate:
         metadata:
           name: "dev-postgres-db-lb"
