@@ -228,6 +228,7 @@ cluster:
             test-annotation: "true"
         spec:
           type: LoadBalancer
+        updateStrategy: Patch
 
   # -- Resources requirements of every generated Pod.
   # Please refer to https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ for more information.
@@ -395,7 +396,7 @@ backups:
   s3:
     region: "auto"
     bucket: "igh9410-backup"
-    path: "/postgres"
+    path: "/postgres/dev"
     accessKey: ""
     secretKey: ""
     # -- Use the role based authentication without providing explicitly the keys
