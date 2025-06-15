@@ -216,7 +216,18 @@ cluster:
   postgresGID: -1
 
   # -- Customization of service definitions. Please refer to https://cloudnative-pg.io/documentation/1.24/service_management/
-  services: {}
+  services:
+    additional:
+    - selectorType: rw
+      serviceTemplate:
+        metadata:
+          name: "dev-postgres-db-lb"
+          labels:
+            test-label: "true"
+          annotations:
+            test-annotation: "true"
+        spec:
+          type: LoadBalancer
 
   # -- Resources requirements of every generated Pod.
   # Please refer to https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ for more information.
