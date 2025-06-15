@@ -20,5 +20,9 @@ resource "kubernetes_secret" "gramnuri_secrets" {
     TIKTOK_CLIENT_KEY        = var.tiktok_client_key
     TIKTOK_CLIENT_SECRET     = var.tiktok_client_secret
     TIKTOK_REDIRECT_URI      = var.tiktok_redirect_uri
+    CLOUDFLARE_ACCOUNT_ID    = var.cloudflare_account_id
+    CLOUDFLARE_ACCESS_TOKEN  = var.cloudflare_access_token
+    CLOUDFLARE_ACCESS_KEY_ID = var.cloudflare_access_key_id
+    CLOUDFLARE_SECRET_ACCESS_KEY = var.cloudflare_secret_access_key
   }
 }

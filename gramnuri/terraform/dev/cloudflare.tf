@@ -36,6 +36,6 @@ resource "cloudflare_dns_record" "tiktok_verification" {
 resource "cloudflare_r2_bucket" "gramnuri_r2_bucket" {
   account_id    = var.cloudflare_account_id
   name          = "dev-gramnuri-bucket"
-  location      = "apac"
+  location      = "APAC"
   storage_class = "Standard"
 }
