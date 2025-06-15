@@ -225,10 +225,11 @@ cluster:
           labels:
             test-label: "true"
           annotations:
+            external-dns.alpha.kubernetes.io/hostname: dev-postgres-db.local
             test-annotation: "true"
         spec:
           type: LoadBalancer
-        updateStrategy: Patch
+      updateStrategy: Patch
 
   # -- Resources requirements of every generated Pod.
   # Please refer to https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ for more information.
