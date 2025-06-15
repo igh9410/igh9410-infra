@@ -229,7 +229,6 @@ cluster:
             test-annotation: "true"
         spec:
           type: LoadBalancer
-      updateStrategy: Patch
 
   # -- Resources requirements of every generated Pod.
   # Please refer to https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ for more information.
