@@ -2,10 +2,9 @@ terraform {
   required_providers {
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "~> 4.0"
+      version = "~> 5"
     }
   }
-
 
   backend "s3" {
     bucket                      = "igh9410-terraform"

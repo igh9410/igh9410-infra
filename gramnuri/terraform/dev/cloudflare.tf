@@ -31,3 +31,10 @@ resource "cloudflare_record" "tiktok_verification" {
   content   = "tiktok-developers-site-verification=uuYK4VKuqEC5wSbmq1klvqViJEiml8IC"
   ttl     = 1 # Automatic TTL
 }
+
+resource "cloudflare_r2_bucket" "gramnuri_r2_bucket" {
+  account_id = var.cloudflare_account_id
+  name = "dev-gramnuri-bucket"
+  location = "apac"
+  storage_class = "Standard"
+}
