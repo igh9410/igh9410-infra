@@ -1,0 +1,3 @@
+kustomize:
+  images:
+  - ghcr.io/igh9410/artskorner-api=ghcr.io/igh9410/artskorner-api:e16fb03c3922ade0651db4b84cf72746e9b616d7
