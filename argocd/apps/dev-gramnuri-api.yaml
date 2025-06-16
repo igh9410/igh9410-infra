@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: dev-gramnuri-api
-  namespace: dev
+  namespace: argocd
   annotations:
     argocd-image-updater.argoproj.io/image-list: gramnuri-api=ghcr.io/igh9410/gramnuri-api
     argocd-image-updater.argoproj.io/gramnuri-api.update-strategy: latest

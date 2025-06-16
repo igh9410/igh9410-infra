@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: prod-artskorner-api
-  namespace: prod
+  namespace: argocd
   annotations:
     argocd-image-updater.argoproj.io/image-list: artskorner-api=ghcr.io/igh9410/artskorner-api
     argocd-image-updater.argoproj.io/artskorner-api.update-strategy: latest
