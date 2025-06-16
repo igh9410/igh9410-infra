@@ -7,3 +7,6 @@ kubeseal < gramnuri/k8s/overlays/dev/secrets.yaml > gramnuri/k8s/overlays/dev/se
 kubectl -n cnpg-database expose service cloudnative-pg-cluster-rw \
   --name=cloudnative-pg-cluster-rw-external \
   --port=5432 --type=LoadBalancer
+
+
+tf init -reconfigure -backend=backend.config
