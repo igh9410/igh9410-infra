@@ -21,3 +21,8 @@ spec:
     syncOptions:
     - CreateNamespace=true
   revisionHistoryLimit: 10
+  ignoreDifferences:
+  - group: argoproj.io
+    kind: Application
+    jsonPointers:
+    - /status
