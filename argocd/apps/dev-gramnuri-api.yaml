@@ -10,8 +10,8 @@ metadata:
     argocd-image-updater.argoproj.io/gramnuri-api.kustomize.image-name: ghcr.io/igh9410/gramnuri-api
     argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/github-access
     argocd-image-updater.argoproj.io/git-branch: main
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
+  #finalizers:
+  #- resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
