@@ -12,5 +12,6 @@ resource "kubernetes_secret" "artskorner_secrets" {
 
   data = {
     DATABASE_URL                 = var.database_url
+    JWT_SECRET                   = var.jwt_secret
   }
 }

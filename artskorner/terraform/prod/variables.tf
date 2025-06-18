@@ -56,3 +56,8 @@ variable "cloudflare_secret_access_key" {
   sensitive   = true
 }
 
+variable "jwt_secret" {
+  description = "JWT Secret"
+  type        = string
+  sensitive   = true
+}
