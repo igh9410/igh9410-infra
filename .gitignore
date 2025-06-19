@@ -106,5 +106,9 @@ secrets.yaml
 
 db_credentials.txt
 
+# Packer user data
+**/http/user-data.yml
+
 # Ignore backend.conf
 backend.conf
+gitleaks-report.json
