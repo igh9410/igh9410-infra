@@ -61,3 +61,8 @@ variable "admin_jwt_secret" {
   type        = string
   sensitive   = true
 }
+
+variable "r2_bucket_name" {
+  description = "R2 Bucket Name"
+  type        = string
+}
