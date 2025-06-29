@@ -305,7 +305,7 @@ tenant:
   features:
     bucketDNS: true
     domains:
-      - "minio.geonhyukim.com"
+      minio: "minio.geonhyukim.com"
     enableSFTP: false
   ###
   # Array of objects describing one or more buckets to create during tenant provisioning.
