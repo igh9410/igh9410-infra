@@ -123,16 +123,16 @@ tenant:
     # The number of MinIO Tenant Pods / Servers in this pool.
     # For standalone mode, supply 1. For distributed mode, supply 4 or more.
     # Note that the operator does not support upgrading from standalone to distributed mode.
-    - servers: 3
+    - servers: 1
       ###
       # Custom name for the pool
       name: minio-pool
       ###
       # The number of volumes attached per MinIO Tenant Pod / Server.
-      volumesPerServer: 2
+      volumesPerServer: 1
       ###
       # The capacity per volume requested per MinIO Tenant Pod.
-      size: 50Gi
+      size: 200Gi
       ###
       # The `storageClass <https://kubernetes.io/docs/concepts/storage/storage-classes/>`__ to associate with volumes generated for this pool.
       #
@@ -172,24 +172,16 @@ tenant:
       # These settings determine the distribution of pods across worker nodes and can help prevent or allow colocating pods onto the same worker nodes.
       affinity:
         nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
               - key: kubernetes.io/hostname
                 operator: In
                 values:
                 - k3s-worker-1
                 - k3s-worker-2
                 - k3s-worker-3
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: v1.min.io/tenant
-                operator: In
-                values:
-                - igh9410-minio
-            topologyKey: kubernetes.io/hostname
       ###
       # 
       # The `Requests or Limits <https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/>`__ for resources to associate to Tenant pods.
