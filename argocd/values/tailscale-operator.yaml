@@ -3,8 +3,18 @@
 
 # Tailscale Operator Helm Values
 # Don't create OAuth secret - use the one created by Terraform
-oauth: {}
-
+oauth:
+  clientId:
+    valueFrom:
+      secretKeyRef:
+        name: operator-oauth
+        key: client_id
+  clientSecret:
+    valueFrom:
+      secretKeyRef:
+        name: operator-oauth
+        key: client_secret
+        
 # Use the secret created by Terraform
 oauthSecretVolume:
   secret:
