@@ -307,8 +307,7 @@ tenant:
     domains:
       minio:
         - "minio.geonhyukim.com"
-      console:
-        - "console-minio.geonhyukim.com"
+      console: "console-minio.geonhyukim.com"
     enableSFTP: false
   ###
   # Array of objects describing one or more buckets to create during tenant provisioning.
