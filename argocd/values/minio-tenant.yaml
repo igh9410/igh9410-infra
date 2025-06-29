@@ -277,7 +277,7 @@ tenant:
     externalCertSecret: [ ]
     ###
     # Enable automatic Kubernetes based `certificate generation and signing <https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster>`__
-    requestAutoCert: true
+    requestAutoCert: false
     ###
     # The minimum number of days to expiry before an alert for an expiring certificate is fired.
     # In the below example, if a given certificate will expire in 7 days then expiration events will only be triggered 1 day before expiry
@@ -506,8 +506,6 @@ ingress:
     labels: { }
     annotations:
       traefik.ingress.kubernetes.io/router.tls: "true"
-      traefik.ingress.kubernetes.io/backend-protocol: "HTTPS"
-      traefik.ingress.kubernetes.io/serversTransport.insecureSkipVerify: "true"
     tls:
       - hosts:
         - minio.geonhyukim.com
@@ -521,8 +519,6 @@ ingress:
     labels: { }
     annotations:
       traefik.ingress.kubernetes.io/router.tls: "true"
-      traefik.ingress.kubernetes.io/backend-protocol: "HTTPS"
-      traefik.ingress.kubernetes.io/serversTransport.insecureSkipVerify: "true"
     tls:
       - hosts:
         - console-minio.geonhyukim.com
