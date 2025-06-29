@@ -3,6 +3,9 @@ kind: Application
 metadata:
   name: minio-tenant
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
@@ -28,4 +31,8 @@ spec:
     syncOptions:
     - CreateNamespace=true
     - ServerSideApply=true
+    - PrunePropagationPolicy=foreground
+    - PruneLast=true
+    - Replace=true
+    - Validate=false
   revisionHistoryLimit: 10 

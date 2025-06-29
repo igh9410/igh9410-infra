@@ -84,7 +84,7 @@ tenant:
   #    secretKey: minio123
   #
   configSecret:
-    name: myminio-env-configuration
+    name: igh9410-minio-env-configuration
     accessKey: minio
     secretKey: minio123
     #existingSecret: true
@@ -189,7 +189,7 @@ tenant:
               - key: v1.min.io/tenant
                 operator: In
                 values:
-                - myminio
+                - igh9410-minio
             topologyKey: kubernetes.io/hostname
       ###
       # 
