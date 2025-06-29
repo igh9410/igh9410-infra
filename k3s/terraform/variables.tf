@@ -74,3 +74,15 @@ variable "cloudflare_tunnel_cert_pem" {
   type        = string
   sensitive   = true
 }
+
+variable "tailscale_client_id" {
+  description = "Tailscale OAuth2 Client ID"
+  type        = string
+  sensitive   = true
+}
+
+variable "tailscale_client_secret" {
+  description = "Tailscale OAuth2 Client Secret"
+  type        = string
+  sensitive   = true
+}
