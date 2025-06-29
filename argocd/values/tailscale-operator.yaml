@@ -1,0 +1,71 @@
+# Copyright (c) Tailscale Inc & AUTHORS
+# SPDX-License-Identifier: BSD-3-Clause
+
+# Tailscale Operator Helm Values
+# OAuth configuration - references the secret created by Terraform
+# The secret 'operator-oauth' is created by Terraform with client_id and client_secret
+oauth: {}
+
+# Use the default secret volume behavior (looks for 'operator-oauth' secret)
+oauthSecretVolume: {}
+
+# Install CRDs as part of the chart
+installCRDs: true
+
+# Operator configuration
+operatorConfig:
+  # ACL tags for the operator
+  defaultTags:
+    - "tag:k8s-operator"
+  
+  image:
+    repository: tailscale/k8s-operator
+    tag: ""  # Will use appVersion from chart
+    pullPolicy: Always
+  
+  logging: "info"
+  hostname: "tailscale-operator"
+  
+  nodeSelector:
+    kubernetes.io/os: linux
+  
+  # Resource limits for the operator
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  
+  podAnnotations: {}
+  podLabels: {}
+  serviceAccountAnnotations: {}
+  tolerations: []
+  affinity: {}
+  podSecurityContext: {}
+  securityContext: {}
+  extraEnv: []
+
+# Enable ingress class creation
+ingressClass:
+  enabled: true
+
+# Proxy configuration for ingress/egress proxies
+proxyConfig:
+  image:
+    repository: tailscale/tailscale
+    tag: ""  # Will use appVersion from chart
+  
+  # ACL tags for proxies
+  defaultTags: "tag:k8s"
+  firewallMode: auto
+  defaultProxyClass: ""
+
+# API Server proxy configuration
+apiServerProxyConfig:
+  mode: "false"  # "true", "false", "noauth"
+
+# Image pull secrets
+imagePullSecrets: []
+
