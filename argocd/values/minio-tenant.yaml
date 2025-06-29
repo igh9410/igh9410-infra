@@ -506,6 +506,8 @@ ingress:
     labels: { }
     annotations:
       traefik.ingress.kubernetes.io/router.tls: "true"
+      traefik.ingress.kubernetes.io/backend-protocol: "HTTPS"
+      traefik.ingress.kubernetes.io/serversTransport.insecureSkipVerify: "true"
     tls:
       - hosts:
         - minio.geonhyukim.com
@@ -519,6 +521,8 @@ ingress:
     labels: { }
     annotations:
       traefik.ingress.kubernetes.io/router.tls: "true"
+      traefik.ingress.kubernetes.io/backend-protocol: "HTTPS"
+      traefik.ingress.kubernetes.io/serversTransport.insecureSkipVerify: "true"
     tls:
       - hosts:
         - console-minio.geonhyukim.com
