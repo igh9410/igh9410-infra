@@ -164,8 +164,7 @@ tenant:
       # The Kubernetes scheduler uses these selectors to determine which worker nodes onto which it can deploy Tenant pods.
       #
       # If no worker nodes match the specified selectors, the Tenant deployment will fail.
-      nodeSelector:
-        node-role.kubernetes.io/worker: "true"
+      nodeSelector: { }
       ###
       #
       # The `affinity <https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes-using-node-affinity/>`__ or anti-affinity settings to apply to Tenant pods.
