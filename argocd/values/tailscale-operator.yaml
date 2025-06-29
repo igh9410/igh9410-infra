@@ -2,10 +2,13 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 # Tailscale Operator Helm Values
+# Don't create OAuth secret - use the one created by Terraform
 oauth: {}
 
-# Use the default secret volume behavior (looks for 'operator-oauth' secret)
-oauthSecretVolume: {}
+# Use the secret created by Terraform
+oauthSecretVolume:
+  secret:
+    secretName: operator-oauth
 
 # Install CRDs as part of the chart
 installCRDs: true
