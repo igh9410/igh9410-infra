@@ -5,20 +5,12 @@
 # Don't create OAuth secret - use the one created by Terraform
 oauth:
   clientId:
-    valueFrom:
-      secretKeyRef:
-        name: operator-oauth
-        key: client_id
+    name: tailscale-operator-secrets
+    key: client_id
   clientSecret:
-    valueFrom:
-      secretKeyRef:
-        name: operator-oauth
-        key: client_secret
-        
-# Use the secret created by Terraform
-oauthSecretVolume:
-  secret:
-    secretName: operator-oauth
+    name: tailscale-operator-secrets
+    key: client_secret
+
 
 # Install CRDs as part of the chart
 installCRDs: true

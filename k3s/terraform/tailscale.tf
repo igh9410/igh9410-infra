@@ -8,7 +8,8 @@ resource "kubernetes_namespace" "tailscale" {
 # Create Kubernetes secret for Tailscale OAuth credentials
 resource "kubernetes_secret" "tailscale_auth" {
   metadata {
-    name      = "operator-oauth"
+    # CHANGE: Updated the secret name to match the ArgoCD Application manifest
+    name      = "tailscale-operator-secrets"
     namespace = kubernetes_namespace.tailscale.metadata[0].name
   }
 
