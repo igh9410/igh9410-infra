@@ -504,12 +504,7 @@ ingress:
     enabled: true
     ingressClassName: "traefik"
     labels: { }
-    annotations:
-      traefik.ingress.kubernetes.io/router.tls: "true"
-    tls:
-      - hosts:
-        - minio.geonhyukim.com
-        secretName: minio-api-tls
+    annotations: {}
     host: minio.geonhyukim.com
     path: /
     pathType: Prefix
@@ -517,12 +512,7 @@ ingress:
     enabled: true
     ingressClassName: "traefik"
     labels: { }
-    annotations:
-      traefik.ingress.kubernetes.io/router.tls: "true"
-    tls:
-      - hosts:
-        - console-minio.geonhyukim.com
-        secretName: minio-console-tls
+    annotations: {}
     host: console-minio.geonhyukim.com
     path: /
     pathType: Prefix
