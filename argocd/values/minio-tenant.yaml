@@ -509,21 +509,29 @@ tenant:
 # Set the keys to conform to the Ingress controller and configuration of your choice.
 ingress:
   api:
-    enabled: false
-    ingressClassName: ""
+    enabled: true
+    ingressClassName: "traefik"
     labels: { }
-    annotations: { }
-    tls: [ ]
-    host: minio.local
+    annotations:
+      traefik.ingress.kubernetes.io/router.tls: "true"
+    tls:
+      - hosts:
+        - minio.geonhyukim.com
+        secretName: minio-api-tls
+    host: minio.geonhyukim.com
     path: /
     pathType: Prefix
   console:
-    enabled: false
-    ingressClassName: ""
+    enabled: true
+    ingressClassName: "traefik"
     labels: { }
-    annotations: { }
-    tls: [ ]
-    host: minio-console.local
+    annotations:
+      traefik.ingress.kubernetes.io/router.tls: "true"
+    tls:
+      - hosts:
+        - console-minio.geonhyukim.com
+        secretName: minio-console-tls
+    host: console-minio.geonhyukim.com
     path: /
     pathType: Prefix
 # Use an extraResources template section to include additional Kubernetes resources
