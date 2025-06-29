@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: minio-tenant
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+  - repoURL: https://operator.min.io
+    chart: tenant
+    targetRevision: "7.1.1"
+    helm:
+      releaseName: minio-tenant
+      valueFiles:
+      - $values/argocd/values/minio-tenant.yaml
+  - repoURL: https://github.com/igh9410/igh9410-infra.git
+    targetRevision: HEAD
+    ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: minio-tenant
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+    - ServerSideApply=true
+    - PrunePropagationPolicy=foreground
+    - PruneLast=true
+    - Replace=true
+    - Validate=false
+  revisionHistoryLimit: 10 
