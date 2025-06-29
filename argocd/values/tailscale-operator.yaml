@@ -2,8 +2,6 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 # Tailscale Operator Helm Values
-# OAuth configuration - references the secret created by Terraform
-# The secret 'operator-oauth' is created by Terraform with client_id and client_secret
 oauth: {}
 
 # Use the default secret volume behavior (looks for 'operator-oauth' secret)
