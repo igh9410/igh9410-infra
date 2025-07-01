@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Check dev-api.gramnuri.com
         run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://dev-api.gramnuri.com/health)
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://dev-api.gramnuri.com/)
           if [ "$STATUS" -ne 200 ]; then
             echo "API health check failed with status $STATUS"
             exit 1
