@@ -1,0 +1,35 @@
+all:
+  children:
+    k3s_cluster:
+      children:
+        k3s_servers:
+          hosts:
+            k3s-server:
+              ansible_host: 192.168.45.199
+              ansible_user: ubuntu
+              ansible_ssh_private_key_file: ~/.ssh/id_rsa
+        k3s_workers:
+          hosts:
+            k3s-worker-1:
+              ansible_host: 192.168.45.201
+              ansible_user: ubuntu
+              ansible_ssh_private_key_file: ~/.ssh/id_rsa
+            k3s-worker-2:
+              ansible_host: 192.168.45.202
+              ansible_user: ubuntu
+              ansible_ssh_private_key_file: ~/.ssh/id_rsa
+            k3s-worker-3:
+              ansible_host: 192.168.45.203
+              ansible_user: ubuntu
+              ansible_ssh_private_key_file: ~/.ssh/id_rsa
+            k3s-worker-4:
+              ansible_host: 192.168.45.204
+              ansible_user: ubuntu
+              ansible_ssh_private_key_file: ~/.ssh/id_rsa
+            k3s-worker-5:
+              ansible_host: 192.168.45.205
+              ansible_user: ubuntu
+              ansible_ssh_private_key_file: ~/.ssh/id_rsa
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no' 
