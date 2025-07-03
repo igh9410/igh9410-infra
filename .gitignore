@@ -112,3 +112,4 @@ db_credentials.txt
 # Ignore backend.conf
 backend.conf
 gitleaks-report.json
+.vault_pass

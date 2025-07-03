@@ -1,7 +1,6 @@
 ---
 - name: Expand LVM logical volume and filesystem to use all free space
   hosts: k3s_cluster
-  become: true
   gather_facts: true
   
   vars:
@@ -10,105 +9,109 @@
     logical_volume: ubuntu-lv
     
   pre_tasks:
-    - name: Ensure community.general collection is available
-      ansible.builtin.debug:
-        msg: "Make sure to run: ansible-galaxy collection install community.general"
-    
-    - name: Check if physical volume exists
-      ansible.builtin.command: pvs --noheadings -o pv_name
-      register: pv_list
+    - name: Ensure community.general collection is installed
+      ansible.builtin.command: ansible-galaxy collection install community.general
+      delegate_to: localhost
+      run_once: true
       changed_when: false
       failed_when: false
-      
-    - name: Get physical volume device
-      ansible.builtin.shell: |
-        pvs --noheadings -o pv_name | grep -E '/dev/[sv]d[a-z][0-9]+' | head -1 | xargs
-      register: pv_device
+    
+    - name: Get current LVM information
+      ansible.builtin.command: "{{ item }}"
+      register: lvm_info
       changed_when: false
-      failed_when: pv_device.stdout == ""
+      failed_when: false
+      loop:
+        - "vgs {{ volume_group }} --noheadings -o vg_name,vg_free"
+        - "lvs {{ volume_group }}/{{ logical_volume }} --noheadings -o lv_name,lv_size"
+        - "df -h /"
       
-    - name: Display current storage information
+    - name: Display current LVM and filesystem status
       ansible.builtin.debug:
         msg: |
           Host: {{ inventory_hostname }}
-          Physical Volume: {{ pv_device.stdout }}
-          Volume Group: {{ volume_group }}
-          Logical Volume: {{ logical_volume }}
+          {% if not ansible_check_mode and lvm_info.results is defined %}
+          Volume Group Info: {{ lvm_info.results[0].stdout.strip() if lvm_info.results[0].stdout is defined else 'N/A (check mode)' }}
+          Logical Volume Info: {{ lvm_info.results[1].stdout.strip() if lvm_info.results[1].stdout is defined else 'N/A (check mode)' }}
+          Root Filesystem Usage: {{ lvm_info.results[2].stdout_lines[1] if lvm_info.results[2].stdout_lines is defined and lvm_info.results[2].stdout_lines|length > 1 else 'N/A (check mode)' }}
+          {% else %}
+          Status: Running in check mode - actual values not available
+          {% endif %}
 
   tasks:
-    - name: Check current disk usage
-      ansible.builtin.command: df -h /
-      register: df_before
+    - name: Check if there's free space in the volume group
+      ansible.builtin.shell: |
+        vgs {{ volume_group }} --noheadings -o vg_free --units m | sed 's/m//' | xargs
+      register: vg_free_space
       changed_when: false
       
-    - name: Display current disk usage
+    - name: Display free space available
       ansible.builtin.debug:
-        msg: "Current root filesystem usage: {{ df_before.stdout_lines[1] }}"
+        msg: "Available free space in VG {{ volume_group }}: {{ vg_free_space.stdout if not ansible_check_mode else 'N/A (check mode)' }}MB"
     
-    - name: Check current LVM status
-      ansible.builtin.command: "{{ item }}"
-      register: lvm_status
+    - name: Scan for new disk space (rescan SCSI devices)
+      ansible.builtin.shell: |
+        for host in /sys/class/scsi_host/*/scan; do
+          echo "- - -" > "$host" 2>/dev/null || true
+        done
       changed_when: false
-      loop:
-        - "pvs {{ pv_device.stdout }}"
-        - "vgs {{ volume_group }}"
-        - "lvs {{ volume_group }}/{{ logical_volume }}"
       
-    - name: Display current LVM status
-      ansible.builtin.debug:
-        msg: "{{ item.stdout_lines }}"
-      loop: "{{ lvm_status.results }}"
-      loop_control:
-        label: "{{ item.cmd }}"
-    
+    - name: Detect physical volume device
+      ansible.builtin.shell: |
+        pvs --noheadings -o pv_name,vg_name | grep {{ volume_group }} | awk '{print $1}' | head -1
+      register: pv_device
+      changed_when: false
+      
     - name: Resize physical volume to use all available space
       ansible.builtin.command: "pvresize {{ pv_device.stdout }}"
       register: pvresize_result
       changed_when: "'Physical volume' in pvresize_result.stdout and 'resized' in pvresize_result.stdout"
       failed_when: pvresize_result.rc != 0 and 'already the correct size' not in pvresize_result.stderr
+      when: pv_device.stdout != "" and not ansible_check_mode
       
-    - name: Extend logical volume to use all free space in volume group
+    - name: Extend logical volume to use all free space and resize filesystem
       community.general.lvol:
         vg: "{{ volume_group }}"
         lv: "{{ logical_volume }}"
         size: +100%FREE
         resizefs: true
-      register: lvextend_result
+      register: lv_extend_result
       
-    - name: Wait a moment for filesystem to be fully resized
+    - name: Wait for filesystem to be fully resized
       ansible.builtin.pause:
-        seconds: 2
+        seconds: 3
+      when: not ansible_check_mode
         
-    - name: Check final disk usage
-      ansible.builtin.command: df -h /
-      register: df_after
+    - name: Get final storage status
+      ansible.builtin.command: "{{ item }}"
+      register: final_status
       changed_when: false
+      loop:
+        - "df -h /"
+        - "vgs {{ volume_group }} --noheadings -o vg_name,vg_size,vg_free"
+        - "lvs {{ volume_group }}/{{ logical_volume }} --noheadings -o lv_name,lv_size"
       
-    - name: Display final disk usage
+    - name: Display final storage status
       ansible.builtin.debug:
         msg: |
           Storage expansion completed for {{ inventory_hostname }}:
-          Before: {{ df_before.stdout_lines[1] }}
-          After:  {{ df_after.stdout_lines[1] }}
-          
-    - name: Verify storage expansion
-      ansible.builtin.shell: |
-        df -h / | tail -1 | awk '{print "Available space: " $4 ", Usage: " $5}'
-      register: final_status
-      changed_when: false
-      
-    - name: Final status
-      ansible.builtin.debug:
-        msg: "{{ final_status.stdout }}"
+          {% if not ansible_check_mode and final_status.results is defined %}
+          Root Filesystem: {{ final_status.results[0].stdout_lines[1] if final_status.results[0].stdout_lines is defined and final_status.results[0].stdout_lines|length > 1 else 'N/A' }}
+          Volume Group: {{ final_status.results[1].stdout.strip() if final_status.results[1].stdout is defined else 'N/A' }}
+          Logical Volume: {{ final_status.results[2].stdout.strip() if final_status.results[2].stdout is defined else 'N/A' }}
+          {% else %}
+          Status: Check mode - changes would be applied in actual run
+          {% endif %}
 
   post_tasks:
     - name: Summary of changes
       ansible.builtin.debug:
         msg: |
           Storage expansion completed successfully on {{ inventory_hostname }}
-          Physical volume resized: {{ pvresize_result.changed }}
-          Logical volume extended: {{ lvextend_result.changed }}
-          
+          Physical volume resized: {{ pvresize_result.changed | default(false) }}
+          Logical volume extended: {{ lv_extend_result.changed }}
+          Filesystem automatically resized: {{ lv_extend_result.changed }}
+
   handlers:
     - name: Reboot if needed
       ansible.builtin.reboot:
