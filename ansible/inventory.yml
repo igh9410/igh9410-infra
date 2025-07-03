@@ -1,0 +1,30 @@
+all:
+  children:
+    k3s_cluster:
+      children:
+        k3s_servers:
+          hosts:
+            k3s-server:
+              ansible_host: 192.168.45.199
+        k3s_workers:
+          hosts:
+            k3s-worker-1:
+              ansible_host: 192.168.45.201
+            k3s-worker-2:
+              ansible_host: 192.168.45.202
+            k3s-worker-3:
+              ansible_host: 192.168.45.203
+            k3s-worker-4:
+              ansible_host: 192.168.45.205
+  vars:
+    # SSH connection settings
+    ansible_user: "{{ ssh_username }}"
+    ansible_password: "{{ ssh_password }}"
+    ansible_connection: ssh
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+    
+    # Become (sudo) settings
+    ansible_become: true
+    ansible_become_method: sudo
+    ansible_become_password: "{{ become_password }}" 
