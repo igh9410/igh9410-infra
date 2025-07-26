@@ -6,22 +6,22 @@ resource "kubernetes_namespace" "argocd" {
 }
 
 # Install ArgoCD using Helm - MANAGED MANUALLY VIA HELM
-# resource "helm_release" "argocd" {
-#   name       = "argocd"
-#   repository = "https://argoproj.github.io/argo-helm"
-#   chart      = "argo-cd"
-#   version    = "7.8.13"
-#   namespace  = kubernetes_namespace.argocd.metadata[0].name
-#
-#   values = [
-#     file("values/argocd.yaml")
-#   ]
-#
-#   # Ensure Helm release depends on the cluster and namespace (dependency updated)
-#   depends_on = [
-#     kubernetes_namespace.argocd
-#   ]
-# }
+resource "helm_release" "argocd" {
+  name       = "argocd"
+  repository = "https://argoproj.github.io/argo-helm"
+  chart      = "argo-cd"
+  version    = "7.8.13"
+  namespace  = kubernetes_namespace.argocd.metadata[0].name
+
+  values = [
+    file("values/argocd.yaml")
+  ]
+
+  # Ensure Helm release depends on the cluster and namespace (dependency updated)
+  depends_on = [
+    kubernetes_namespace.argocd
+  ]
+} 
 
 # Create a secret for GitHub credentials
 resource "kubernetes_secret" "github_access" {

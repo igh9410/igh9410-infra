@@ -1,3 +1,4 @@
+/*
 resource "kubernetes_namespace" "cloudflared_system" {
   metadata {
     labels = {
@@ -6,7 +7,7 @@ resource "kubernetes_namespace" "cloudflared_system" {
     name = "cloudflared-system"
   }
 }
-/*
+
 resource "kubernetes_secret" "cloudflared_tunnel_secret" {
   metadata {
     name      = "cloudflared-tunnel-secret"
@@ -31,4 +32,5 @@ resource "helm_release" "cloudflared" {
   ]
   
   depends_on = [kubernetes_secret.cloudflared_tunnel_secret]
-} */
+} 
+*/

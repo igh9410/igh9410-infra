@@ -75,15 +75,15 @@ prometheus:
       enabled: true
       excludePools: ""
       thresholds:
-      - labels:
-          severity: warning
-        percent: 75
-      - labels:
-          severity: warning
-        percent: 85
-      - labels:
-          severity: critical
-        percent: 95
+        - labels:
+            severity: warning
+          percent: 75
+        - labels:
+            severity: warning
+          percent: 85
+        - labels:
+            severity: critical
+          percent: 95
     annotations: {}
     bgpSessionDown:
       enabled: true
@@ -132,7 +132,7 @@ speaker:
     enabled: true
   extraContainers: []
   frr:
-    enabled: true
+    enabled: false
     image:
       pullPolicy: null
       repository: quay.io/frrouting/frr
