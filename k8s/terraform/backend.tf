@@ -9,7 +9,7 @@ terraform {
 
   backend "s3" {
     bucket                      = "igh9410-terraform"
-    key                         = "k3s/terraform.tfstate"
+    key                         = "k8s/terraform.tfstate"
     region                      = "auto"
     skip_credentials_validation = true
     skip_metadata_api_check     = true
