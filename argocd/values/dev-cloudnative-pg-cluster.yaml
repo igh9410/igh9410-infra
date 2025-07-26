@@ -58,7 +58,7 @@ recovery:
   # -- Overrides the provider specific default endpoint. Defaults to:
   # S3: https://s3.<region>.amazonaws.com"
   # Leave empty if using the default S3 endpoint
-  endpointURL: ""
+  endpointURL: "https://c3b77c4aca2f20de101a1452ef946655.r2.cloudflarestorage.com"
   # -- Specifies a CA bundle to validate a privately signed certificate.
   endpointCA:
     # -- Creates a secret with the given value if true, otherwise uses an existing secret.
@@ -70,7 +70,7 @@ recovery:
   # S3: s3://<bucket><path>
   # Azure: https://<storageAccount>.<serviceName>.core.windows.net/<containerName><path>
   # Google: gs://<bucket><path>
-  destinationPath: ""
+  destinationPath: "s3://igh9410-backup/postgres/dev"
   # -- One of `s3`, `azure` or `google`
   provider: s3
   s3:
@@ -421,7 +421,7 @@ backups:
   # -- One of `s3`, `azure` or `google`
   provider: s3
   s3:
-    region: "auto"
+    region: "apac"
     bucket: "igh9410-backup"
     path: "/postgres/dev"
     accessKey: ""
