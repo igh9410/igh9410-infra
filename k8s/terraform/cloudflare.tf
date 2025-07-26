@@ -1,4 +1,4 @@
-/*
+
 resource "kubernetes_namespace" "cloudflared_system" {
   metadata {
     labels = {
@@ -8,29 +8,19 @@ resource "kubernetes_namespace" "cloudflared_system" {
   }
 }
 
-resource "kubernetes_secret" "cloudflared_tunnel_secret" {
-  metadata {
-    name      = "cloudflared-tunnel-secret"
-    namespace = kubernetes_namespace.cloudflared_system.metadata[0].name
-  }
-  data = {
-    "cert.pem"          = var.cloudflare_tunnel_cert_pem
-    "credentials.json"  = var.cloudflare_tunnel_credentials
-  }
-  type = "Opaque"
-}
-
-
 resource "helm_release" "cloudflared" {
   name       = "cloudflared"
   repository = "https://community-charts.github.io/helm-charts"
   chart      = "cloudflared"
-  namespace  = "cloudflared-system" # Should match the secret's namespace
-  version    = "2.0.5"   # As you requested
+  namespace  = "cloudflared-system"
+  version    = "2.0.9"
   values = [
-    file("values/cloudflared.yaml")
+    file("values/cloudflared.yaml"),
+    yamlencode({
+      tunnelSecrets = {
+        base64EncodedConfigJsonFile = base64encode(var.cloudflare_tunnel_credentials)
+        base64EncodedPemFile        = base64encode(var.cloudflare_tunnel_cert_pem)
+      }
+    })
   ]
-  
-  depends_on = [kubernetes_secret.cloudflared_tunnel_secret]
-} 
-*/
+}  
