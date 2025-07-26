@@ -18,7 +18,7 @@ prometheus:
       volumeClaimTemplate:
         spec:
           storageClassName: local-path
-          accessModes: [ "ReadWriteOnce" ]
+          accessModes: ["ReadWriteOnce"]
           resources:
             requests:
               storage: 10Gi
@@ -45,7 +45,7 @@ alertmanager:
       volumeClaimTemplate:
         spec:
           storageClassName: local-path
-          accessModes: [ "ReadWriteOnce" ]
+          accessModes: ["ReadWriteOnce"]
           resources:
             requests:
               storage: 2Gi
@@ -67,7 +67,7 @@ grafana:
     enabled: true
     ingressClassName: "traefik"
     hosts:
-    - grafana.geonhyukim.com
+      - grafana.geonhyukim.com
     tls: false
   persistence:
     enabled: true
