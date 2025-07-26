@@ -188,7 +188,8 @@ cluster:
   imageName: "" # Default value depends on type (postgresql/postgis/timescaledb)
 
   # -- Reference to `ImageCatalog` of `ClusterImageCatalog`, if specified takes precedence over `cluster.imageName`
-  imageCatalogRef: {}
+  imageCatalogRef:
+    {}
     # kind: ImageCatalog
     # name: postgresql
 
@@ -202,12 +203,12 @@ cluster:
 
   storage:
     size: 30Gi
-    storageClass: ""
+    storageClass: "local-path"
 
   walStorage:
     enabled: false
     size: 1Gi
-    storageClass: ""
+    storageClass: "local-path"
 
   # -- The UID of the postgres user inside the image, defaults to 26
   postgresUID: -1
@@ -218,24 +219,25 @@ cluster:
   # -- Customization of service definitions. Please refer to https://cloudnative-pg.io/documentation/1.24/service_management/
   services:
     additional:
-    - selectorType: rw
-      updateStrategy: patch
-      serviceTemplate:
-        metadata:
-          name: "dev-postgres-db-lb"
-          labels:
-            test-label: "true"
-          annotations:
-            external-dns.alpha.kubernetes.io/hostname: dev-postgres-db.local
-            test-annotation: "true"
-        spec:
-          type: LoadBalancer
+      - selectorType: rw
+        updateStrategy: patch
+        serviceTemplate:
+          metadata:
+            name: "dev-postgres-db-lb"
+            labels:
+              test-label: "true"
+            annotations:
+              external-dns.alpha.kubernetes.io/hostname: dev-postgres-db.local
+              test-annotation: "true"
+          spec:
+            type: LoadBalancer
 
   # -- Resources requirements of every generated Pod.
   # Please refer to https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ for more information.
   # We strongly advise you use the same setting for limits and requests so that your cluster pods are given a Guaranteed QoS.
   # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-qos/
-  resources: {}
+  resources:
+    {}
     # limits:
     #   cpu: 2000m
     #   memory: 8Gi
@@ -279,7 +281,8 @@ cluster:
   # -- This feature enables declarative management of existing roles, as well as the creation of new roles if they are not
   # already present in the database.
   # See: https://cloudnative-pg.io/documentation/current/declarative_role_management/
-  roles: []
+  roles:
+    []
     # - name: dante
     #   ensure: present
     #   comment: Dante Alighieri
@@ -330,7 +333,8 @@ cluster:
     # -- PostgreSQL configuration options (postgresql.conf)
     parameters: {} # max_connections: 300
     # -- Quorum-based Synchronous Replication
-    synchronous: {}
+    synchronous:
+      {}
       # method: any
       # number: 1
     # -- PostgreSQL Host Based Authentication rules (lines to be appended to the pg_hba.conf file)
@@ -340,7 +344,8 @@ cluster:
     # -- Lists of shared preload libraries to add to the default ones
     shared_preload_libraries: [] # - pgaudit
     # -- PostgreSQL LDAP configuration (see https://cloudnative-pg.io/documentation/current/postgresql_conf/#ldap-configuration)
-    ldap: {}
+    ldap:
+      {}
       # https://cloudnative-pg.io/documentation/1.24/postgresql_conf/#ldap-configuration
       # server: 'openldap.default.svc.cluster.local'
       # bindSearchAuth:
@@ -354,7 +359,8 @@ cluster:
   # -- BootstrapInitDB is the configuration of the bootstrap process when initdb is used.
   # See: https://cloudnative-pg.io/documentation/current/bootstrap/
   # See: https://cloudnative-pg.io/documentation/current/cloudnative-pg.v1/#postgresql-cnpg-io-v1-bootstrapinitdb
-  initdb: {}
+  initdb:
+    {}
     # database: app
     # owner: "" # Defaults to the database name
     # secret:
@@ -438,15 +444,14 @@ backups:
     jobs: 2
 
   scheduledBackups:
-
-  # -- Scheduled backup name
-  - name: daily-backup
-    # -- Schedule in cron format
-    schedule: "0 0 18 * * *"
-    # -- Backup owner reference
-    backupOwnerReference: self
-    # -- Backup method, can be `barmanObjectStore` (default) or `volumeSnapshot`
-    method: barmanObjectStore
+    # -- Scheduled backup name
+    - name: daily-backup
+      # -- Schedule in cron format
+      schedule: "0 0 18 * * *"
+      # -- Backup owner reference
+      backupOwnerReference: self
+      # -- Backup method, can be `barmanObjectStore` (default) or `volumeSnapshot`
+      method: barmanObjectStore
   # -- Retention policy for backups
   retentionPolicy: "30d"
 
@@ -454,12 +459,14 @@ imageCatalog:
   # -- Whether to provision an image catalog. If imageCatalog.images is empty this option will be ignored.
   create: true
   # -- List of images to be provisioned in an image catalog.
-  images: []
+  images:
+    []
     # - image: ghcr.io/your_repo/your_image:your_tag
     #   major: 16
 
 # -- List of PgBouncer poolers
-poolers: []
+poolers:
+  []
   # -
   #   # -- Pooler name
   #   name: rw
