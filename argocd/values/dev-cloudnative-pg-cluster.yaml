@@ -417,7 +417,7 @@ backups:
   # S3: s3://<bucket><path>
   # Azure: https://<storageAccount>.<serviceName>.core.windows.net/<containerName><path>
   # Google: gs://<bucket><path>
-  destinationPath: ""
+  destinationPath: "s3://igh9410-backup/postgres/dev"
   # -- One of `s3`, `azure` or `google`
   provider: s3
   s3:
