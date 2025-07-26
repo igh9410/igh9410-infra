@@ -3,6 +3,9 @@ resource "kubernetes_namespace" "metallb_system" {
     name = "metallb-system"
     labels = {
       "name" = "metallb-system"
+      "pod-security.kubernetes.io/enforce" = "privileged"
+      "pod-security.kubernetes.io/audit"   = "privileged"
+      "pod-security.kubernetes.io/warn"    = "privileged"
     }
   }
 }
@@ -20,6 +23,7 @@ resource "helm_release" "metallb" {
   ]
 }
 
+
 resource "kubernetes_manifest" "metallb_ip_pool" {
   manifest = {
     "apiVersion" = "metallb.io/v1beta1"
@@ -30,8 +34,7 @@ resource "kubernetes_manifest" "metallb_ip_pool" {
     }
     "spec" = {
       "addresses" = [
-        "192.168.45.200/32",
-        "192.168.45.244/32",
+        "192.168.45.240-192.168.45.253",
       ]
     }
   }
@@ -55,4 +58,4 @@ resource "kubernetes_manifest" "metallb_l2_advertisement" {
   }
 
   depends_on = [kubernetes_manifest.metallb_ip_pool]
-}
+} 
