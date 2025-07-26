@@ -53,10 +53,12 @@ recovery:
   database: gramnuri_db
   # -- Name of the owner of the database in the instance to be used by applications. Defaults to the value of the `database` key.
   owner: "postgres"
+  # -- External cluster source name for recovery
+  source: "cloudnative-pg-cluster"
   # -- Overrides the provider specific default endpoint. Defaults to:
   # S3: https://s3.<region>.amazonaws.com"
   # Leave empty if using the default S3 endpoint
-  endpointURL: "https://c3b77c4aca2f20de101a1452ef946655.r2.cloudflarestorage.com"
+  endpointURL: ""
   # -- Specifies a CA bundle to validate a privately signed certificate.
   endpointCA:
     # -- Creates a secret with the given value if true, otherwise uses an existing secret.
@@ -68,13 +70,13 @@ recovery:
   # S3: s3://<bucket><path>
   # Azure: https://<storageAccount>.<serviceName>.core.windows.net/<containerName><path>
   # Google: gs://<bucket><path>
-  destinationPath: "s3://igh9410-backup/postgres/dev"
+  destinationPath: ""
   # -- One of `s3`, `azure` or `google`
   provider: s3
   s3:
-    region: "auto"
-    bucket: "igh9410-backup"
-    path: "/postgres/dev"
+    region: ""
+    bucket: ""
+    path: ""
     accessKey: ""
     secretKey: ""
     # -- Use the role based authentication without providing explicitly the keys
@@ -97,7 +99,7 @@ recovery:
     # -- Whether to create a secret for the backup credentials
     create: false
     # -- Name of the backup credentials secret
-    name: "cnpg-cluster-backup-credentials"
+    name: ""
 
   # See https://cloudnative-pg.io/documentation/1.22/bootstrap/#bootstrap-from-a-live-cluster-pg_basebackup
   pgBaseBackup:
@@ -377,6 +379,24 @@ cluster:
 
   additionalLabels: {}
   annotations: {}
+
+# External clusters configuration for recovery
+externalClusters:
+  - name: cloudnative-pg-cluster
+    barmanObjectStore:
+      destinationPath: "s3://igh9410-backup/postgres/dev"
+      endpointURL: "https://c3b77c4aca2f20de101a1452ef946655.r2.cloudflarestorage.com"
+      s3Credentials:
+        accessKeyId:
+          name: cnpg-cluster-backup-credentials
+          key: ACCESS_KEY_ID
+        secretAccessKey:
+          name: cnpg-cluster-backup-credentials
+          key: ACCESS_SECRET_KEY
+      wal:
+        retention: "7d"
+      data:
+        compression: gzip
 
 backups:
   # -- You need to configure backups manually, so backups are disabled by default.
