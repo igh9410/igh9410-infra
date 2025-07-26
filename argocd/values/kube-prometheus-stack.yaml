@@ -41,15 +41,18 @@ prometheus:
       fsGroup: 0
       runAsNonRoot: false
     containerSecurityContext:
+      privileged: true
       runAsUser: 0
       runAsGroup: 0
       runAsNonRoot: false
       allowPrivilegeEscalation: true
-      privileged: true
   initContainers:
     - name: chown-data
       image: busybox
-      command: ["chown", "-R", "1000:1000", "/prometheus"]
+      command: ["chown", "-R", "0:0", "/prometheus"]
+      securityContext:
+        privileged: true
+        runAsUser: 0
       volumeMounts:
         - name: prometheus-kube-prometheus-stack-prometheus-db
           mountPath: /prometheus

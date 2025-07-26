@@ -1,3 +1,0 @@
-- op: replace
-  path: /cluster/apiServer/admissionControl/0/configuration/defaults/enforce
-  value: privileged
