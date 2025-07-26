@@ -46,6 +46,13 @@ prometheus:
       runAsNonRoot: false
       allowPrivilegeEscalation: true
       privileged: true
+  initContainers:
+    - name: chown-data
+      image: busybox
+      command: ["chown", "-R", "1000:1000", "/prometheus"]
+      volumeMounts:
+        - name: prometheus-kube-prometheus-stack-prometheus-db
+          mountPath: /prometheus
 
 # Alertmanager configuration
 alertmanager:
