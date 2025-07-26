@@ -21,7 +21,7 @@ resource "helm_release" "argocd" {
   depends_on = [
     kubernetes_namespace.argocd
   ]
-} 
+}
 
 # Create a secret for GitHub credentials
 resource "kubernetes_secret" "github_access" {
