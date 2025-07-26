@@ -2,7 +2,7 @@ resource "kubernetes_namespace" "metallb_system" {
   metadata {
     name = "metallb-system"
     labels = {
-      "name" = "metallb-system"
+      "name"                               = "metallb-system"
       "pod-security.kubernetes.io/enforce" = "privileged"
       "pod-security.kubernetes.io/audit"   = "privileged"
       "pod-security.kubernetes.io/warn"    = "privileged"
@@ -16,7 +16,7 @@ resource "helm_release" "metallb" {
   chart      = "metallb"
   namespace  = kubernetes_namespace.metallb_system.metadata[0].name
   version    = "0.15.2" # Pinning version for stability
-  
+
   values = [file("values/metallb.yaml")]
   depends_on = [
     kubernetes_namespace.metallb_system
@@ -58,4 +58,5 @@ resource "kubernetes_manifest" "metallb_l2_advertisement" {
   }
 
   depends_on = [kubernetes_manifest.metallb_ip_pool]
-} 
+}
+ 

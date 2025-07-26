@@ -2,9 +2,9 @@ provider "kubernetes" {
   config_path = var.kubeconfig_path
 }
 
-# Configure Helm provider to connect to the new VKE cluster
+
 provider "helm" {
-  kubernetes {
+  kubernetes = {
     config_path = var.kubeconfig_path
   }
 }

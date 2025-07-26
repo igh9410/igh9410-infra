@@ -20,7 +20,7 @@ variable "github_app_private_key_pem_content" {
   description = "The content of the GitHub App's private key PEM file. Ensure no extra newlines."
   type        = string
   sensitive   = true
-} 
+}
 
 variable "github_repo" {
   description = "GitHub repository in format: OWNER/REPO"
