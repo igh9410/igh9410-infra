@@ -45,6 +45,7 @@ prometheus:
       runAsGroup: 0
       runAsNonRoot: false
       allowPrivilegeEscalation: true
+      privileged: true
 
 # Alertmanager configuration
 alertmanager:
