@@ -4,20 +4,20 @@ metadata:
   name: kube-prometheus-stack
   namespace: argocd
   finalizers:
-  - resources-finalizer.argocd.argoproj.io
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   sources:
-  - repoURL: https://prometheus-community.github.io/helm-charts
-    chart: kube-prometheus-stack
-    targetRevision: "73.2.0"
-    helm:
-      releaseName: kube-prometheus-stack
-      valueFiles:
-      - $values/argocd/values/kube-prometheus-stack.yaml
-  - repoURL: https://github.com/igh9410/igh9410-infra.git
-    targetRevision: HEAD
-    ref: values
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: kube-prometheus-stack
+      targetRevision: "73.2.0"
+      helm:
+        releaseName: kube-prometheus-stack
+        valueFiles:
+          - $values/argocd/values/kube-prometheus-stack.yaml
+    - repoURL: https://github.com/igh9410/igh9410-infra.git
+      targetRevision: HEAD
+      ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
@@ -26,26 +26,26 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-    - CreateNamespace=true
-    - ServerSideApply=true
-    - RespectIgnoreDifferences=true
+      - CreateNamespace=true
+      - ServerSideApply=true
+      - RespectIgnoreDifferences=true
   revisionHistoryLimit: 10
   ignoreDifferences:
-  - group: ""
-    kind: Secret
-    name: kube-prometheus-stack-grafana
-    jsonPointers:
-    - /data/admin-password
-  # Ignore PVC differences to prevent replacement attempts
-  - group: ""
-    kind: PersistentVolumeClaim
-    name: kube-prometheus-stack-grafana
-    jsonPointers:
-    - /spec/volumeName
-    - /spec/storageClassName
+    - group: ""
+      kind: Secret
+      name: kube-prometheus-stack-grafana
+      jsonPointers:
+        - /data/admin-password
+    # # Ignore PVC differences to prevent replacement attempts
+    # - group: ""
+    #   kind: PersistentVolumeClaim
+    #   name: kube-prometheus-stack-grafana
+    #   jsonPointers:
+    #     - /spec/volumeName
+    #     - /spec/storageClassName
   # Ignore deployment replica differences during rolling updates
-  - group: apps
-    kind: Deployment
-    name: kube-prometheus-stack-grafana
-    jsonPointers:
-    - /spec/replicas
+  # - group: apps
+  #   kind: Deployment
+  #   name: kube-prometheus-stack-grafana
+  #   jsonPointers:
+  #   - /spec/replicas
