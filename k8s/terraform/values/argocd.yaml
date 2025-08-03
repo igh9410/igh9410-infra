@@ -6,8 +6,8 @@ server:
     type: ClusterIP
   insecure: true # For server's own endpoint being HTTP
   extraArgs:
-  # List of strings for server command line
-  - "--insecure" # For insecure gRPC between components, if that was the intent
+    # List of strings for server command line
+    - "--insecure" # For insecure gRPC between components, if that was the intent
   config:
     # Populates argocd-cm
     url: "https://argocd.geonhyukim.com"
@@ -21,9 +21,9 @@ server:
   ingress:
     enabled: true
     hosts:
-    - "argocd.geonhyukim.com" # Explicitly setting the host
+      - "argocd.geonhyukim.com" # Explicitly setting the host
     paths:
-    - "/"
+      - "/"
     pathType: "Prefix"
     annotations:
       # Your test annotation, can be kept or removed

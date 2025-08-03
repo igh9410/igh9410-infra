@@ -14,7 +14,7 @@ spec:
       helm:
         releaseName: argocd
         valueFiles:
-          - $values/k8s/terraform/values/argocd-current.yaml
+          - $values/k8s/terraform/values/argocd.yaml
     - repoURL: https://github.com/igh9410/igh9410-infra.git
       targetRevision: HEAD
       ref: values
