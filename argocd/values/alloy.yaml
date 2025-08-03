@@ -44,7 +44,6 @@ alloy:
 
         selectors {
           role  = "pod"
-          namespace = ""
         }
       }
 
