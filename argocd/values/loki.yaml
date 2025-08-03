@@ -415,6 +415,10 @@ loki:
     #   ruler: FIXME
     #   admin: FIXME
     type: s3
+    bucketNames:
+      chunks: "igh9410-loki-chunk"
+      ruler: "igh9410-loki-ruler"
+      admin: "igh9410-loki-admin"
     s3:
       s3: null
       endpoint: "https://c3b77c4aca2f20de101a1452ef946655.r2.cloudflarestorage.com"
@@ -508,7 +512,15 @@ loki:
         account_key: null
 
   # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
-  schemaConfig: {}
+  schemaConfig:
+    configs:
+      - from: 2025-08-01
+        store: tsdb
+        object_store: s3
+        schema: v13
+        index:
+          prefix: loki_index_
+          period: 24h
   # -- a real Loki install requires a proper schemaConfig defined above this, however for testing or playing around
   # you can enable useTestSchema
   useTestSchema: false
