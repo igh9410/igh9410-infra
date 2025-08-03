@@ -59,13 +59,13 @@ alloy:
       // 3. Create a log source for the discovered application pods.
       loki.source.kubernetes "applications" {
         targets    = discovery.kubernetes.applications.targets
-        forward_to = [loki.write.loki_endpoint.receiver]
+        forward_to = [loki.write.endpoint.receiver]
       }
 
       // 4. Create a log source for the discovered database pods.
       loki.source.kubernetes "database" {
         targets    = discovery.kubernetes.database.targets
-        forward_to = [loki.write.loki_endpoint.receiver]
+        forward_to = [loki.write.endpoint.receiver]
       }
 
       loki.write "endpoint" {
