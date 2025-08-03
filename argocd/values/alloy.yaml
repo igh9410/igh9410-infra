@@ -140,7 +140,7 @@ alloy:
 
   mounts:
     # -- Mount /var/log from the host into the container for log collection.
-    varlog: false
+    varlog: true
     # -- Mount /var/lib/docker/containers from the host into the container for log
     # collection.
     dockercontainers: false
