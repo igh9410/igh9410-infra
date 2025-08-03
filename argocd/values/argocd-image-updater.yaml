@@ -1,0 +1,20 @@
+---
+image:
+  tag: "v0.12.3"
+
+metrics:
+  enabled: true
+
+config:
+  registries:
+    - name: "ghcr"
+      prefix: ""
+      api_url: "https://ghcr.io"
+      defaultns: "igh9410"
+      insecure: false
+      default: true
+      credentials: "pullsecret:argocd/ghcr-creds"
+
+serviceAccount:
+  create: true
+  name: "argocd-image-updater"
