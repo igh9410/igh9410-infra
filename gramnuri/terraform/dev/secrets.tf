@@ -24,5 +24,7 @@ resource "kubernetes_secret" "gramnuri_secrets" {
     CLOUDFLARE_ACCESS_KEY_ID     = var.cloudflare_access_key_id
     CLOUDFLARE_SECRET_ACCESS_KEY = var.cloudflare_secret_access_key
     R2_BUCKET_NAME               = var.r2_bucket_name
+    AWS_ACCESS_KEY_ID            = var.aws_access_key_id
+    AWS_SECRET_ACCESS_KEY        = var.aws_secret_access_key
   }
 }
