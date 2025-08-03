@@ -39,17 +39,33 @@ alloy:
         format = "logfmt"
       }
 
-      discovery.kubernetes "pods" {
-        role = "pod"
-
-        selectors {
-          role  = "pod"
-        }
+      // 1. Discover application pods in 'dev' and 'prod' namespaces.
+      // NOTE: You may need to add a 'label_selector' to target only app pods
+      // if other non-app pods exist in these namespaces.
+      discovery.kubernetes "applications" {
+        role       = "pod"
+        namespaces = ["dev", "prod"]
       }
 
-      loki.source.kubernetes "pods" {
-        targets    = discovery.kubernetes.pods.targets
-        forward_to = [loki.write.endpoint.receiver]
+      // 2. Discover CloudNative-PG database pods.
+
+      discovery.kubernetes "database" {
+        role            = "pod"
+        namespaces      = ["cnpg-database"]
+        label_selector  = "cnpg.io/cluster"
+      }
+
+
+      // 3. Create a log source for the discovered application pods.
+      loki.source.kubernetes "applications" {
+        targets    = discovery.kubernetes.applications.targets
+        forward_to = [loki.write.loki_endpoint.receiver]
+      }
+
+      // 4. Create a log source for the discovered database pods.
+      loki.source.kubernetes "database" {
+        targets    = discovery.kubernetes.database.targets
+        forward_to = [loki.write.loki_endpoint.receiver]
       }
 
       loki.write "endpoint" {
@@ -124,7 +140,7 @@ alloy:
 
   mounts:
     # -- Mount /var/log from the host into the container for log collection.
-    varlog: false
+    varlog: true
     # -- Mount /var/lib/docker/containers from the host into the container for log
     # collection.
     dockercontainers: false
