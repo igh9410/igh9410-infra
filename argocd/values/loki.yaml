@@ -512,7 +512,7 @@ loki:
   # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
   schemaConfig:
     configs:
-      - from: 2025-08-01
+      - from: 2025-07-01 # FIXED: Start from July 1st to accept older logs
         store: tsdb
         object_store: s3
         schema: v13
