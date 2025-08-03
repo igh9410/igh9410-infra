@@ -41,6 +41,11 @@ alloy:
 
       discovery.kubernetes "pods" {
         role = "pod"
+
+        selectors {
+          role  = "pod"
+          namespace = ""
+        }
       }
 
       loki.source.kubernetes "pods" {
