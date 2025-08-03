@@ -43,16 +43,25 @@ alloy:
       // NOTE: You may need to add a 'label_selector' to target only app pods
       // if other non-app pods exist in these namespaces.
       discovery.kubernetes "applications" {
-        role       = "pod"
-        namespaces = ["dev", "prod"]
+        role = "pod"
+        
+        namespaces {
+          names = ["dev", "prod"]
+        }
       }
 
       // 2. Discover CloudNative-PG database pods.
-
       discovery.kubernetes "database" {
-        role            = "pod"
-        namespaces      = ["cnpg-database"]
-        label_selector  = "cnpg.io/cluster"
+        role = "pod"
+        
+        namespaces {
+          names = ["cnpg-database"]
+        }
+        
+        selectors {
+          role = "pod"
+          label = "cnpg.io/cluster"
+        }
       }
 
 
