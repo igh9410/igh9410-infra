@@ -423,8 +423,6 @@ loki:
       s3: null
       endpoint: "https://c3b77c4aca2f20de101a1452ef946655.r2.cloudflarestorage.com"
       region: "apac"
-      secretAccessKey: "${AWS_SECRET_ACCESS_KEY}"
-      accessKeyId: "${AWS_ACCESS_KEY_ID}"
       signatureVersion: null
       s3ForcePathStyle: false
       insecure: false

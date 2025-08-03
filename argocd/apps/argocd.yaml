@@ -4,20 +4,20 @@ metadata:
   name: argocd
   namespace: argocd
   finalizers:
-  - resources-finalizer.argocd.argoproj.io
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   sources:
-  - repoURL: https://argoproj.github.io/argo-helm
-    chart: argo-cd
-    targetRevision: "7.8.13"
-    helm:
-      releaseName: argocd
-      valueFiles:
-      - $values/k3s/terraform/values/argocd-current.yaml
-  - repoURL: https://github.com/igh9410/igh9410-infra.git
-    targetRevision: HEAD
-    ref: values
+    - repoURL: https://argoproj.github.io/argo-helm
+      chart: argo-cd
+      targetRevision: "7.8.13"
+      helm:
+        releaseName: argocd
+        valueFiles:
+          - $values/k8s/terraform/values/argocd-current.yaml
+    - repoURL: https://github.com/igh9410/igh9410-infra.git
+      targetRevision: HEAD
+      ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
@@ -26,17 +26,17 @@ spec:
       prune: false # Set to false for ArgoCD self-management to avoid issues
       selfHeal: true
     syncOptions:
-    - CreateNamespace=true
-    - ServerSideApply=true
+      - CreateNamespace=true
+      - ServerSideApply=true
   revisionHistoryLimit: 10
   ignoreDifferences:
-  - group: ""
-    kind: Secret
-    name: argocd-secret
-    jsonPointers:
-    - /data
-  - group: ""
-    kind: ConfigMap
-    name: argocd-cm
-    jsonPointers:
-    - /data/accounts.geonhyuk
+    - group: ""
+      kind: Secret
+      name: argocd-secret
+      jsonPointers:
+        - /data
+    - group: ""
+      kind: ConfigMap
+      name: argocd-cm
+      jsonPointers:
+        - /data/accounts.geonhyuk
