@@ -9,9 +9,6 @@ provider "helm" {
   }
 }
 
-provider "cloudflare" {
-  api_token = var.cloudflare_api_token
-}
 
 # Secret to store the GitHub App's private key
 resource "kubernetes_secret" "github_app_private_key" {
