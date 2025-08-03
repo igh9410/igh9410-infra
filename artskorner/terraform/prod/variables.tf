@@ -38,11 +38,6 @@ variable "kubeconfig_path" {
   default     = "~/.kube/config"
 }
 
-variable "cloudflare_access_token" {
-  description = "Cloudflare Access Token"
-  type        = string
-  sensitive   = true
-}
 
 variable "cloudflare_access_key_id" {
   description = "Cloudflare Access Key ID"
