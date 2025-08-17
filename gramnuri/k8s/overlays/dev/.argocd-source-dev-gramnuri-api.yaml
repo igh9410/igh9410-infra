@@ -1,3 +1,3 @@
 kustomize:
   images:
-  - ghcr.io/igh9410/gramnuri-api=ghcr.io/igh9410/gramnuri-api:7d8b52d9d6f430c6bf4151e0e5e8b13a2a5dd795
+  - ghcr.io/igh9410/gramnuri-api=ghcr.io/igh9410/gramnuri-api:3b64b0fd9c06b25464d4f119dfe235fb5d51f358
