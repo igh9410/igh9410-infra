@@ -117,3 +117,9 @@ variable "aws_secret_access_key" {
   type        = string
   sensitive   = true
 }
+
+variable "r2_custom_domain" {
+  description = "R2 Custom Domain"
+  type        = string
+  default     = "dev-cdn.gramnuri.com"
+}
