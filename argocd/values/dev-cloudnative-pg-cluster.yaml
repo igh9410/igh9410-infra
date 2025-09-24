@@ -12,6 +12,10 @@ namespaceOverride: ""
 # * `timescaledb`
 type: postgresql
 
+cluster:
+  annotations:
+    cnpg.io/skipEmptyWalArchiveCheck: "enabled"
+
 version:
   # -- PostgreSQL major version to use
   postgresql: "17"
