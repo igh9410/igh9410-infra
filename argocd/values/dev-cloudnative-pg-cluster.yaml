@@ -44,11 +44,11 @@ recovery:
 
   ##
   # -- Backup Recovery Method
-  backupName: "backup-20250923180000" # Name of the backup to recover from. Required if method is `backup`.
+  backupName: "" # Name of the backup to recover from. Required if method is `backup`.
 
   ##
   # -- The original cluster name when used in backups. Also known as serverName.
-  clusterName: "dev-cloudnative-pg-cluster"
+  clusterName: "dev-postgres-db"
   # -- Name of the database used by the application. Default: `app`.
   database: gramnuri_db
   # -- Name of the owner of the database in the instance to be used by applications. Defaults to the value of the `database` key.
@@ -184,8 +184,6 @@ recovery:
 cluster:
   # -- Number of instances
   instances: 1
-  annotations:
-    cnpg.io/skipEmptyWalArchiveCheck: "enabled"
 
   # -- Name of the container image, supporting both tags (<image>:<tag>) and digests for deterministic and repeatable deployments:
   # <image>:<tag>@sha256:<digestValue>
@@ -382,6 +380,23 @@ cluster:
   additionalLabels: {}
   annotations: {}
 
+# External clusters configuration for recovery
+externalClusters:
+  - name: dev-cloudnative-pg-cluster
+    barmanObjectStore:
+      destinationPath: "s3://igh9410-backup/postgres/dev"
+      endpointURL: "https://c3b77c4aca2f20de101a1452ef946655.r2.cloudflarestorage.com"
+      s3Credentials:
+        accessKeyId:
+          name: cnpg-cluster-backup-credentials
+          key: ACCESS_KEY_ID
+        secretAccessKey:
+          name: cnpg-cluster-backup-credentials
+          key: ACCESS_SECRET_KEY
+      wal:
+        retention: "7d"
+      data:
+        compression: gzip
 
 backups:
   # -- You need to configure backups manually, so backups are disabled by default.
