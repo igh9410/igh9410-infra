@@ -386,7 +386,20 @@ cluster:
 
   additionalLabels: {}
   annotations: {}
-
+externalClusters:
+  - name: dev-postgres-db-backup
+    barmanObjectStore:
+      s3Config:
+        bucket: "igh9410-backup"
+        path: "/postgres/dev/dev-cloudnative-pg-cluster"
+        endpoint: "https://your-account.r2.cloudflarestorage.com"
+        accessKeyId:
+          name: r2-credentials
+          key: ACCESS_KEY_ID
+        secretAccessKey:
+          name: r2-credentials
+          key: SECRET_ACCESS_KEY
+        region: "auto"
 backups:
   # -- You need to configure backups manually, so backups are disabled by default.
   enabled: false
