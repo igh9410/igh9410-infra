@@ -14,7 +14,7 @@ provider "helm" {
 resource "kubernetes_secret" "github_app_private_key" {
   metadata {
     name      = "github-app-private-key"
-    namespace = "kube-system" # Choose a secure, appropriate namespace
+    namespace = "kube-system" # 
   }
   data = {
     # Ensure the key content does not have extra newlines before/after the BEGIN/END markers
@@ -23,7 +23,7 @@ resource "kubernetes_secret" "github_app_private_key" {
   }
 }
 
-resource "kubernetes_namespace" "dev" {
+/* resource "kubernetes_namespace" "dev" {
   metadata {
     name = "dev"
   }
@@ -33,4 +33,4 @@ resource "kubernetes_namespace" "prod" {
   metadata {
     name = "prod"
   }
-}
+} */
