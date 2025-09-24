@@ -14,7 +14,7 @@ type: postgresql
 
 version:
   # -- PostgreSQL major version to use
-  postgresql: "16"
+  postgresql: "17"
   # -- If using TimescaleDB, specify the version
   timescaledb: "2.15"
   # -- If using PostGIS, specify the version
@@ -25,7 +25,7 @@ version:
 # * `standalone` - default mode. Creates new or updates an existing CNPG cluster.
 # * `replica` - Creates a replica cluster from an existing CNPG cluster. # TODO
 # * `recovery` - Same as standalone but creates a cluster from a backup, object store or via pg_basebackup.
-mode: standalone
+mode: recovery
 
 recovery:
   ##
@@ -35,7 +35,7 @@ recovery:
   # * `pg_basebackup` - Recovers a CNPG cluster viaa streaming replication protocol. Useful if you want to
   #        migrate databases to CloudNativePG, even from outside Kubernetes.
   # * `import` - Import one or more databases from an existing Postgres cluster.
-  method: backup
+  method: object_store
 
   ## -- Point in time recovery target. Specify one of the following:
   pitrTarget:
@@ -48,15 +48,15 @@ recovery:
 
   ##
   # -- The original cluster name when used in backups. Also known as serverName.
-  clusterName: ""
+  clusterName: "dev-cloudnative-pg-cluster"
   # -- Name of the database used by the application. Default: `app`.
-  database: app
+  database: gramnuri_db
   # -- Name of the owner of the database in the instance to be used by applications. Defaults to the value of the `database` key.
-  owner: ""
+  owner: "postgres"
   # -- Overrides the provider specific default endpoint. Defaults to:
   # S3: https://s3.<region>.amazonaws.com"
   # Leave empty if using the default S3 endpoint
-  endpointURL: ""
+  endpointURL: "https://c3b77c4aca2f20de101a1452ef946655.r2.cloudflarestorage.com"
   # -- Specifies a CA bundle to validate a privately signed certificate.
   endpointCA:
     # -- Creates a secret with the given value if true, otherwise uses an existing secret.
@@ -68,7 +68,7 @@ recovery:
   # S3: s3://<bucket><path>
   # Azure: https://<storageAccount>.<serviceName>.core.windows.net/<containerName><path>
   # Google: gs://<bucket><path>
-  destinationPath: ""
+  destinationPath: "s3://igh9410-backup/postgres/dev/dev-cloudnative-pg-cluster"
   # -- One of `s3`, `azure` or `google`
   provider: s3
   s3:
@@ -387,26 +387,29 @@ cluster:
   additionalLabels: {}
   annotations: {}
 externalClusters:
-  - name: dev-postgres-db-backup
+  - name: dev-cloudnative-pg-cluster
     barmanObjectStore:
-      s3Config:
-        bucket: "igh9410-backup"
-        path: "/postgres/dev/dev-cloudnative-pg-cluster"
-        endpoint: "https://your-account.r2.cloudflarestorage.com"
+      destinationPath: "s3://igh9410-backup/postgres/dev/dev-cloudnative-pg-cluster"
+      endpointURL: "https://c3b77c4aca2f20de101a1452ef946655.r2.cloudflarestorage.com"
+      s3Credentials:
         accessKeyId:
-          name: r2-credentials
+          name: cnpg-cluster-backup-credentials
           key: ACCESS_KEY_ID
         secretAccessKey:
-          name: r2-credentials
-          key: SECRET_ACCESS_KEY
-        region: "auto"
+          name: cnpg-cluster-backup-credentials
+          key: ACCESS_SECRET_KEY
+      wal:
+        retention: "7d"
+      data:
+        compression: gzip
+
 backups:
   # -- You need to configure backups manually, so backups are disabled by default.
-  enabled: false
+  enabled: true
 
   # -- Overrides the provider specific default endpoint. Defaults to:
   # S3: https://s3.<region>.amazonaws.com"
-  endpointURL: "" # Leave empty if using the default S3 endpoint
+  endpointURL: "https://c3b77c4aca2f20de101a1452ef946655.r2.cloudflarestorage.com" # Leave empty if using the default S3 endpoint
   # -- Specifies a CA bundle to validate a privately signed certificate.
   endpointCA:
     # -- Creates a secret with the given value if true, otherwise uses an existing secret.
@@ -419,13 +422,13 @@ backups:
   # S3: s3://<bucket><path>
   # Azure: https://<storageAccount>.<serviceName>.core.windows.net/<containerName><path>
   # Google: gs://<bucket><path>
-  destinationPath: ""
+  destinationPath: "s3://igh9410-backup/cnpg/dev"
   # -- One of `s3`, `azure` or `google`
   provider: s3
   s3:
-    region: ""
-    bucket: ""
-    path: "/"
+    region: "apac"
+    bucket: "igh9410-backup"
+    path: "/cnpg/dev"
     accessKey: ""
     secretKey: ""
     # -- Use the role based authentication without providing explicitly the keys
@@ -446,9 +449,9 @@ backups:
     applicationCredentials: ""
   secret:
     # -- Whether to create a secret for the backup credentials
-    create: true
+    create: false
     # -- Name of the backup credentials secret
-    name: ""
+    name: "cnpg-cluster-backup-credentials"
 
   wal:
     # -- WAL compression method. One of `` (for no compression), `gzip`, `bzip2` or `snappy`.
