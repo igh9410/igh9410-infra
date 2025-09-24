@@ -70,7 +70,7 @@ recovery:
   # S3: s3://<bucket><path>
   # Azure: https://<storageAccount>.<serviceName>.core.windows.net/<containerName><path>
   # Google: gs://<bucket><path>
-  destinationPath: "s3://igh9410-backup/postgres/dev"
+  destinationPath: "s3://igh9410-backup/postgres/dev/dev-cloudnative-pg-cluster"
   # -- One of `s3`, `azure` or `google`
   provider: s3
   s3:
