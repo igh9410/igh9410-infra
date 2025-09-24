@@ -217,19 +217,32 @@ cluster:
   postgresGID: -1
 
   # -- Customization of service definitions. Please refer to https://cloudnative-pg.io/documentation/1.24/service_management/
-  services: {}
+  services:
+    additional:
+      - selectorType: rw
+        updateStrategy: patch
+        serviceTemplate:
+          metadata:
+            name: "dev-postgres-db-lb"
+            labels:
+              test-label: "true"
+            annotations:
+              external-dns.alpha.kubernetes.io/hostname: dev-postgres-db.local
+              test-annotation: "true"
+          spec:
+            type: LoadBalancer
 
   # -- Resources requirements of every generated Pod.
   # Please refer to https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ for more information.
   # We strongly advise you use the same setting for limits and requests so that your cluster pods are given a Guaranteed QoS.
   # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-qos/
-  resources:
-    limits:
-      cpu: 500m
-      memory: 4Gi
-    requests:
-      cpu: 500m
-      memory: 4Gi
+  resources: {}
+  #  limits:
+  #    cpu: 500m
+  #    memory: 4Gi
+  #  requests:
+  #    cpu: 500m
+  #     memory: 4Gi
 
   priorityClassName: ""
 
