@@ -44,7 +44,7 @@ recovery:
 
   ##
   # -- Backup Recovery Method
-  backupName: "" # Name of the backup to recover from. Required if method is `backup`.
+  backupName: "dev-cloudnative-pg-cluster" # Name of the backup to recover from. Required if method is `backup`.
 
   ##
   # -- The original cluster name when used in backups. Also known as serverName.
