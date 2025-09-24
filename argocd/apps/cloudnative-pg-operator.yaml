@@ -4,20 +4,20 @@ metadata:
   name: cloudnative-pg-operator
   namespace: argocd
   finalizers:
-  - resources-finalizer.argocd.argoproj.io
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   sources:
-  - repoURL: https://cloudnative-pg.github.io/charts
-    chart: cloudnative-pg
-    targetRevision: "0.24.0" # Match your values version
-    helm:
-      releaseName: cloudnative-pg-operator
-      valueFiles:
-      - $values/argocd/values/cloudnative-pg-custom.yaml
-  - repoURL: https://github.com/igh9410/igh9410-infra.git
-    targetRevision: HEAD
-    ref: values
+    - repoURL: https://cloudnative-pg.github.io/charts
+      chart: cloudnative-pg
+      targetRevision: "0.24.0" # Match your values version
+      helm:
+        releaseName: cloudnative-pg-operator
+        valueFiles:
+          - $values/argocd/values/cloudnative-pg-operator.yaml
+    - repoURL: https://github.com/igh9410/igh9410-infra.git
+      targetRevision: HEAD
+      ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: cnpg-system
@@ -26,6 +26,6 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-    - CreateNamespace=true
-    - ServerSideApply=true
+      - CreateNamespace=true
+      - ServerSideApply=true
   revisionHistoryLimit: 10
