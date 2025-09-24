@@ -79,17 +79,3 @@ resource "kubernetes_secret" "ghcr_creds" {
   ]
 }
 
-# ArgoCD Image Updater - MANAGED MANUALLY VIA HELM
-# resource "helm_release" "argocd_image_updater" {
-#   name       = "argocd-image-updater"
-#   repository = "https://argoproj.github.io/argo-helm"
-#   chart      = "argocd-image-updater"
-#   namespace  = "argocd"
-#   version    = "0.12.1"
-#
-#   values = [file("values/argocd-image-updater.yaml")]
-#   depends_on = [
-#     helm_release.argocd
-#   ]
-# }  
-

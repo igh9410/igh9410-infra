@@ -58,5 +58,5 @@ resource "kubernetes_manifest" "metallb_l2_advertisement" {
   }
 
   depends_on = [kubernetes_manifest.metallb_ip_pool]
-}
+} 
  
