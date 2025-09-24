@@ -14,7 +14,7 @@ type: postgresql
 
 version:
   # -- PostgreSQL major version to use
-  postgresql: "17"
+  postgresql: "16"
   # -- If using TimescaleDB, specify the version
   timescaledb: "2.15"
   # -- If using PostGIS, specify the version
@@ -25,7 +25,7 @@ version:
 # * `standalone` - default mode. Creates new or updates an existing CNPG cluster.
 # * `replica` - Creates a replica cluster from an existing CNPG cluster. # TODO
 # * `recovery` - Same as standalone but creates a cluster from a backup, object store or via pg_basebackup.
-mode: recovery
+mode: standalone
 
 recovery:
   ##
@@ -35,7 +35,7 @@ recovery:
   # * `pg_basebackup` - Recovers a CNPG cluster viaa streaming replication protocol. Useful if you want to
   #        migrate databases to CloudNativePG, even from outside Kubernetes.
   # * `import` - Import one or more databases from an existing Postgres cluster.
-  method: object_store
+  method: backup
 
   ## -- Point in time recovery target. Specify one of the following:
   pitrTarget:
@@ -48,17 +48,15 @@ recovery:
 
   ##
   # -- The original cluster name when used in backups. Also known as serverName.
-  clusterName: "dev-postgres-db"
+  clusterName: ""
   # -- Name of the database used by the application. Default: `app`.
-  database: gramnuri_db
+  database: app
   # -- Name of the owner of the database in the instance to be used by applications. Defaults to the value of the `database` key.
-  owner: "postgres"
-  # -- External cluster source name for recovery
-  source: "dev-cloudnative-pg-cluster"
+  owner: ""
   # -- Overrides the provider specific default endpoint. Defaults to:
   # S3: https://s3.<region>.amazonaws.com"
   # Leave empty if using the default S3 endpoint
-  endpointURL: "https://c3b77c4aca2f20de101a1452ef946655.r2.cloudflarestorage.com"
+  endpointURL: ""
   # -- Specifies a CA bundle to validate a privately signed certificate.
   endpointCA:
     # -- Creates a secret with the given value if true, otherwise uses an existing secret.
@@ -70,13 +68,13 @@ recovery:
   # S3: s3://<bucket><path>
   # Azure: https://<storageAccount>.<serviceName>.core.windows.net/<containerName><path>
   # Google: gs://<bucket><path>
-  destinationPath: "s3://igh9410-backup/postgres/dev"
+  destinationPath: ""
   # -- One of `s3`, `azure` or `google`
   provider: s3
   s3:
     region: ""
     bucket: ""
-    path: ""
+    path: "/"
     accessKey: ""
     secretKey: ""
     # -- Use the role based authentication without providing explicitly the keys
@@ -97,7 +95,7 @@ recovery:
     applicationCredentials: ""
   secret:
     # -- Whether to create a secret for the backup credentials
-    create: false
+    create: true
     # -- Name of the backup credentials secret
     name: ""
 
@@ -134,7 +132,7 @@ recovery:
         name: ""
         key: ""
 
-  # See: https://cloudnative-pg.io/documentation/current/database_import/#how-it-works
+  # See: https://cloudnative-pg.io/documentation/current/cloudnative-pg.v1/#postgresql-cnpg-io-v1-Import
   import:
     # -- One of `microservice` or `monolith.`
     # See: https://cloudnative-pg.io/documentation/current/database_import/#how-it-works
@@ -210,7 +208,7 @@ cluster:
   walStorage:
     enabled: false
     size: 1Gi
-    storageClass: "local-path"
+    storageClass: ""
 
   # -- The UID of the postgres user inside the image, defaults to 26
   postgresUID: -1
@@ -219,33 +217,19 @@ cluster:
   postgresGID: -1
 
   # -- Customization of service definitions. Please refer to https://cloudnative-pg.io/documentation/1.24/service_management/
-  services:
-    additional:
-      - selectorType: rw
-        updateStrategy: patch
-        serviceTemplate:
-          metadata:
-            name: "dev-postgres-db-lb"
-            labels:
-              test-label: "true"
-            annotations:
-              external-dns.alpha.kubernetes.io/hostname: dev-postgres-db.local
-              test-annotation: "true"
-          spec:
-            type: LoadBalancer
+  services: {}
 
   # -- Resources requirements of every generated Pod.
   # Please refer to https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ for more information.
   # We strongly advise you use the same setting for limits and requests so that your cluster pods are given a Guaranteed QoS.
   # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-qos/
   resources:
-    {}
-    # limits:
-    #   cpu: 2000m
-    #   memory: 8Gi
-    # requests:
-    #   cpu: 2000m
-    #   memory: 8Gi
+    limits:
+      cpu: 500m
+      memory: 4Gi
+    requests:
+      cpu: 500m
+      memory: 4Gi
 
   priorityClassName: ""
 
@@ -296,7 +280,7 @@ cluster:
 
   monitoring:
     # -- Whether to enable monitoring
-    enabled: true
+    enabled: false
     podMonitor:
       # -- Whether to enable the PodMonitor
       enabled: true
@@ -310,7 +294,9 @@ cluster:
       # -- Whether to enable the PrometheusRule automated alerts
       enabled: true
       # -- Exclude specified rules
-      excludeRules: [] # - CNPGClusterZoneSpreadWarning
+      excludeRules:
+        []
+        # - CNPGClusterZoneSpreadWarning
     # -- Whether the default queries should be injected.
     # Set it to true if you don't want to inject default queries into the cluster.
     disableDefaultQueries: false
@@ -333,18 +319,26 @@ cluster:
 
   postgresql:
     # -- PostgreSQL configuration options (postgresql.conf)
-    parameters: {} # max_connections: 300
+    parameters:
+      {}
+      # max_connections: 300
     # -- Quorum-based Synchronous Replication
     synchronous:
       {}
       # method: any
       # number: 1
     # -- PostgreSQL Host Based Authentication rules (lines to be appended to the pg_hba.conf file)
-    pg_hba: [] # - host all all 10.244.0.0/16 md5
+    pg_hba:
+      []
+      # - host all all 10.244.0.0/16 md5
     # -- PostgreSQL User Name Maps rules (lines to be appended to the pg_ident.conf file)
-    pg_ident: [] # - mymap   /^(.*)@mydomain\.com$      \1
+    pg_ident:
+      []
+      # - mymap   /^(.*)@mydomain\.com$      \1
     # -- Lists of shared preload libraries to add to the default ones
-    shared_preload_libraries: [] # - pgaudit
+    shared_preload_libraries:
+      []
+      # - pgaudit
     # -- PostgreSQL LDAP configuration (see https://cloudnative-pg.io/documentation/current/postgresql_conf/#ldap-configuration)
     ldap:
       {}
@@ -380,31 +374,13 @@ cluster:
   additionalLabels: {}
   annotations: {}
 
-# External clusters configuration for recovery
-externalClusters:
-  - name: dev-cloudnative-pg-cluster
-    barmanObjectStore:
-      destinationPath: "s3://igh9410-backup/postgres/dev"
-      endpointURL: "https://c3b77c4aca2f20de101a1452ef946655.r2.cloudflarestorage.com"
-      s3Credentials:
-        accessKeyId:
-          name: cnpg-cluster-backup-credentials
-          key: ACCESS_KEY_ID
-        secretAccessKey:
-          name: cnpg-cluster-backup-credentials
-          key: ACCESS_SECRET_KEY
-      wal:
-        retention: "7d"
-      data:
-        compression: gzip
-
 backups:
   # -- You need to configure backups manually, so backups are disabled by default.
-  enabled: true
+  enabled: false
 
   # -- Overrides the provider specific default endpoint. Defaults to:
   # S3: https://s3.<region>.amazonaws.com"
-  endpointURL: "https://c3b77c4aca2f20de101a1452ef946655.r2.cloudflarestorage.com" # Leave empty if using the default S3 endpoint
+  endpointURL: "" # Leave empty if using the default S3 endpoint
   # -- Specifies a CA bundle to validate a privately signed certificate.
   endpointCA:
     # -- Creates a secret with the given value if true, otherwise uses an existing secret.
@@ -417,13 +393,13 @@ backups:
   # S3: s3://<bucket><path>
   # Azure: https://<storageAccount>.<serviceName>.core.windows.net/<containerName><path>
   # Google: gs://<bucket><path>
-  destinationPath: "s3://igh9410-backup/postgres/dev"
+  destinationPath: ""
   # -- One of `s3`, `azure` or `google`
   provider: s3
   s3:
-    region: "apac"
-    bucket: "igh9410-backup"
-    path: "/postgres/dev"
+    region: ""
+    bucket: ""
+    path: "/"
     accessKey: ""
     secretKey: ""
     # -- Use the role based authentication without providing explicitly the keys
@@ -444,9 +420,9 @@ backups:
     applicationCredentials: ""
   secret:
     # -- Whether to create a secret for the backup credentials
-    create: false
+    create: true
     # -- Name of the backup credentials secret
-    name: "cnpg-cluster-backup-credentials"
+    name: ""
 
   wal:
     # -- WAL compression method. One of `` (for no compression), `gzip`, `bzip2` or `snappy`.

@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: dev-cloudnative-pg-cluster
+  name: dev-cnpg-cluster
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -12,9 +12,9 @@ spec:
       chart: cluster
       targetRevision: "0.3.1"
       helm:
-        releaseName: dev-cloudnative-pg-cluster
+        releaseName: dev-cnpg-cluster
         valueFiles:
-          - $values/argocd/values/dev-cloudnative-pg-cluster.yaml
+          - $values/argocd/values/dev-cnpg-cluster.yaml
     - repoURL: https://github.com/igh9410/igh9410-infra.git
       targetRevision: HEAD
       ref: values
