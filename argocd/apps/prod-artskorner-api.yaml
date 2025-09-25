@@ -12,12 +12,12 @@ metadata:
     argocd-image-updater.argoproj.io/git-branch: main
     argocd-image-updater.argoproj.io/ghcr.io.creds: secret:argocd/ghcr-creds
   finalizers:
-  - resources-finalizer.argocd.argoproj.io
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
     repoURL: https://github.com/igh9410/igh9410-infra.git
-    targetRevision: HEAD
+    targetRevision: main
     path: artskorner/k8s/overlays/prod
   destination:
     server: https://kubernetes.default.svc
@@ -27,7 +27,7 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-    - CreateNamespace=true
-    - PrunePropagationPolicy=foreground
-    - PruneLast=true
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
   revisionHistoryLimit: 10
