@@ -16,7 +16,7 @@ spec:
         valueFiles:
           - $values/argocd/values/dev-cnpg-cluster.yaml
     - repoURL: https://github.com/igh9410/igh9410-infra.git
-      targetRevision: HEAD
+      targetRevision: main
       ref: values
   destination:
     server: https://kubernetes.default.svc
