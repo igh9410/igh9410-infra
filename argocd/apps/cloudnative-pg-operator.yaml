@@ -14,7 +14,7 @@ spec:
       helm:
         releaseName: cloudnative-pg-operator
         valueFiles:
-          - $values/argocd/infra-apps/values/cloudnative-pg-operator.yaml
+          - $values/argocd/values/cloudnative-pg-operator.yaml
     - repoURL: https://github.com/igh9410/igh9410-infra.git
       targetRevision: main
       ref: values

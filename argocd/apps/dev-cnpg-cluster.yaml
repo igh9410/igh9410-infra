@@ -14,7 +14,7 @@ spec:
       helm:
         releaseName: dev-cnpg-cluster
         valueFiles:
-          - $values/argocd/apps/values/dev-cnpg-cluster.yaml
+          - $values/argocd/values/dev-cnpg-cluster.yaml
     - repoURL: https://github.com/igh9410/igh9410-infra.git
       targetRevision: main
       ref: values
