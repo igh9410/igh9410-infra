@@ -1,0 +1,646 @@
+=================================================
+APPLICATION: argocd/alloy
+=================================================
+
+Name:               argocd/alloy
+Project:            default
+Server:             https://kubernetes.default.svc
+Namespace:          monitoring
+URL:                https://argocd.geonhyukim.com/applications/argocd/alloy
+Sources:
+- Repo:             https://grafana.github.io/helm-charts
+  Target:           1.2.0
+  Helm Values:      $values/argocd/values/alloy.yaml
+- Repo:             https://github.com/igh9410/igh9410-infra.git
+  Target:           main
+  Ref:              values
+SyncWindow:         Sync Allowed
+Sync Policy:        Automated (Prune)
+Sync Status:        Synced to 1.2.0
+Health Status:      Healthy
+
+Operation:          Sync
+Sync Revision:      1.2.0, 73a2f0e0ae7bfd8d746f0b180952aadbe5d9295d
+Phase:              Succeeded
+Start:              2025-09-26 19:16:58 +0900 KST
+Finished:           2025-09-26 19:16:59 +0900 KST
+Duration:           1s
+Message:            successfully synced (no more tasks)
+
+GROUP                      KIND                      NAMESPACE   NAME                            STATUS     HEALTH   HOOK  MESSAGE
+                           ServiceAccount            monitoring  alloy                           Synced                    serviceaccount/alloy configured (dry run)
+                           ConfigMap                 monitoring  alloy                           Synced                    configmap/alloy configured (dry run)
+apiextensions.k8s.io       CustomResourceDefinition  monitoring  podlogs.monitoring.grafana.com  Succeeded  Synced         customresourcedefinition.apiextensions.k8s.io/podlogs.monitoring.grafana.com configured (dry run)
+rbac.authorization.k8s.io  ClusterRole               monitoring  alloy                           Succeeded  Synced         clusterrole.rbac.authorization.k8s.io/alloy reconciled (dry run). clusterrole.rbac.authorization.k8s.io/alloy configured (dry run)
+rbac.authorization.k8s.io  ClusterRoleBinding        monitoring  alloy                           Succeeded  Synced         clusterrolebinding.rbac.authorization.k8s.io/alloy reconciled (dry run). clusterrolebinding.rbac.authorization.k8s.io/alloy configured (dry run)
+                           Service                   monitoring  alloy                           Synced     Healthy        service/alloy configured (dry run)
+apps                       DaemonSet                 monitoring  alloy                           Synced     Healthy        daemonset.apps/alloy configured (dry run)
+apiextensions.k8s.io       CustomResourceDefinition              podlogs.monitoring.grafana.com  Synced     Healthy        
+rbac.authorization.k8s.io  ClusterRole                           alloy                           Synced                    
+rbac.authorization.k8s.io  ClusterRoleBinding                    alloy                           Synced                    
+
+
+=================================================
+APPLICATION: argocd/cloudnative-pg-operator
+=================================================
+
+Name:               argocd/cloudnative-pg-operator
+Project:            default
+Server:             https://kubernetes.default.svc
+Namespace:          cnpg-system
+URL:                https://argocd.geonhyukim.com/applications/argocd/cloudnative-pg-operator
+Sources:
+- Repo:             https://cloudnative-pg.github.io/charts
+  Target:           0.24.0
+  Helm Values:      $values/argocd/values/cloudnative-pg-operator.yaml
+- Repo:             https://github.com/igh9410/igh9410-infra.git
+  Target:           main
+  Ref:              values
+SyncWindow:         Sync Allowed
+Sync Policy:        Automated (Prune)
+Sync Status:        Synced to 0.24.0
+Health Status:      Healthy
+
+Operation:          Sync
+Sync Revision:      0.24.0, 73a2f0e0ae7bfd8d746f0b180952aadbe5d9295d
+Phase:              Succeeded
+Start:              2025-09-26 19:17:01 +0900 KST
+Finished:           2025-09-26 19:17:02 +0900 KST
+Duration:           1s
+Message:            successfully synced (no more tasks)
+
+GROUP                         KIND                            NAMESPACE    NAME                                     STATUS     HEALTH   HOOK  MESSAGE
+                              ServiceAccount                  cnpg-system  cloudnative-pg-operator                  Synced                    serviceaccount/cloudnative-pg-operator configured (dry run)
+                              ConfigMap                       cnpg-system  cnpg-controller-manager-config           Synced                    configmap/cnpg-controller-manager-config configured (dry run)
+                              ConfigMap                       cnpg-system  cnpg-default-monitoring                  Synced                    configmap/cnpg-default-monitoring configured (dry run)
+                              ConfigMap                       cnpg-system  cnpg-grafana-dashboard                   Synced                    configmap/cnpg-grafana-dashboard configured (dry run)
+apiextensions.k8s.io          CustomResourceDefinition        cnpg-system  imagecatalogs.postgresql.cnpg.io         Succeeded  Synced         customresourcedefinition.apiextensions.k8s.io/imagecatalogs.postgresql.cnpg.io configured (dry run)
+apiextensions.k8s.io          CustomResourceDefinition        cnpg-system  scheduledbackups.postgresql.cnpg.io      Succeeded  Synced         customresourcedefinition.apiextensions.k8s.io/scheduledbackups.postgresql.cnpg.io configured (dry run)
+apiextensions.k8s.io          CustomResourceDefinition        cnpg-system  clusterimagecatalogs.postgresql.cnpg.io  Succeeded  Synced         customresourcedefinition.apiextensions.k8s.io/clusterimagecatalogs.postgresql.cnpg.io configured (dry run)
+apiextensions.k8s.io          CustomResourceDefinition        cnpg-system  databases.postgresql.cnpg.io             Succeeded  Synced         customresourcedefinition.apiextensions.k8s.io/databases.postgresql.cnpg.io configured (dry run)
+apiextensions.k8s.io          CustomResourceDefinition        cnpg-system  publications.postgresql.cnpg.io          Succeeded  Synced         customresourcedefinition.apiextensions.k8s.io/publications.postgresql.cnpg.io configured (dry run)
+apiextensions.k8s.io          CustomResourceDefinition        cnpg-system  subscriptions.postgresql.cnpg.io         Succeeded  Synced         customresourcedefinition.apiextensions.k8s.io/subscriptions.postgresql.cnpg.io configured (dry run)
+apiextensions.k8s.io          CustomResourceDefinition        cnpg-system  backups.postgresql.cnpg.io               Succeeded  Synced         customresourcedefinition.apiextensions.k8s.io/backups.postgresql.cnpg.io configured (dry run)
+apiextensions.k8s.io          CustomResourceDefinition        cnpg-system  clusters.postgresql.cnpg.io              Succeeded  Synced         customresourcedefinition.apiextensions.k8s.io/clusters.postgresql.cnpg.io configured (dry run)
+apiextensions.k8s.io          CustomResourceDefinition        cnpg-system  poolers.postgresql.cnpg.io               Succeeded  Synced         customresourcedefinition.apiextensions.k8s.io/poolers.postgresql.cnpg.io configured (dry run)
+rbac.authorization.k8s.io     ClusterRole                     cnpg-system  cloudnative-pg-operator                  Succeeded  Synced         clusterrole.rbac.authorization.k8s.io/cloudnative-pg-operator reconciled (dry run). clusterrole.rbac.authorization.k8s.io/cloudnative-pg-operator configured (dry run)
+rbac.authorization.k8s.io     ClusterRole                     cnpg-system  cloudnative-pg-operator-edit             Succeeded  Synced         clusterrole.rbac.authorization.k8s.io/cloudnative-pg-operator-edit reconciled (dry run). clusterrole.rbac.authorization.k8s.io/cloudnative-pg-operator-edit configured (dry run)
+rbac.authorization.k8s.io     ClusterRole                     cnpg-system  cloudnative-pg-operator-view             Succeeded  Synced         clusterrole.rbac.authorization.k8s.io/cloudnative-pg-operator-view reconciled (dry run). clusterrole.rbac.authorization.k8s.io/cloudnative-pg-operator-view configured (dry run)
+rbac.authorization.k8s.io     ClusterRoleBinding              cnpg-system  cloudnative-pg-operator                  Succeeded  Synced         clusterrolebinding.rbac.authorization.k8s.io/cloudnative-pg-operator reconciled (dry run). clusterrolebinding.rbac.authorization.k8s.io/cloudnative-pg-operator configured (dry run)
+                              Service                         cnpg-system  cnpg-webhook-service                     Synced     Healthy        service/cnpg-webhook-service configured (dry run)
+apps                          Deployment                      cnpg-system  cloudnative-pg-operator                  Synced     Healthy        deployment.apps/cloudnative-pg-operator configured (dry run)
+monitoring.coreos.com         PodMonitor                      cnpg-system  cloudnative-pg-operator                  Synced                    podmonitor.monitoring.coreos.com/cloudnative-pg-operator configured (dry run)
+admissionregistration.k8s.io  MutatingWebhookConfiguration    cnpg-system  cnpg-mutating-webhook-configuration      Succeeded  Synced         mutatingwebhookconfiguration.admissionregistration.k8s.io/cnpg-mutating-webhook-configuration configured (dry run)
+admissionregistration.k8s.io  ValidatingWebhookConfiguration  cnpg-system  cnpg-validating-webhook-configuration    Succeeded  Synced         validatingwebhookconfiguration.admissionregistration.k8s.io/cnpg-validating-webhook-configuration configured (dry run)
+admissionregistration.k8s.io  MutatingWebhookConfiguration                 cnpg-mutating-webhook-configuration      Synced                    
+admissionregistration.k8s.io  ValidatingWebhookConfiguration               cnpg-validating-webhook-configuration    Synced                    
+apiextensions.k8s.io          CustomResourceDefinition                     backups.postgresql.cnpg.io               Synced     Healthy        
+apiextensions.k8s.io          CustomResourceDefinition                     clusterimagecatalogs.postgresql.cnpg.io  Synced     Healthy        
+apiextensions.k8s.io          CustomResourceDefinition                     clusters.postgresql.cnpg.io              Synced     Healthy        
+apiextensions.k8s.io          CustomResourceDefinition                     databases.postgresql.cnpg.io             Synced     Healthy        
+apiextensions.k8s.io          CustomResourceDefinition                     imagecatalogs.postgresql.cnpg.io         Synced     Healthy        
+apiextensions.k8s.io          CustomResourceDefinition                     poolers.postgresql.cnpg.io               Synced     Healthy        
+apiextensions.k8s.io          CustomResourceDefinition                     publications.postgresql.cnpg.io          Synced     Healthy        
+apiextensions.k8s.io          CustomResourceDefinition                     scheduledbackups.postgresql.cnpg.io      Synced     Healthy        
+apiextensions.k8s.io          CustomResourceDefinition                     subscriptions.postgresql.cnpg.io         Synced     Healthy        
+rbac.authorization.k8s.io     ClusterRole                                  cloudnative-pg-operator                  Synced                    
+rbac.authorization.k8s.io     ClusterRole                                  cloudnative-pg-operator-edit             Synced                    
+rbac.authorization.k8s.io     ClusterRole                                  cloudnative-pg-operator-view             Synced                    
+rbac.authorization.k8s.io     ClusterRoleBinding                           cloudnative-pg-operator                  Synced                    
+
+
+=================================================
+APPLICATION: argocd/dev-cnpg-cluster
+=================================================
+
+Name:               argocd/dev-cnpg-cluster
+Project:            default
+Server:             https://kubernetes.default.svc
+Namespace:          cnpg-database
+URL:                https://argocd.geonhyukim.com/applications/argocd/dev-cnpg-cluster
+Sources:
+- Repo:             https://cloudnative-pg.github.io/charts
+  Target:           0.3.1
+  Helm Values:      $values/argocd/values/dev-cnpg-cluster.yaml
+- Repo:             https://github.com/igh9410/igh9410-infra.git
+  Target:           main
+  Ref:              values
+SyncWindow:         Sync Allowed
+Sync Policy:        Automated (Prune)
+Sync Status:        Synced to 0.3.1
+Health Status:      Healthy
+
+Operation:          Sync
+Sync Revision:      0.3.1, 73a2f0e0ae7bfd8d746f0b180952aadbe5d9295d
+Phase:              Succeeded
+Start:              2025-09-26 19:17:04 +0900 KST
+Finished:           2025-09-26 19:17:04 +0900 KST
+Duration:           0s
+Message:            successfully synced (no more tasks)
+
+GROUP               KIND             NAMESPACE      NAME                           STATUS  HEALTH   HOOK  MESSAGE
+postgresql.cnpg.io  Cluster          cnpg-database  dev-cnpg-cluster               Synced  Healthy        cluster.postgresql.cnpg.io/dev-cnpg-cluster configured (dry run)
+postgresql.cnpg.io  ScheduledBackup  cnpg-database  dev-cnpg-cluster-daily-backup  Synced                 scheduledbackup.postgresql.cnpg.io/dev-cnpg-cluster-daily-backup configured (dry run)
+
+
+=================================================
+APPLICATION: argocd/dev-gramnuri-api
+=================================================
+
+Name:               argocd/dev-gramnuri-api
+Project:            default
+Server:             https://kubernetes.default.svc
+Namespace:          dev
+URL:                https://argocd.geonhyukim.com/applications/argocd/dev-gramnuri-api
+Source:
+- Repo:             https://github.com/igh9410/igh9410-infra.git
+  Target:           main
+  Path:             gramnuri/k8s/overlays/dev
+SyncWindow:         Sync Allowed
+Sync Policy:        Automated (Prune)
+Sync Status:        Synced to main (73a2f0e)
+Health Status:      Healthy
+
+Operation:          Sync
+Sync Revision:      73a2f0e0ae7bfd8d746f0b180952aadbe5d9295d
+Phase:              Succeeded
+Start:              2025-09-26 19:17:06 +0900 KST
+Finished:           2025-09-26 19:17:06 +0900 KST
+Duration:           0s
+Message:            successfully synced (no more tasks)
+
+GROUP              KIND        NAMESPACE  NAME                      STATUS  HEALTH   HOOK  MESSAGE
+                   Service     dev        dev-gramnuri-api          Synced  Healthy        service/dev-gramnuri-api configured (dry run)
+apps               Deployment  dev        dev-gramnuri-api          Synced  Healthy        deployment.apps/dev-gramnuri-api configured (dry run)
+networking.k8s.io  Ingress     dev        dev-gramnuri-api-ingress  Synced  Healthy        ingress.networking.k8s.io/dev-gramnuri-api-ingress configured (dry run)
+
+
+=================================================
+APPLICATION: argocd/kube-prometheus-stack
+=================================================
+TIMESTAMP                  GROUP                               KIND                       NAMESPACE                   NAME                                               STATUS   HEALTH        HOOK  MESSAGE
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-kube-etcd                                    Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-kube-proxy                                   Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-prometheus                                   Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-scheduler                                    Synced                       
+2025-09-26T19:17:09+09:00                                   Service                      monitoring   kube-prometheus-stack-prometheus                                   Synced  Healthy              
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         Alertmanager                    monitoring   kube-prometheus-stack-alertmanager                                 Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-grafana-config-dashboards                    Synced                       
+2025-09-26T19:17:09+09:00   apps                         Deployment                      monitoring   kube-prometheus-stack-kube-state-metrics                           Synced  Healthy              
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-k8s.rules.container-memory-cache             Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-alertmanager                                 Synced                       
+2025-09-26T19:17:09+09:00  rbac.authorization.k8s.io     ClusterRoleBinding                           kube-prometheus-stack-prometheus                                   Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-node-cluster-rsrc-use                        Synced                       
+2025-09-26T19:17:09+09:00                                   Service                      monitoring   kube-prometheus-stack-operator                                     Synced  Healthy              
+2025-09-26T19:17:09+09:00                                ServiceAccount                  monitoring   kube-prometheus-stack-grafana                                      Synced                       
+2025-09-26T19:17:09+09:00                                ServiceAccount                  monitoring   kube-prometheus-stack-prometheus                                   Synced                       
+2025-09-26T19:17:09+09:00  rbac.authorization.k8s.io     ClusterRole                                  kube-prometheus-stack-operator                                     Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-etcd                                         Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-prometheus                                   Synced                       
+2025-09-26T19:17:09+09:00                                ServiceAccount                  monitoring   kube-prometheus-stack-kube-state-metrics                           Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-prometheus-operator                          Synced                       
+2025-09-26T19:17:09+09:00                                    Secret                      monitoring   alertmanager-kube-prometheus-stack-alertmanager                    Synced                       
+2025-09-26T19:17:09+09:00                                ServiceAccount                  monitoring   kube-prometheus-stack-operator                                     Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kube-apiserver-slos                          Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kubernetes-apps                              Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kubernetes-system-kube-proxy                 Synced                       
+2025-09-26T19:17:09+09:00  rbac.authorization.k8s.io     ClusterRole                                  kube-prometheus-stack-grafana-clusterrole                          Synced                       
+2025-09-26T19:17:09+09:00  rbac.authorization.k8s.io     ClusterRoleBinding                           kube-prometheus-stack-kube-state-metrics                           Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-coredns                                      Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-namespace-by-pod                             Synced                       
+2025-09-26T19:17:09+09:00                                   Service                      kube-system  kube-prometheus-stack-kube-proxy                                   Synced  Healthy              
+2025-09-26T19:17:09+09:00  admissionregistration.k8s.io  MutatingWebhookConfiguration                 kube-prometheus-stack-admission                                    Synced                       
+2025-09-26T19:17:09+09:00  apiextensions.k8s.io          CustomResourceDefinition                     prometheuses.monitoring.coreos.com                                 Synced  Healthy              
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kubernetes-resources                         Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kubernetes-system                            Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kubernetes-system-controller-manager         Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-pod-total                                    Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-config-reloaders                             Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-alertmanager-overview                        Synced                       
+2025-09-26T19:17:09+09:00                                   Service                      kube-system  kube-prometheus-stack-kube-etcd                                    Synced  Healthy              
+2025-09-26T19:17:09+09:00                                   Service                      monitoring   kube-prometheus-stack-grafana                                      Synced  Healthy              
+2025-09-26T19:17:09+09:00  apiextensions.k8s.io          CustomResourceDefinition                     alertmanagerconfigs.monitoring.coreos.com                          Synced  Healthy              
+2025-09-26T19:17:09+09:00  apiextensions.k8s.io          CustomResourceDefinition                     probes.monitoring.coreos.com                                       Synced  Healthy              
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-k8s.rules.container-resource                 Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-grafana                                      Synced                       
+2025-09-26T19:17:09+09:00                                PersistentVolumeClaim           monitoring   kube-prometheus-stack-grafana                                      Synced  Healthy              
+2025-09-26T19:17:09+09:00   apps                         Deployment                      monitoring   kube-prometheus-stack-grafana                                      Synced  Healthy              
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-etcd                                         Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-node-exporter.rules                          Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-apiserver                                    Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-cluster-total                                Synced                       
+2025-09-26T19:17:09+09:00                                   Service                      monitoring   kube-prometheus-stack-prometheus-node-exporter                     Synced  Healthy              
+2025-09-26T19:17:09+09:00  apiextensions.k8s.io          CustomResourceDefinition                     thanosrulers.monitoring.coreos.com                                 Synced  Healthy              
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-prometheus-node-exporter                     Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-k8s-resources-multicluster                   Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-k8s.rules.container-cpu-usage-seconds-tot    Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kubernetes-system-scheduler                  Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-prometheus                                   Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-k8s-resources-namespace                      Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-proxy                                        Synced                       
+2025-09-26T19:17:09+09:00                                   Service                      monitoring   kube-prometheus-stack-kube-state-metrics                           Synced  Healthy              
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kubernetes-storage                           Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-k8s-coredns                                  Synced                       
+2025-09-26T19:17:09+09:00                                ServiceAccount                  monitoring   kube-prometheus-stack-prometheus-node-exporter                     Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         Prometheus                      monitoring   kube-prometheus-stack-prometheus                                   Synced  Healthy              
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kube-state-metrics                           Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-kube-state-metrics                           Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-grafana-datasource                           Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-k8s-resources-cluster                        Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-node-rsrc-use                                Synced                       
+2025-09-26T19:17:09+09:00   apps                          DaemonSet                      monitoring   kube-prometheus-stack-prometheus-node-exporter                     Synced  Healthy              
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-k8s.rules.container-memory-working-set-by    Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kube-prometheus-node-recording.rules         Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kubelet.rules                                Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-node-exporter                                Synced                       
+2025-09-26T19:17:09+09:00  rbac.authorization.k8s.io     ClusterRoleBinding                           kube-prometheus-stack-grafana-clusterrolebinding                   Synced                       
+2025-09-26T19:17:09+09:00  rbac.authorization.k8s.io     ClusterRoleBinding                           kube-prometheus-stack-operator                                     Synced                       
+2025-09-26T19:17:09+09:00  rbac.authorization.k8s.io           Role                      monitoring   kube-prometheus-stack-grafana                                      Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-nodes-aix                                    Synced                       
+2025-09-26T19:17:09+09:00  apiextensions.k8s.io          CustomResourceDefinition                     servicemonitors.monitoring.coreos.com                              Synced  Healthy              
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-k8s-resources-pod                            Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-namespace-by-workload                        Synced                       
+2025-09-26T19:17:09+09:00  admissionregistration.k8s.io  ValidatingWebhookConfiguration               kube-prometheus-stack-admission                                    Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-kube-scheduler                               Synced                       
+2025-09-26T19:17:09+09:00  networking.k8s.io                Ingress                      monitoring   kube-prometheus-stack-grafana                                      Synced  Healthy              
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-k8s-resources-workload                       Synced                       
+2025-09-26T19:17:09+09:00                                   Service                      monitoring   kube-prometheus-stack-alertmanager                                 Synced  Healthy              
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kube-apiserver-histogram.rules               Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-node.rules                                   Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-kubelet                                      Synced                       
+2025-09-26T19:17:09+09:00  rbac.authorization.k8s.io     RoleBinding                     monitoring   kube-prometheus-stack-grafana                                      Synced                       
+2025-09-26T19:17:09+09:00                                   Service                      kube-system  kube-prometheus-stack-kube-scheduler                               Synced  Healthy              
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kubernetes-system-apiserver                  Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-kube-controller-manager                      Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-grafana-overview                             Synced                       
+2025-09-26T19:17:09+09:00  apiextensions.k8s.io          CustomResourceDefinition                     podmonitors.monitoring.coreos.com                                  Synced  Healthy              
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kube-prometheus-general.rules                Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-node-network                                 Synced                       
+2025-09-26T19:17:09+09:00  rbac.authorization.k8s.io     ClusterRole                                  kube-prometheus-stack-kube-state-metrics                           Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-controller-manager                           Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-k8s.rules.container-memory-swap              Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-workload-total                               Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kube-scheduler.rules                         Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-kubelet                                      Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-persistentvolumesusage                       Synced                       
+2025-09-26T19:17:09+09:00                                   Service                      kube-system  kube-prometheus-stack-coredns                                      Synced  Healthy              
+2025-09-26T19:17:09+09:00                                   Service                      kube-system  kube-prometheus-stack-kube-controller-manager                      Synced  Healthy              
+2025-09-26T19:17:09+09:00  apiextensions.k8s.io          CustomResourceDefinition                     alertmanagers.monitoring.coreos.com                                Synced  Healthy              
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-k8s.rules.pod-owner                          Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-nodes                                        Synced                       
+2025-09-26T19:17:09+09:00  apiextensions.k8s.io          CustomResourceDefinition                     scrapeconfigs.monitoring.coreos.com                                Synced  Healthy              
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-general.rules                                Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kube-apiserver-burnrate.rules                Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kubernetes-system-kubelet                    Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-operator                                     Synced                       
+2025-09-26T19:17:09+09:00  rbac.authorization.k8s.io     ClusterRole                                  kube-prometheus-stack-prometheus                                   Synced                       
+2025-09-26T19:17:09+09:00  apiextensions.k8s.io          CustomResourceDefinition                     prometheusrules.monitoring.coreos.com                              Synced  Healthy              
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-grafana                                      Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-apiserver                                    Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-nodes-darwin                                 Synced                       
+2025-09-26T19:17:09+09:00                                    Secret                      monitoring   kube-prometheus-stack-grafana                                      Synced                       
+2025-09-26T19:17:09+09:00  apiextensions.k8s.io          CustomResourceDefinition                     prometheusagents.monitoring.coreos.com                             Synced  Healthy              
+2025-09-26T19:17:09+09:00   apps                         Deployment                      monitoring   kube-prometheus-stack-operator                                     Synced  Healthy              
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-alertmanager.rules                           Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-k8s-resources-workloads-namespace            Synced                       
+2025-09-26T19:17:09+09:00                                ServiceAccount                  monitoring   kube-prometheus-stack-alertmanager                                 Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-k8s.rules.container-memory-rss               Synced                       
+2025-09-26T19:17:09+09:00  monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kube-apiserver-availability.rules            Synced                       
+2025-09-26T19:17:09+09:00                                 ConfigMap                      monitoring   kube-prometheus-stack-k8s-resources-node                           Synced                       
+
+Name:               argocd/kube-prometheus-stack
+Project:            default
+Server:             https://kubernetes.default.svc
+Namespace:          monitoring
+URL:                https://argocd.geonhyukim.com/applications/argocd/kube-prometheus-stack
+Sources:
+- Repo:             https://prometheus-community.github.io/helm-charts
+  Target:           73.2.0
+  Helm Values:      $values/argocd/values/kube-prometheus-stack.yaml
+- Repo:             https://github.com/igh9410/igh9410-infra.git
+  Target:           main
+  Ref:              values
+SyncWindow:         Sync Allowed
+Sync Policy:        Automated (Prune)
+Sync Status:        Synced to 73.2.0
+Health Status:      Healthy
+
+Operation:          Sync
+Sync Revision:      73.2.0, 73a2f0e0ae7bfd8d746f0b180952aadbe5d9295d
+Phase:              Succeeded
+Start:              2025-09-26 19:17:08 +0900 KST
+Finished:           2025-09-26 19:17:11 +0900 KST
+Duration:           3s
+Message:            successfully synced (no more tasks)
+
+GROUP                         KIND            NAMESPACE   NAME                             STATUS     HEALTH  HOOK     MESSAGE
+                              ServiceAccount  monitoring  kube-prometheus-stack-admission  Succeeded  Synced  PreSync  serviceaccount/kube-prometheus-stack-admission created (dry run)
+rbac.authorization.k8s.io     ClusterRole     monitoring  kube-prometheus-stack-admission  Succeeded  Synced  PreSync  clusterrole.rbac.authorization.k8s.io/kube-prometheus-stack-admission reconciled (dry run). reconciliation required create
+                              missing rules added:
+                                                  {Verbs:[get update] APIGroups:[admissionregistration.k8s.io] Resources:[validatingwebhookconfigurations mutatingwebhookconfigurations] ResourceNames:[] NonResourceURLs:[]}. clusterrole.rbac.authorization.k8s.io/kube-prometheus-stack-admission created (dry run)
+rbac.authorization.k8s.io     ClusterRoleBinding  monitoring  kube-prometheus-stack-admission  Succeeded  Synced  PreSync  clusterrolebinding.rbac.authorization.k8s.io/kube-prometheus-stack-admission reconciled (dry run). reconciliation required create
+                              missing subjects added:
+                                    {Kind:ServiceAccount APIGroup: Name:kube-prometheus-stack-admission Namespace:monitoring}. clusterrolebinding.rbac.authorization.k8s.io/kube-prometheus-stack-admission created (dry run)
+rbac.authorization.k8s.io     Role  monitoring  kube-prometheus-stack-admission  Succeeded  Synced  PreSync  role.rbac.authorization.k8s.io/kube-prometheus-stack-admission reconciled (dry run). reconciliation required create
+                              missing rules added:
+                                           {Verbs:[get create] APIGroups:[] Resources:[secrets] ResourceNames:[] NonResourceURLs:[]}. role.rbac.authorization.k8s.io/kube-prometheus-stack-admission created (dry run)
+rbac.authorization.k8s.io     RoleBinding  monitoring  kube-prometheus-stack-admission  Succeeded  Synced  PreSync  rolebinding.rbac.authorization.k8s.io/kube-prometheus-stack-admission reconciled (dry run). reconciliation required create
+                              missing subjects added:
+                                                              {Kind:ServiceAccount APIGroup: Name:kube-prometheus-stack-admission Namespace:monitoring}. rolebinding.rbac.authorization.k8s.io/kube-prometheus-stack-admission created (dry run)
+batch                         Job                             monitoring   kube-prometheus-stack-admission-create                           Succeeded  Synced   PreSync   job.batch/kube-prometheus-stack-admission-create created (dry run)
+                              ServiceAccount                  monitoring   kube-prometheus-stack-prometheus                                 Synced                        serviceaccount/kube-prometheus-stack-prometheus configured (dry run)
+                              ServiceAccount                  monitoring   kube-prometheus-stack-alertmanager                               Synced                        serviceaccount/kube-prometheus-stack-alertmanager configured (dry run)
+                              ServiceAccount                  monitoring   kube-prometheus-stack-kube-state-metrics                         Synced                        serviceaccount/kube-prometheus-stack-kube-state-metrics configured (dry run)
+                              ServiceAccount                  monitoring   kube-prometheus-stack-prometheus-node-exporter                   Synced                        serviceaccount/kube-prometheus-stack-prometheus-node-exporter configured (dry run)
+                              ServiceAccount                  monitoring   kube-prometheus-stack-operator                                   Synced                        serviceaccount/kube-prometheus-stack-operator configured (dry run)
+                              ServiceAccount                  monitoring   kube-prometheus-stack-grafana                                    Synced                        serviceaccount/kube-prometheus-stack-grafana configured (dry run)
+                              Secret                          monitoring   alertmanager-kube-prometheus-stack-alertmanager                  Synced                        secret/alertmanager-kube-prometheus-stack-alertmanager configured (dry run)
+                              Secret                          monitoring   kube-prometheus-stack-grafana                                    Synced                        secret/kube-prometheus-stack-grafana configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-k8s-resources-workloads-namespace          Synced                        configmap/kube-prometheus-stack-k8s-resources-workloads-namespace configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-k8s-resources-workload                     Synced                        configmap/kube-prometheus-stack-k8s-resources-workload configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-persistentvolumesusage                     Synced                        configmap/kube-prometheus-stack-persistentvolumesusage configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-apiserver                                  Synced                        configmap/kube-prometheus-stack-apiserver configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-node-rsrc-use                              Synced                        configmap/kube-prometheus-stack-node-rsrc-use configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-etcd                                       Synced                        configmap/kube-prometheus-stack-etcd configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-nodes                                      Synced                        configmap/kube-prometheus-stack-nodes configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-grafana-config-dashboards                  Synced                        configmap/kube-prometheus-stack-grafana-config-dashboards configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-proxy                                      Synced                        configmap/kube-prometheus-stack-proxy configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-grafana-overview                           Synced                        configmap/kube-prometheus-stack-grafana-overview configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-prometheus                                 Synced                        configmap/kube-prometheus-stack-prometheus configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-cluster-total                              Synced                        configmap/kube-prometheus-stack-cluster-total configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-nodes-aix                                  Synced                        configmap/kube-prometheus-stack-nodes-aix configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-namespace-by-pod                           Synced                        configmap/kube-prometheus-stack-namespace-by-pod configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-nodes-darwin                               Synced                        configmap/kube-prometheus-stack-nodes-darwin configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-alertmanager-overview                      Synced                        configmap/kube-prometheus-stack-alertmanager-overview configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-namespace-by-workload                      Synced                        configmap/kube-prometheus-stack-namespace-by-workload configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-pod-total                                  Synced                        configmap/kube-prometheus-stack-pod-total configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-grafana                                    Synced                        configmap/kube-prometheus-stack-grafana configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-grafana-datasource                         Synced                        configmap/kube-prometheus-stack-grafana-datasource configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-node-cluster-rsrc-use                      Synced                        configmap/kube-prometheus-stack-node-cluster-rsrc-use configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-controller-manager                         Synced                        configmap/kube-prometheus-stack-controller-manager configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-kubelet                                    Synced                        configmap/kube-prometheus-stack-kubelet configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-k8s-coredns                                Synced                        configmap/kube-prometheus-stack-k8s-coredns configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-k8s-resources-pod                          Synced                        configmap/kube-prometheus-stack-k8s-resources-pod configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-k8s-resources-node                         Synced                        configmap/kube-prometheus-stack-k8s-resources-node configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-k8s-resources-cluster                      Synced                        configmap/kube-prometheus-stack-k8s-resources-cluster configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-k8s-resources-namespace                    Synced                        configmap/kube-prometheus-stack-k8s-resources-namespace configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-k8s-resources-multicluster                 Synced                        configmap/kube-prometheus-stack-k8s-resources-multicluster configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-scheduler                                  Synced                        configmap/kube-prometheus-stack-scheduler configured (dry run)
+                              ConfigMap                       monitoring   kube-prometheus-stack-workload-total                             Synced                        configmap/kube-prometheus-stack-workload-total configured (dry run)
+                              PersistentVolumeClaim           monitoring   kube-prometheus-stack-grafana                                    Synced     Healthy            persistentvolumeclaim/kube-prometheus-stack-grafana configured (dry run)
+apiextensions.k8s.io          CustomResourceDefinition        monitoring   servicemonitors.monitoring.coreos.com                            Succeeded  Synced             customresourcedefinition.apiextensions.k8s.io/servicemonitors.monitoring.coreos.com configured (dry run)
+apiextensions.k8s.io          CustomResourceDefinition        monitoring   prometheusrules.monitoring.coreos.com                            Succeeded  Synced             customresourcedefinition.apiextensions.k8s.io/prometheusrules.monitoring.coreos.com configured (dry run)
+apiextensions.k8s.io          CustomResourceDefinition        monitoring   podmonitors.monitoring.coreos.com                                Succeeded  Synced             customresourcedefinition.apiextensions.k8s.io/podmonitors.monitoring.coreos.com configured (dry run)
+apiextensions.k8s.io          CustomResourceDefinition        monitoring   thanosrulers.monitoring.coreos.com                               Succeeded  Synced             customresourcedefinition.apiextensions.k8s.io/thanosrulers.monitoring.coreos.com configured (dry run)
+apiextensions.k8s.io          CustomResourceDefinition        monitoring   alertmanagerconfigs.monitoring.coreos.com                        Succeeded  Synced             customresourcedefinition.apiextensions.k8s.io/alertmanagerconfigs.monitoring.coreos.com configured (dry run)
+apiextensions.k8s.io          CustomResourceDefinition        monitoring   probes.monitoring.coreos.com                                     Succeeded  Synced             customresourcedefinition.apiextensions.k8s.io/probes.monitoring.coreos.com configured (dry run)
+apiextensions.k8s.io          CustomResourceDefinition        monitoring   alertmanagers.monitoring.coreos.com                              Succeeded  Synced             customresourcedefinition.apiextensions.k8s.io/alertmanagers.monitoring.coreos.com configured (dry run)
+apiextensions.k8s.io          CustomResourceDefinition        monitoring   scrapeconfigs.monitoring.coreos.com                              Succeeded  Synced             customresourcedefinition.apiextensions.k8s.io/scrapeconfigs.monitoring.coreos.com configured (dry run)
+apiextensions.k8s.io          CustomResourceDefinition        monitoring   prometheusagents.monitoring.coreos.com                           Succeeded  Synced             customresourcedefinition.apiextensions.k8s.io/prometheusagents.monitoring.coreos.com configured (dry run)
+apiextensions.k8s.io          CustomResourceDefinition        monitoring   prometheuses.monitoring.coreos.com                               Succeeded  Synced             customresourcedefinition.apiextensions.k8s.io/prometheuses.monitoring.coreos.com configured (dry run)
+rbac.authorization.k8s.io     ClusterRole                     monitoring   kube-prometheus-stack-grafana-clusterrole                        Succeeded  Synced             clusterrole.rbac.authorization.k8s.io/kube-prometheus-stack-grafana-clusterrole reconciled (dry run). clusterrole.rbac.authorization.k8s.io/kube-prometheus-stack-grafana-clusterrole configured (dry run)
+rbac.authorization.k8s.io     ClusterRole                     monitoring   kube-prometheus-stack-prometheus                                 Succeeded  Synced             clusterrole.rbac.authorization.k8s.io/kube-prometheus-stack-prometheus reconciled (dry run). clusterrole.rbac.authorization.k8s.io/kube-prometheus-stack-prometheus configured (dry run)
+rbac.authorization.k8s.io     ClusterRole                     monitoring   kube-prometheus-stack-kube-state-metrics                         Succeeded  Synced             clusterrole.rbac.authorization.k8s.io/kube-prometheus-stack-kube-state-metrics reconciled (dry run). clusterrole.rbac.authorization.k8s.io/kube-prometheus-stack-kube-state-metrics configured (dry run)
+rbac.authorization.k8s.io     ClusterRole                     monitoring   kube-prometheus-stack-operator                                   Succeeded  Synced             clusterrole.rbac.authorization.k8s.io/kube-prometheus-stack-operator reconciled (dry run). clusterrole.rbac.authorization.k8s.io/kube-prometheus-stack-operator configured (dry run)
+rbac.authorization.k8s.io     ClusterRoleBinding              monitoring   kube-prometheus-stack-operator                                   Succeeded  Synced             clusterrolebinding.rbac.authorization.k8s.io/kube-prometheus-stack-operator reconciled (dry run). clusterrolebinding.rbac.authorization.k8s.io/kube-prometheus-stack-operator configured (dry run)
+rbac.authorization.k8s.io     ClusterRoleBinding              monitoring   kube-prometheus-stack-prometheus                                 Succeeded  Synced             clusterrolebinding.rbac.authorization.k8s.io/kube-prometheus-stack-prometheus reconciled (dry run). clusterrolebinding.rbac.authorization.k8s.io/kube-prometheus-stack-prometheus configured (dry run)
+rbac.authorization.k8s.io     ClusterRoleBinding              monitoring   kube-prometheus-stack-grafana-clusterrolebinding                 Succeeded  Synced             clusterrolebinding.rbac.authorization.k8s.io/kube-prometheus-stack-grafana-clusterrolebinding reconciled (dry run). clusterrolebinding.rbac.authorization.k8s.io/kube-prometheus-stack-grafana-clusterrolebinding configured (dry run)
+rbac.authorization.k8s.io     ClusterRoleBinding              monitoring   kube-prometheus-stack-kube-state-metrics                         Succeeded  Synced             clusterrolebinding.rbac.authorization.k8s.io/kube-prometheus-stack-kube-state-metrics reconciled (dry run). clusterrolebinding.rbac.authorization.k8s.io/kube-prometheus-stack-kube-state-metrics configured (dry run)
+rbac.authorization.k8s.io     Role                            monitoring   kube-prometheus-stack-grafana                                    Synced                        role.rbac.authorization.k8s.io/kube-prometheus-stack-grafana reconciled (dry run). role.rbac.authorization.k8s.io/kube-prometheus-stack-grafana configured (dry run)
+rbac.authorization.k8s.io     RoleBinding                     monitoring   kube-prometheus-stack-grafana                                    Synced                        rolebinding.rbac.authorization.k8s.io/kube-prometheus-stack-grafana reconciled (dry run). rolebinding.rbac.authorization.k8s.io/kube-prometheus-stack-grafana configured (dry run)
+                              Service                         monitoring   kube-prometheus-stack-kube-state-metrics                         Synced     Healthy            service/kube-prometheus-stack-kube-state-metrics configured (dry run)
+                              Service                         monitoring   kube-prometheus-stack-prometheus                                 Synced     Healthy            service/kube-prometheus-stack-prometheus configured (dry run)
+                              Service                         monitoring   kube-prometheus-stack-prometheus-node-exporter                   Synced     Healthy            service/kube-prometheus-stack-prometheus-node-exporter configured (dry run)
+                              Service                         kube-system  kube-prometheus-stack-coredns                                    Synced     Healthy            service/kube-prometheus-stack-coredns configured (dry run)
+                              Service                         kube-system  kube-prometheus-stack-kube-etcd                                  Synced     Healthy            service/kube-prometheus-stack-kube-etcd configured (dry run)
+                              Service                         kube-system  kube-prometheus-stack-kube-proxy                                 Synced     Healthy            service/kube-prometheus-stack-kube-proxy configured (dry run)
+                              Service                         kube-system  kube-prometheus-stack-kube-controller-manager                    Synced     Healthy            service/kube-prometheus-stack-kube-controller-manager configured (dry run)
+                              Service                         monitoring   kube-prometheus-stack-operator                                   Synced     Healthy            service/kube-prometheus-stack-operator configured (dry run)
+                              Service                         monitoring   kube-prometheus-stack-alertmanager                               Synced     Healthy            service/kube-prometheus-stack-alertmanager configured (dry run)
+                              Service                         kube-system  kube-prometheus-stack-kube-scheduler                             Synced     Healthy            service/kube-prometheus-stack-kube-scheduler configured (dry run)
+                              Service                         monitoring   kube-prometheus-stack-grafana                                    Synced     Healthy            service/kube-prometheus-stack-grafana configured (dry run)
+apps                          DaemonSet                       monitoring   kube-prometheus-stack-prometheus-node-exporter                   Synced     Healthy            daemonset.apps/kube-prometheus-stack-prometheus-node-exporter configured (dry run)
+apps                          Deployment                      monitoring   kube-prometheus-stack-operator                                   Synced     Healthy            deployment.apps/kube-prometheus-stack-operator configured (dry run)
+apps                          Deployment                      monitoring   kube-prometheus-stack-kube-state-metrics                         Synced     Healthy            deployment.apps/kube-prometheus-stack-kube-state-metrics configured (dry run)
+apps                          Deployment                      monitoring   kube-prometheus-stack-grafana                                    Synced     Healthy            deployment.apps/kube-prometheus-stack-grafana configured (dry run)
+networking.k8s.io             Ingress                         monitoring   kube-prometheus-stack-grafana                                    Synced     Healthy            ingress.networking.k8s.io/kube-prometheus-stack-grafana configured (dry run)
+admissionregistration.k8s.io  MutatingWebhookConfiguration    monitoring   kube-prometheus-stack-admission                                  Succeeded  Synced             mutatingwebhookconfiguration.admissionregistration.k8s.io/kube-prometheus-stack-admission configured (dry run)
+admissionregistration.k8s.io  ValidatingWebhookConfiguration  monitoring   kube-prometheus-stack-admission                                  Succeeded  Synced             validatingwebhookconfiguration.admissionregistration.k8s.io/kube-prometheus-stack-admission configured (dry run)
+monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-alertmanager                               Synced                        servicemonitor.monitoring.coreos.com/kube-prometheus-stack-alertmanager configured (dry run)
+monitoring.coreos.com         Alertmanager                    monitoring   kube-prometheus-stack-alertmanager                               Synced                        alertmanager.monitoring.coreos.com/kube-prometheus-stack-alertmanager configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-alertmanager.rules                         Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-alertmanager.rules configured (dry run)
+monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-apiserver                                  Synced                        servicemonitor.monitoring.coreos.com/kube-prometheus-stack-apiserver configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-config-reloaders                           Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-config-reloaders configured (dry run)
+monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-coredns                                    Synced                        servicemonitor.monitoring.coreos.com/kube-prometheus-stack-coredns configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-general.rules                              Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-general.rules configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-etcd                                       Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-etcd configured (dry run)
+monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-grafana                                    Synced                        servicemonitor.monitoring.coreos.com/kube-prometheus-stack-grafana configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-k8s.rules.pod-owner                        Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-k8s.rules.pod-owner configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kube-apiserver-availability.rules          Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-kube-apiserver-availability.rules configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-k8s.rules.container-memory-cache           Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-k8s.rules.container-memory-cache configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-k8s.rules.container-memory-working-set-by  Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-k8s.rules.container-memory-working-set-by configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kube-apiserver-slos                        Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-kube-apiserver-slos configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-k8s.rules.container-memory-swap            Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-k8s.rules.container-memory-swap configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-k8s.rules.container-cpu-usage-seconds-tot  Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-k8s.rules.container-cpu-usage-seconds-tot configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kube-apiserver-burnrate.rules              Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-kube-apiserver-burnrate.rules configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kube-apiserver-histogram.rules             Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-kube-apiserver-histogram.rules configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-k8s.rules.container-resource               Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-k8s.rules.container-resource configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-k8s.rules.container-memory-rss             Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-k8s.rules.container-memory-rss configured (dry run)
+monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-kube-etcd                                  Synced                        servicemonitor.monitoring.coreos.com/kube-prometheus-stack-kube-etcd configured (dry run)
+monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-kube-controller-manager                    Synced                        servicemonitor.monitoring.coreos.com/kube-prometheus-stack-kube-controller-manager configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kube-prometheus-node-recording.rules       Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-kube-prometheus-node-recording.rules configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kube-prometheus-general.rules              Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-kube-prometheus-general.rules configured (dry run)
+monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-kube-proxy                                 Synced                        servicemonitor.monitoring.coreos.com/kube-prometheus-stack-kube-proxy configured (dry run)
+monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-kube-scheduler                             Synced                        servicemonitor.monitoring.coreos.com/kube-prometheus-stack-kube-scheduler configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kube-state-metrics                         Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-kube-state-metrics configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kube-scheduler.rules                       Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-kube-scheduler.rules configured (dry run)
+monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-kubelet                                    Synced                        servicemonitor.monitoring.coreos.com/kube-prometheus-stack-kubelet configured (dry run)
+monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-kube-state-metrics                         Synced                        servicemonitor.monitoring.coreos.com/kube-prometheus-stack-kube-state-metrics configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-node-exporter                              Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-node-exporter configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kubernetes-system-kubelet                  Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-kubernetes-system-kubelet configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kubernetes-apps                            Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-kubernetes-apps configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kubernetes-system                          Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-kubernetes-system configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kubernetes-system-controller-manager       Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-kubernetes-system-controller-manager configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kubernetes-system-scheduler                Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-kubernetes-system-scheduler configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-node-network                               Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-node-network configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kubernetes-storage                         Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-kubernetes-storage configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kubelet.rules                              Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-kubelet.rules configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-node-exporter.rules                        Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-node-exporter.rules configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kubernetes-system-kube-proxy               Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-kubernetes-system-kube-proxy configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kubernetes-resources                       Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-kubernetes-resources configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-node.rules                                 Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-node.rules configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-kubernetes-system-apiserver                Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-kubernetes-system-apiserver configured (dry run)
+monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-prometheus                                 Synced                        servicemonitor.monitoring.coreos.com/kube-prometheus-stack-prometheus configured (dry run)
+monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-operator                                   Synced                        servicemonitor.monitoring.coreos.com/kube-prometheus-stack-operator configured (dry run)
+monitoring.coreos.com         Prometheus                      monitoring   kube-prometheus-stack-prometheus                                 Synced     Healthy            prometheus.monitoring.coreos.com/kube-prometheus-stack-prometheus configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-prometheus                                 Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-prometheus configured (dry run)
+monitoring.coreos.com         ServiceMonitor                  monitoring   kube-prometheus-stack-prometheus-node-exporter                   Synced                        servicemonitor.monitoring.coreos.com/kube-prometheus-stack-prometheus-node-exporter configured (dry run)
+monitoring.coreos.com         PrometheusRule                  monitoring   kube-prometheus-stack-prometheus-operator                        Synced                        prometheusrule.monitoring.coreos.com/kube-prometheus-stack-prometheus-operator configured (dry run)
+                              ServiceAccount                  monitoring   kube-prometheus-stack-admission                                  Succeeded  Synced   PostSync  serviceaccount/kube-prometheus-stack-admission created (dry run)
+rbac.authorization.k8s.io     ClusterRole                     monitoring   kube-prometheus-stack-admission                                  Succeeded  Synced   PostSync  clusterrole.rbac.authorization.k8s.io/kube-prometheus-stack-admission reconciled (dry run). reconciliation required create
+                              missing rules added:
+                                                  {Verbs:[get update] APIGroups:[admissionregistration.k8s.io] Resources:[validatingwebhookconfigurations mutatingwebhookconfigurations] ResourceNames:[] NonResourceURLs:[]}. clusterrole.rbac.authorization.k8s.io/kube-prometheus-stack-admission created (dry run)
+rbac.authorization.k8s.io     ClusterRoleBinding  monitoring  kube-prometheus-stack-admission  Succeeded  Synced  PostSync  clusterrolebinding.rbac.authorization.k8s.io/kube-prometheus-stack-admission reconciled (dry run). reconciliation required create
+                              missing subjects added:
+                                    {Kind:ServiceAccount APIGroup: Name:kube-prometheus-stack-admission Namespace:monitoring}. clusterrolebinding.rbac.authorization.k8s.io/kube-prometheus-stack-admission created (dry run)
+rbac.authorization.k8s.io     Role  monitoring  kube-prometheus-stack-admission  Succeeded  Synced  PostSync  role.rbac.authorization.k8s.io/kube-prometheus-stack-admission reconciled (dry run). reconciliation required create
+                              missing rules added:
+                                           {Verbs:[get create] APIGroups:[] Resources:[secrets] ResourceNames:[] NonResourceURLs:[]}. role.rbac.authorization.k8s.io/kube-prometheus-stack-admission created (dry run)
+rbac.authorization.k8s.io     RoleBinding  monitoring  kube-prometheus-stack-admission  Succeeded  Synced  PostSync  rolebinding.rbac.authorization.k8s.io/kube-prometheus-stack-admission reconciled (dry run). reconciliation required create
+                              missing subjects added:
+                                                              {Kind:ServiceAccount APIGroup: Name:kube-prometheus-stack-admission Namespace:monitoring}. rolebinding.rbac.authorization.k8s.io/kube-prometheus-stack-admission created (dry run)
+batch                         Job                             monitoring  kube-prometheus-stack-admission-patch             Succeeded  Synced   PostSync  job.batch/kube-prometheus-stack-admission-patch created (dry run)
+admissionregistration.k8s.io  MutatingWebhookConfiguration                kube-prometheus-stack-admission                   Synced                        
+admissionregistration.k8s.io  ValidatingWebhookConfiguration              kube-prometheus-stack-admission                   Synced                        
+apiextensions.k8s.io          CustomResourceDefinition                    alertmanagerconfigs.monitoring.coreos.com         Synced     Healthy            
+apiextensions.k8s.io          CustomResourceDefinition                    alertmanagers.monitoring.coreos.com               Synced     Healthy            
+apiextensions.k8s.io          CustomResourceDefinition                    podmonitors.monitoring.coreos.com                 Synced     Healthy            
+apiextensions.k8s.io          CustomResourceDefinition                    probes.monitoring.coreos.com                      Synced     Healthy            
+apiextensions.k8s.io          CustomResourceDefinition                    prometheusagents.monitoring.coreos.com            Synced     Healthy            
+apiextensions.k8s.io          CustomResourceDefinition                    prometheuses.monitoring.coreos.com                Synced     Healthy            
+apiextensions.k8s.io          CustomResourceDefinition                    prometheusrules.monitoring.coreos.com             Synced     Healthy            
+apiextensions.k8s.io          CustomResourceDefinition                    scrapeconfigs.monitoring.coreos.com               Synced     Healthy            
+apiextensions.k8s.io          CustomResourceDefinition                    servicemonitors.monitoring.coreos.com             Synced     Healthy            
+apiextensions.k8s.io          CustomResourceDefinition                    thanosrulers.monitoring.coreos.com                Synced     Healthy            
+rbac.authorization.k8s.io     ClusterRole                                 kube-prometheus-stack-grafana-clusterrole         Synced                        
+rbac.authorization.k8s.io     ClusterRole                                 kube-prometheus-stack-kube-state-metrics          Synced                        
+rbac.authorization.k8s.io     ClusterRole                                 kube-prometheus-stack-operator                    Synced                        
+rbac.authorization.k8s.io     ClusterRole                                 kube-prometheus-stack-prometheus                  Synced                        
+rbac.authorization.k8s.io     ClusterRoleBinding                          kube-prometheus-stack-grafana-clusterrolebinding  Synced                        
+rbac.authorization.k8s.io     ClusterRoleBinding                          kube-prometheus-stack-kube-state-metrics          Synced                        
+rbac.authorization.k8s.io     ClusterRoleBinding                          kube-prometheus-stack-operator                    Synced                        
+rbac.authorization.k8s.io     ClusterRoleBinding                          kube-prometheus-stack-prometheus                  Synced                        
+
+
+=================================================
+APPLICATION: argocd/loki
+=================================================
+
+Name:               argocd/loki
+Project:            default
+Server:             https://kubernetes.default.svc
+Namespace:          monitoring
+URL:                https://argocd.geonhyukim.com/applications/argocd/loki
+Sources:
+- Repo:             https://grafana.github.io/helm-charts
+  Target:           6.34.0
+  Helm Values:      $values/argocd/values/loki.yaml
+- Repo:             https://github.com/igh9410/igh9410-infra.git
+  Target:           main
+  Ref:              values
+SyncWindow:         Sync Allowed
+Sync Policy:        Automated (Prune)
+Sync Status:        Synced to 6.34.0
+Health Status:      Healthy
+
+Operation:          Sync
+Sync Revision:      6.34.0, 73a2f0e0ae7bfd8d746f0b180952aadbe5d9295d
+Phase:              Succeeded
+Start:              2025-09-26 19:17:13 +0900 KST
+Finished:           2025-09-26 19:17:13 +0900 KST
+Duration:           0s
+Message:            successfully synced (no more tasks)
+
+GROUP                      KIND                 NAMESPACE   NAME                            STATUS     HEALTH   HOOK  MESSAGE
+policy                     PodDisruptionBudget  monitoring  loki-write                      Synced     Healthy        poddisruptionbudget.policy/loki-write configured (dry run)
+policy                     PodDisruptionBudget  monitoring  loki-backend                    Synced     Healthy        poddisruptionbudget.policy/loki-backend configured (dry run)
+policy                     PodDisruptionBudget  monitoring  loki-read                       Synced     Healthy        poddisruptionbudget.policy/loki-read configured (dry run)
+                           ServiceAccount       monitoring  loki                            Synced                    serviceaccount/loki configured (dry run)
+                           ServiceAccount       monitoring  loki-canary                     Synced                    serviceaccount/loki-canary configured (dry run)
+                           ConfigMap            monitoring  loki                            Synced                    configmap/loki configured (dry run)
+                           ConfigMap            monitoring  loki-gateway                    Synced                    configmap/loki-gateway configured (dry run)
+                           ConfigMap            monitoring  loki-runtime                    Synced                    configmap/loki-runtime configured (dry run)
+rbac.authorization.k8s.io  ClusterRole          monitoring  loki-clusterrole                Succeeded  Synced         clusterrole.rbac.authorization.k8s.io/loki-clusterrole reconciled (dry run). clusterrole.rbac.authorization.k8s.io/loki-clusterrole configured (dry run)
+rbac.authorization.k8s.io  ClusterRoleBinding   monitoring  loki-clusterrolebinding         Succeeded  Synced         clusterrolebinding.rbac.authorization.k8s.io/loki-clusterrolebinding reconciled (dry run). clusterrolebinding.rbac.authorization.k8s.io/loki-clusterrolebinding configured (dry run)
+                           Service              monitoring  loki-read-headless              Synced     Healthy        service/loki-read-headless configured (dry run)
+                           Service              monitoring  loki-backend-headless           Synced     Healthy        service/loki-backend-headless configured (dry run)
+                           Service              monitoring  loki-gateway                    Synced     Healthy        service/loki-gateway configured (dry run)
+                           Service              monitoring  loki-results-cache              Synced     Healthy        service/loki-results-cache configured (dry run)
+                           Service              monitoring  loki-write-headless             Synced     Healthy        service/loki-write-headless configured (dry run)
+                           Service              monitoring  loki-memberlist                 Synced     Healthy        service/loki-memberlist configured (dry run)
+                           Service              monitoring  loki-chunks-cache               Synced     Healthy        service/loki-chunks-cache configured (dry run)
+                           Service              monitoring  loki-query-scheduler-discovery  Synced     Healthy        service/loki-query-scheduler-discovery configured (dry run)
+                           Service              monitoring  loki-read                       Synced     Healthy        service/loki-read configured (dry run)
+                           Service              monitoring  loki-canary                     Synced     Healthy        service/loki-canary configured (dry run)
+                           Service              monitoring  loki-backend                    Synced     Healthy        service/loki-backend configured (dry run)
+                           Service              monitoring  loki-write                      Synced     Healthy        service/loki-write configured (dry run)
+apps                       DaemonSet            monitoring  loki-canary                     Synced     Healthy        daemonset.apps/loki-canary configured (dry run)
+apps                       Deployment           monitoring  loki-gateway                    Synced     Healthy        deployment.apps/loki-gateway configured (dry run)
+apps                       Deployment           monitoring  loki-read                       Synced     Healthy        deployment.apps/loki-read configured (dry run)
+apps                       StatefulSet          monitoring  loki-backend                    Synced     Healthy        statefulset.apps/loki-backend configured (dry run)
+apps                       StatefulSet          monitoring  loki-chunks-cache               Synced     Healthy        statefulset.apps/loki-chunks-cache configured (dry run)
+apps                       StatefulSet          monitoring  loki-results-cache              Synced     Healthy        statefulset.apps/loki-results-cache configured (dry run)
+apps                       StatefulSet          monitoring  loki-write                      Synced     Healthy        statefulset.apps/loki-write configured (dry run)
+rbac.authorization.k8s.io  ClusterRole                      loki-clusterrole                Synced                    
+rbac.authorization.k8s.io  ClusterRoleBinding               loki-clusterrolebinding         Synced                    
+
+
+=================================================
+APPLICATION: argocd/prod-artskorner-api
+=================================================
+
+Name:               argocd/prod-artskorner-api
+Project:            default
+Server:             https://kubernetes.default.svc
+Namespace:          prod
+URL:                https://argocd.geonhyukim.com/applications/argocd/prod-artskorner-api
+Source:
+- Repo:             https://github.com/igh9410/igh9410-infra.git
+  Target:           main
+  Path:             artskorner/k8s/overlays/prod
+SyncWindow:         Sync Allowed
+Sync Policy:        Automated (Prune)
+Sync Status:        Synced to main (73a2f0e)
+Health Status:      Healthy
+
+Operation:          Sync
+Sync Revision:      73a2f0e0ae7bfd8d746f0b180952aadbe5d9295d
+Phase:              Succeeded
+Start:              2025-09-26 19:17:15 +0900 KST
+Finished:           2025-09-26 19:17:15 +0900 KST
+Duration:           0s
+Message:            successfully synced (no more tasks)
+
+GROUP              KIND        NAMESPACE  NAME                         STATUS  HEALTH   HOOK  MESSAGE
+                   Service     prod       prod-artskorner-api          Synced  Healthy        service/prod-artskorner-api configured (dry run)
+apps               Deployment  prod       prod-artskorner-api          Synced  Healthy        deployment.apps/prod-artskorner-api configured (dry run)
+networking.k8s.io  Ingress     prod       prod-artskorner-api-ingress  Synced  Healthy        ingress.networking.k8s.io/prod-artskorner-api-ingress configured (dry run)
+
+
+=================================================
+APPLICATION: argocd/root-app
+=================================================
+
+Name:               argocd/root-app
+Project:            default
+Server:             https://kubernetes.default.svc
+Namespace:          argocd
+URL:                https://argocd.geonhyukim.com/applications/argocd/root-app
+Source:
+- Repo:             https://github.com/igh9410/igh9410-infra.git
+  Target:           main
+  Path:             argocd/apps
+SyncWindow:         Sync Allowed
+Sync Policy:        Manual
+Sync Status:        OutOfSync from main (73a2f0e)
+Health Status:      Healthy
+
+Operation:          Sync
+Sync Revision:      73a2f0e0ae7bfd8d746f0b180952aadbe5d9295d
+Phase:              Succeeded
+Start:              2025-09-26 19:17:18 +0900 KST
+Finished:           2025-09-26 19:17:18 +0900 KST
+Duration:           0s
+Message:            successfully synced (no more tasks)
+
+GROUP        KIND         NAMESPACE  NAME                     STATUS     HEALTH  HOOK  MESSAGE
+argoproj.io  Application  argocd     alloy                    Synced                   application.argoproj.io/alloy configured (dry run)
+argoproj.io  Application  argocd     dev-cnpg-cluster         OutOfSync                application.argoproj.io/dev-cnpg-cluster configured (dry run)
+argoproj.io  Application  argocd     kube-prometheus-stack    OutOfSync                application.argoproj.io/kube-prometheus-stack configured (dry run)
+argoproj.io  Application  argocd     dev-gramnuri-api         Synced                   application.argoproj.io/dev-gramnuri-api configured (dry run)
+argoproj.io  Application  argocd     loki                     Synced                   application.argoproj.io/loki configured (dry run)
+argoproj.io  Application  argocd     root-app                 OutOfSync                application.argoproj.io/root-app configured (dry run)
+argoproj.io  Application  argocd     prod-artskorner-api      Synced                   application.argoproj.io/prod-artskorner-api configured (dry run)
+argoproj.io  Application  argocd     cloudnative-pg-operator  Synced                   application.argoproj.io/cloudnative-pg-operator configured (dry run)
+
+
