@@ -3,15 +3,16 @@ kind: Kustomization
 namePrefix: prod-
 namespace: prod
 resources:
-- ../../base
+  - ../../base
 patches:
-- path: deployment-patch.yaml
-  target:
-    kind: Deployment
-    name: artskorner-api
-- path: ingress-patch.yaml
-  target:
-    kind: Ingress
-    name: artskorner-api-ingress
+  - path: deployment-patch.yaml
+    target:
+      kind: Deployment
+      name: artskorner-api
+  - path: ingress-patch.yaml
+    target:
+      kind: Ingress
+      name: artskorner-api-ingress
 images:
-- name: ghcr.io/igh9410/artskorner-api
+  - name: ghcr.io/igh9410/artskorner-api
+    newTag: 730cd71f6d919b27f9cb73aafbe8bc5c7e2c6ac7

@@ -3,18 +3,16 @@ kind: Kustomization
 namePrefix: dev-
 namespace: dev
 resources:
-- ../../base
+  - ../../base
 patches:
-- path: deployment-patch.yaml
-  target:
-    kind: Deployment
-    name: gramnuri-api
-- path: ingress-patch.yaml
-  target:
-    kind: Ingress
-    name: gramnuri-api-ingress
+  - path: deployment-patch.yaml
+    target:
+      kind: Deployment
+      name: gramnuri-api
+  - path: ingress-patch.yaml
+    target:
+      kind: Ingress
+      name: gramnuri-api-ingress
 images:
-- name: ghcr.io/igh9410/gramnuri-api
-
-#  newName: ghcr.io/igh9410/gramnuri-api
-#  newTag: 0d55e3052fc5b2e73db7755c8a92d0e2be36b891
+  - name: ghcr.io/igh9410/gramnuri-api
+    newTag: 3b64b0fd9c06b25464d4f119dfe235fb5d51f358
