@@ -13,7 +13,6 @@ spec:
     path: argocd/infra-apps
     directory:
       recurse: true
-      exclude: "app-of-apps.yaml"
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
