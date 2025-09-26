@@ -1,0 +1,82 @@
+# Custom values for CloudNativePG Operator
+# Optimized for stability and monitoring integration
+
+# Operator configuration
+config:
+  # Enable cluster-wide watching
+  clusterWide: true
+  # Increase concurrent reconciles for better performance
+  maxConcurrentReconciles: 15
+
+# Enable monitoring integration with your Prometheus stack
+monitoring:
+  # Enable PodMonitor for Prometheus scraping
+  podMonitorEnabled: true
+  # Additional labels to match your Prometheus setup
+  podMonitorAdditionalLabels:
+    app.kubernetes.io/component: operator
+    app.kubernetes.io/part-of: cloudnative-pg
+
+  # Enable Grafana dashboard creation
+  grafanaDashboard:
+    create: true
+    # Labels for Grafana to pick up the dashboard
+    labels:
+      grafana_dashboard: "1"
+    # Annotations for better organization
+    annotations:
+      k8s-sidecar-target-directory: "/tmp/dashboards/cloudnative-pg"
+
+# Resource limits for the operator
+resources:
+  limits:
+    cpu: 200m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+# Security settings - already good defaults, keeping them
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  seccompProfile:
+    type: RuntimeDefault
+  capabilities:
+    drop:
+    - "ALL"
+
+podSecurityContext:
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+
+# Add labels for better organization
+podLabels:
+  app.kubernetes.io/component: operator
+  app.kubernetes.io/part-of: cloudnative-pg
+  app.kubernetes.io/managed-by: argocd
+
+# Enhanced probes for better reliability
+webhook:
+  port: 9443
+  mutating:
+    create: true
+    failurePolicy: Fail
+  validating:
+    create: true
+    failurePolicy: Fail
+  livenessProbe:
+    initialDelaySeconds: 10
+    periodSeconds: 30
+    timeoutSeconds: 5
+  readinessProbe:
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 5
+  startupProbe:
+    failureThreshold: 12
+    periodSeconds: 5
+    timeoutSeconds: 5
