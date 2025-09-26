@@ -3,13 +3,6 @@ kind: Application
 metadata:
   name: dev-gramnuri-api
   namespace: argocd
-  annotations:
-    argocd-image-updater.argoproj.io/image-list: gramnuri-api=ghcr.io/igh9410/gramnuri-api
-    argocd-image-updater.argoproj.io/gramnuri-api.update-strategy: latest
-    argocd-image-updater.argoproj.io/gramnuri-api.allow-tags: regexp:^.*$
-    argocd-image-updater.argoproj.io/gramnuri-api.kustomize.image-name: ghcr.io/igh9410/gramnuri-api
-    argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/github-access
-    argocd-image-updater.argoproj.io/git-branch: main
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
