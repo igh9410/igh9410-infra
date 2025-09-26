@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-app
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/igh9410/igh9410-infra.git
+      targetRevision: main
+      path: argocd/infra-apps
+      directory:
+        include: "app-of-apps.yaml"
+    - repoURL: https://github.com/igh9410/igh9410-infra.git
+      targetRevision: main
+      path: argocd/apps
+      directory:
+        include: "app-of-apps.yaml"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      enabled: false
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  revisionHistoryLimit: 10

@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: prod-artskorner-api
+  name: infrastructure-app-of-apps
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -10,16 +10,14 @@ spec:
   source:
     repoURL: https://github.com/igh9410/igh9410-infra.git
     targetRevision: main
-    path: argocd/apps/artskorner/overlays/prod
+    path: argocd/infra-apps
+    directory:
+      recurse: true
+      exclude: "app-of-apps.yaml"
   destination:
     server: https://kubernetes.default.svc
-    namespace: prod
+    namespace: argocd
   syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      - PrunePropagationPolicy=foreground
-      - PruneLast=true
   revisionHistoryLimit: 10

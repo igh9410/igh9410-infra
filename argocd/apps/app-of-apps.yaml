@@ -1,8 +1,10 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: root-app
+  name: applications-app-of-apps
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
@@ -11,14 +13,11 @@ spec:
     path: argocd/apps
     directory:
       recurse: true
+      exclude: "app-of-apps.yaml"
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
   syncPolicy:
-    automated:
-      enabled: false
-      prune: true
-      selfHeal: true
     syncOptions:
       - CreateNamespace=true
   revisionHistoryLimit: 10
