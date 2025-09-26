@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infrastructure-app-of-apps
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/igh9410/igh9410-infra.git
+    targetRevision: main
+    path: argocd/infra-apps
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+  revisionHistoryLimit: 10
