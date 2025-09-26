@@ -122,22 +122,6 @@ igh9410-infra/
 3. **ArgoCD Config**: Update ArgoCD applications if needed
 4. **Verification**: Ensure services are healthy
 
-## 🌐 Applications
-
-### ArtsKorner (Production)
-
-- **Environment**: Production
-- **Namespace**: `prod`
-- **Domain**: `test-artskorner.gramnuri.com`
-- **Image**: `ghcr.io/igh9410/artskorner-api`
-
-### Gramnuri (Development)
-
-- **Environment**: Development
-- **Namespace**: `gramnuri`
-- **Domain**: `gramnuri.com`
-- **Image**: `ghcr.io/igh9410/gramnuri-api`
-
 ## 📊 Monitoring & Observability
 
 ### Access Points
@@ -327,22 +311,6 @@ igh9410-infra/
 2. **계획 및 적용**: Terraform 변경 사항 검토 및 적용
 3. **ArgoCD 구성**: 필요시 ArgoCD 애플리케이션 업데이트
 4. **검증**: 서비스가 정상인지 확인
-
-## 🌐 애플리케이션
-
-### ArtsKorner (프로덕션)
-
-- **환경**: 프로덕션
-- **네임스페이스**: `prod`
-- **도메인**: `test-artskorner.gramnuri.com`
-- **이미지**: `ghcr.io/igh9410/artskorner-api`
-
-### Gramnuri (개발)
-
-- **환경**: 개발
-- **네임스페이스**: `gramnuri`
-- **도메인**: `gramnuri.com`
-- **이미지**: `ghcr.io/igh9410/gramnuri-api`
 
 ## 📊 모니터링 및 가시성
 
