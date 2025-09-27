@@ -114,3 +114,6 @@ db_credentials.txt
 backend.conf
 gitleaks-report.json
 .vault_pass
+
+# Ansible
+ansible/files/id_rsa_ansible
