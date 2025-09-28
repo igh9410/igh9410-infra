@@ -22,7 +22,8 @@ on:
             APP_PRIVATE_KEY:
                 description: "GitHub App Private Key"
                 required: true
-
+permissions:
+    contents: write
 jobs:
     kustomize-deploy:
         runs-on: ubuntu-latest
