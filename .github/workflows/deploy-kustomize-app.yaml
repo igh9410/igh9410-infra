@@ -60,8 +60,8 @@ jobs:
             - name: Commit and push changes
               working-directory: igh9410-infra
               run: |
-                  git config user.name "geonhyuk-cicd[bot]"
-                  git config user.email "geonhyuk-cicd[bot]@github.com"
+                  git config user.name "github-actions[bot]"
+                  git config user.email "github-actions[bot]@github.com"
                   git add apps/${{ inputs.app_name }}/overlays/${{ inputs.environment }}/kustomization.yaml
                   git commit -m "chore: update ${{ inputs.app_name }} image to ${{ inputs.commit_sha }}"
                   git push origin HEAD:main
