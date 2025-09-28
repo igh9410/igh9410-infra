@@ -51,8 +51,9 @@ jobs:
 
             - name: Update kustomization.yaml
               working-directory: igh9410-infra
+              env:
+                  FILE: "apps/${{ inputs.app_name }}/overlays/${{ inputs.environment }}/kustomization.yaml"
               run: |
-                  FILE="apps/${{ inputs.app_name }}/overlays/${{ inputs.environment }}/kustomization.yaml"
                   echo "Updating $FILE with commit SHA ${{ inputs.commit_sha }}"
                   yq -iy '.images[0].newTag = "${{ inputs.commit_sha }}"' "$FILE"
 
