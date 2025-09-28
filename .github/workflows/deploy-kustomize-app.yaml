@@ -39,7 +39,7 @@ jobs:
             - name: Checkout Infrastructure Repo
               uses: actions/checkout@v4
               with:
-                  repository: team-igh9410/igh9410-infra
+                  repository: igh9410/igh9410-infra
                   ref: main
                   token: ${{ steps.app-token.outputs.token }}
                   path: igh9410-infra
