@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/igh9410/igh9410-infra.git
     targetRevision: main
-    path: apps/artskorner/overlays/prod
+    path: apps/artskorner-api/overlays/prod
   destination:
     server: https://kubernetes.default.svc
     namespace: prod

@@ -1,0 +1,67 @@
+name: Deploy Kustomize App
+
+on:
+    workflow_call:
+        inputs:
+            app_name:
+                description: "Application to deploy (e.g., gramnuri-api)"
+                required: true
+                type: string
+            environment:
+                description: "Environment to deploy (e.g., dev, qa, staging, prod)"
+                required: true
+                type: string
+            commit_sha:
+                description: "Commit SHA to update the image tag to"
+                required: true
+                type: string
+        secrets:
+            APP_ID:
+                description: "GitHub App ID"
+                required: true
+            APP_PRIVATE_KEY:
+                description: "GitHub App Private Key"
+                required: true
+
+jobs:
+    kustomize-deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Generate GitHub App Token
+              uses: actions/create-github-app-token@v2
+              id: app-token
+              with:
+                  app-id: ${{ secrets.APP_ID }}
+                  private-key: ${{ secrets.APP_PRIVATE_KEY }}
+                  owner: igh9410
+                  repositories: igh9410-infra
+
+            - name: Checkout Infrastructure Repo
+              uses: actions/checkout@v4
+              with:
+                  repository: team-igh9410/igh9410-infra
+                  ref: main
+                  token: ${{ steps.app-token.outputs.token }}
+                  path: igh9410-infra
+
+            # - name: Install yq
+            #   run: |
+            #       sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+            #       sudo chmod +x /usr/local/bin/yq
+
+            - name: Update kustomization.yaml
+              working-directory: igh9410-infra
+              run: |
+                  FILE="apps/${{ inputs.app_name }}/overlays/${{ inputs.environment }}/kustomization.yaml"
+                  echo "Updating $FILE with commit SHA ${{ inputs.commit_sha }}"
+                  yq -iy '.images[0].newTag = "${{ inputs.commit_sha }}"' "$FILE"
+
+            - name: Commit and push changes
+              working-directory: igh9410-infra
+              run: |
+                  git config user.name "github-actions[bot]"
+                  git add apps/${{ inputs.app_name }}/overlays/${{ inputs.environment }}/kustomization.yaml
+                  git commit -m "chore: update ${{ inputs.app_name }} image to ${{ inputs.commit_sha }}"
+                  git push origin HEAD:main
+              env:
+                  GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
