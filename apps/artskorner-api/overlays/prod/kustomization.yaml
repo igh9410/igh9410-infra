@@ -15,4 +15,4 @@ patches:
       name: artskorner-api-ingress
 images:
   - name: ghcr.io/igh9410/artskorner-api
-    newTag: f436680a85a9e714b3a6e4a164010d368a0fccaf
+    newTag: dfd512e774807626c999833caf5e9c0f78396259
