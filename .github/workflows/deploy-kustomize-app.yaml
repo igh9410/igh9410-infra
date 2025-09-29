@@ -45,11 +45,6 @@ jobs:
                   token: ${{ steps.app-token.outputs.token }}
                   path: igh9410-infra
 
-            # - name: Install yq
-            #   run: |
-            #       sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
-            #       sudo chmod +x /usr/local/bin/yq
-
             - name: Update kustomization.yaml
               working-directory: igh9410-infra
               env:
@@ -66,5 +61,3 @@ jobs:
                   git add apps/${{ inputs.app_name }}/overlays/${{ inputs.environment }}/kustomization.yaml
                   git commit -m "chore: update ${{ inputs.app_name }} image to ${{ inputs.commit_sha }}"
                   git push origin main
-              env:
-                  GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
