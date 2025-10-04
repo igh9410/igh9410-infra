@@ -1,4 +1,4 @@
-resource "helm_release" "cloudflared" {
+/*resource "helm_release" "cloudflared" {
   name       = "cloudflared"
   repository = "https://community-charts.github.io/helm-charts"
   chart      = "cloudflared"
@@ -11,3 +11,4 @@ resource "helm_release" "cloudflared" {
 
 
 }
+*/
