@@ -86,7 +86,7 @@ grafana:
     enabled: true
   ingress:
     enabled: true
-    ingressClassName: "traefik"
+    ingressClassName: "cilium"
     hosts:
       - grafana.geonhyukim.com
     tls: false
