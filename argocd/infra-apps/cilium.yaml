@@ -7,20 +7,10 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  sources:
-    - repoURL: https://helm.cilium.io/
-      chart: cilium
-      targetRevision: "1.18.2"
-      helm:
-        releaseName: cilium
-        valueFiles:
-          - $values/argocd/values/cilium.yaml
-    - repoURL: https://github.com/igh9410/igh9410-infra.git
-      targetRevision: main
-      ref: values
-    - repoURL: https://github.com/igh9410/igh9410-infra.git
-      targetRevision: main
-      path: infrastructure/cilium
+  source:
+    repoURL: https://github.com/igh9410/igh9410-infra.git
+    targetRevision: main
+    path: infrastructure/cilium
   destination:
     server: https://kubernetes.default.svc
     namespace: kube-system
