@@ -73,19 +73,20 @@ securityContext:
 # -- This is for setting up the cloudflared tunnel secrets. For more information checkout: https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/do-more-with-tunnels/local-management/create-local-tunnel/
 tunnelSecrets:
   # -- This is for cloudflared tunnel certificate PEM file.
+
   base64EncodedConfigJsonFile: ""
   base64EncodedPemFile: ""
 
   # -- This is for setting up the existing secret for the cloudflared tunnel certificate PEM file. If not set, the base64EncodedPemFile will be used.
   existingPemFileSecret:
     # -- This is the name of the existing secret.
-    name: ""
+    name: cloudflared-tunnel-credentials
     # -- This is the key of the certificate PEM file in the existing secret.
-    key: ""
+    key: token
   # -- This is for setting up the existing secret for the cloudflared tunnel configuration JSON file. If not set, the base64EncodedConfigJsonFile will be used.
   existingConfigJsonFileSecret:
     # -- This is the name of the existing secret.
-    name: ""
+    name: cloudflared-tunnel-credentials
     # -- This is the key of the configuration JSON file in the existing secret.
     key: "credentials.json"
 
@@ -109,9 +110,9 @@ tunnelConfig:
 # -- Cloudflare ingress rules. More information can be found here: https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/configure-tunnels/local-management/configuration-file/#how-traffic-is-matched
 ingress:
   - hostname: "*.geonhyukim.com"
-    service: http://traefik.traefik-v3.svc.cluster.local:80
+    service: http://cilium-ingress.kube-system.svc.cluster.local:80
   - hostname: "*.gramnuri.com"
-    service: http://traefik.traefik-v3.svc.cluster.local:80
+    service: http://cilium-ingress.kube-system.svc.cluster.local:80
   - service: http_status:404
 
 # -- This block is for setting up the resource management for the pod more information can be found here: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/

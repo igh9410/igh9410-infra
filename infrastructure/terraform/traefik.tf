@@ -11,5 +11,5 @@ resource "helm_release" "traefik" {
     file("${path.module}/values/traefik.yaml")
   ]
 
- 
+
 }

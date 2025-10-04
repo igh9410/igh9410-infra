@@ -4,7 +4,7 @@ metadata:
   name: artskorner-api-ingress
   namespace: dev
 spec:
-  ingressClassName: traefik # Added ingressClassName under spec
+  ingressClassName: cilium # Added ingressClassName under spec
   rules:
     - host: api.gramnuri.com
       http:
