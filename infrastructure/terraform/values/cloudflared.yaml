@@ -81,7 +81,7 @@ tunnelSecrets:
     # -- This is the name of the existing secret.
     name: ""
     # -- This is the key of the certificate PEM file in the existing secret.
-    key: "cert.pem"
+    key: ""
   # -- This is for setting up the existing secret for the cloudflared tunnel configuration JSON file. If not set, the base64EncodedConfigJsonFile will be used.
   existingConfigJsonFileSecret:
     # -- This is the name of the existing secret.
