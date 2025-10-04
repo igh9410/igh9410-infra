@@ -1,0 +1,19 @@
+cluster:
+  name: default
+hubble:
+  relay:
+    enabled: true
+  ui:
+    enabled: false
+ipam:
+  operator:
+    clusterPoolIPv4PodCIDRList: 192.168.0.0/16
+l2announcements:
+  enabled: true
+operator:
+  replicas: 1
+routingMode: tunnel
+tunnelProtocol: vxlan
+ingressController:
+  enabled: true
+  loadbalancerMode: dedicated
