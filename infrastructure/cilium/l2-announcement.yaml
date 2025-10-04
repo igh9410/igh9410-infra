@@ -6,4 +6,4 @@ spec:
   externalIPs: true
   loadBalancerIPs: true
   interfaces:
-    - ^eth[0-9]+
+    - ^enX[0-9]+
