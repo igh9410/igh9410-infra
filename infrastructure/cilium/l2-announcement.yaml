@@ -5,11 +5,7 @@ metadata:
 spec:
   serviceSelector:
     matchLabels:
-      color: blue
-  nodeSelector:
-    matchExpressions:
-      - key: node-role.kubernetes.io/control-plane
-        operator: DoesNotExist
+      cilium-lb-pool: default-pool
   interfaces:
     - ^eth[0-9]+
   externalIPs: true
