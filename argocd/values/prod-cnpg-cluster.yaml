@@ -202,12 +202,12 @@ cluster:
   imagePullSecrets: []
 
   storage:
-    size: 100Gi
+    size: 250Gi
     storageClass: "local-path"
 
   walStorage:
     enabled: true
-    size: 15Gi
+    size: 10Gi
     storageClass: "local-path"
 
   # -- The UID of the postgres user inside the image, defaults to 26
@@ -259,25 +259,12 @@ cluster:
   # -- Affinity/Anti-affinity rules for Pods.
   # See: https://cloudnative-pg.io/documentation/current/cloudnative-pg.v1/#postgresql-cnpg-io-v1-AffinityConfiguration
   affinity:
-    # Spread pods across different nodes for HA
-    topologyKey: kubernetes.io/hostname
-    # Prefer to place primary on node04 (the more powerful node)
-    nodeSelector:
-      kubernetes.io/hostname: node04
-    # Anti-affinity to ensure replicas are on different nodes
-    podAntiAffinityType: required
-    # Additional node affinity preferences
-    additionalPodAffinity:
-      preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 100
-          podAffinityTerm:
-            labelSelector:
-              matchExpressions:
-                - key: cnpg.io/instanceRole
-                  operator: In
-                  values:
-                    - primary
-            topologyKey: kubernetes.io/hostname
+    topologyKey: topology.kubernetes.io/zone
+    tolerations:
+      - key: "dedicated"
+        operator: "Equal"
+        value: "prod-database"
+        effect: "NoSchedule"
 
   # -- The configuration for the CA and related certificates.
   # See: https://cloudnative-pg.io/documentation/current/cloudnative-pg.v1/#postgresql-cnpg-io-v1-CertificatesConfiguration
@@ -412,11 +399,9 @@ externalClusters:
       endpointURL: "https://c3b77c4aca2f20de101a1452ef946655.r2.cloudflarestorage.com"
       s3Credentials:
         accessKeyId:
-          namespace: cnpg-database
           name: cnpg-cluster-backup-credentials
           key: ACCESS_KEY_ID
         secretAccessKey:
-          namespace: cnpg-database
           name: cnpg-cluster-backup-credentials
           key: ACCESS_SECRET_KEY
       wal:
