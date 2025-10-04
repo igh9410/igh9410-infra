@@ -6,7 +6,5 @@ spec:
   serviceSelector:
     matchLabels:
       cilium-lb-pool: default-pool
-  interfaces:
-    - ^eth[0-9]+
   externalIPs: true
   loadBalancerIPs: true
