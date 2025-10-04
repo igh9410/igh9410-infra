@@ -11,7 +11,5 @@ resource "helm_release" "traefik" {
     file("${path.module}/values/traefik.yaml")
   ]
 
-  depends_on = [
-    helm_release.metallb
-  ]
+ 
 }

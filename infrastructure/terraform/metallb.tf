@@ -9,7 +9,7 @@ resource "kubernetes_namespace" "metallb_system" {
     }
   }
 }
-
+/*
 resource "helm_release" "metallb" {
   name       = "metallb"
   repository = "https://metallb.github.io/metallb"
@@ -59,4 +59,4 @@ resource "kubernetes_manifest" "metallb_l2_advertisement" {
 
   depends_on = [kubernetes_manifest.metallb_ip_pool]
 } 
- 
+ */
