@@ -1502,7 +1502,11 @@ singleBinary:
   # -- Node selector for single binary pods
   nodeSelector: {}
   # -- Tolerations for single binary pods
-  tolerations: []
+  tolerations:
+    - key: "dedicated"
+      operator: "Equal"
+      value: "prod-database"
+      effect: "NoSchedule"
   persistence:
     # -- Enable StatefulSetAutoDeletePVC feature
     enableStatefulSetAutoDeletePVC: true

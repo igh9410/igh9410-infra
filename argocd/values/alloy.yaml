@@ -272,7 +272,7 @@ controller:
   tolerations:
     - key: "dedicated"
       operator: "Equal"
-      value: "db"
+      value: "prod-database"
       effect: "NoSchedule"
 
   # -- Topology Spread Constraints to apply to Grafana Alloy pods.
