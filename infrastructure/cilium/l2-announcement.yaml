@@ -5,3 +5,5 @@ metadata:
 spec:
   externalIPs: true
   loadBalancerIPs: true
+  interfaces:
+    - ^eth[0-9]+
