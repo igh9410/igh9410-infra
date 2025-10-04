@@ -17,3 +17,4 @@ tunnelProtocol: vxlan
 ingressController:
   enabled: true
   loadbalancerMode: dedicated
+  default: true
