@@ -210,7 +210,7 @@ cluster:
 
   walStorage:
     enabled: true
-    size: 10Gi
+    size: 1Gi
     storageClass: "local-path"
 
   # -- The UID of the postgres user inside the image, defaults to 26
