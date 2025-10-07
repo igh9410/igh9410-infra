@@ -132,6 +132,6 @@ apiServerProxyConfig:
   # If true or noauth, the operator will run an in-process API server proxy.
   # You can deploy a ProxyGroup of type "kube-apiserver" to run a high
   # availability set of API server proxies instead.
-  mode: "false" # "true", "false", "noauth"
+  mode: "true" # "true", "false", "noauth"
 
 imagePullSecrets: []
