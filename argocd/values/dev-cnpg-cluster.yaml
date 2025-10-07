@@ -230,7 +230,8 @@ cluster:
               test-label: "true"
             annotations:
               external-dns.alpha.kubernetes.io/hostname: dev-postgres-db.local
-              test-annotation: "true"
+              tailscale.com/expose: "true"
+              tailscale.com/hostname: "dev-postgres-db"
           spec:
             type: LoadBalancer
 

@@ -231,6 +231,8 @@ cluster:
               environment: production
             annotations:
               external-dns.alpha.kubernetes.io/hostname: prod-postgres-db.local
+              tailscale.com/expose: "true"
+              tailscale.com/hostname: "prod-postgres-db"
           spec:
             type: LoadBalancer
 
