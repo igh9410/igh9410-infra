@@ -5,21 +5,20 @@ hubble:
     enabled: true
   ui:
     enabled: false
+ingressController:
+  default: true
+  enabled: true
+  loadbalancerMode: shared
 ipam:
   operator:
     clusterPoolIPv4PodCIDRList: 192.168.0.0/16
+k8sServiceHost: 192.168.45.199
+k8sServicePort: 6443
+kubeProxyReplacement: true
 l2announcements:
   enabled: true
 operator:
   replicas: 1
-routingMode: tunnel
+routingMode: native
+socketLB.hostNamespaceOnly: true
 tunnelProtocol: vxlan
-kubeProxyReplacement: true
-# Required for bootstrap when kubeProxyReplacement=true
-# Allows Cilium to connect directly to API server instead of service IP
-k8sServiceHost: 192.168.45.199
-k8sServicePort: 6443
-ingressController:
-  enabled: true
-  loadbalancerMode: shared
-  default: true

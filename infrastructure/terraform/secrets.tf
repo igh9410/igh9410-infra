@@ -32,3 +32,14 @@ resource "kubernetes_secret" "prod_cnpg_cluster_backup_credentials" {
     "ACCESS_SECRET_KEY" = var.r2_secret_access_key
   }
 }
+
+resource "kubernetes_secret" "tailscale_oauth_credentials" {
+  metadata {
+    name      = "operator-oauth"
+    namespace = "tailscale"
+  }
+  data = {
+    "client_id"     = var.tailscale_oauth_client_id
+    "client_secret" = var.tailscale_oauth_client_secret
+  }
+}
