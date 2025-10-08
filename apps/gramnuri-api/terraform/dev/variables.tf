@@ -64,23 +64,6 @@ variable "cloudflare_account_id" {
   sensitive   = true
 }
 
-variable "tiktok_client_key" {
-  description = "TikTok Client Key"
-  type        = string
-  sensitive   = true
-}
-
-variable "tiktok_client_secret" {
-  description = "TikTok Client Secret"
-  type        = string
-  sensitive   = true
-}
-
-variable "tiktok_redirect_uri" {
-  description = "TikTok Redirect URI"
-  type        = string
-  default     = "https://dev.gramnuri.com/oauth/callback/tiktok"
-}
 
 variable "kubeconfig_path" {
   description = "Path to the kubeconfig file"
@@ -122,4 +105,10 @@ variable "r2_custom_domain" {
   description = "R2 Custom Domain"
   type        = string
   default     = "dev-cdn.gramnuri.com"
+}
+
+variable "gemini_api_key" {
+  description = "Gemini API Key"
+  type        = string
+  sensitive   = true
 }
