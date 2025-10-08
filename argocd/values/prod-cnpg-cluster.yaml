@@ -480,13 +480,13 @@ backups:
     jobs: 2
 
   scheduledBackups:
-    - name: backup-twice-a-day
-      schedule: "0 06,18 * * *" # Daily at 6 AM and 6 PM (KST: 3 AM and 3 PM)
+    - name: daily-backup
+      schedule: "0 0 19 * * *" # Daily at 7 PM (KST: 4 PM)
       backupOwnerReference: self
       method: barmanObjectStore
 
   # -- Retention policy for backups
-  retentionPolicy: "30d"
+  retentionPolicy: "7d"
 
 imageCatalog:
   # -- Whether to provision an image catalog. If imageCatalog.images is empty this option will be ignored.
