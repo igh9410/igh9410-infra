@@ -1,6 +1,6 @@
-# 🔬 Homelab Infra
+# 🔬 igh9410-infra
 
-This repository contains all of the configuration and documentation of my homelab.
+All the infrastructure-as-code, configurations, and documentation for my homelab are stored in this repository.
 I use my homelab for deploying my side projects and experiment new technologies and Kubernetes cluster.
 
 ## Cluster Provisioning & Architecture
@@ -35,77 +35,28 @@ igh9410-infra/
 └── Makefile                        # Automation scripts
 ```
 
-## 🛠️ Installed Apps & Tools
+## Core Components & Applications
 
-### Apps
+### Custom Applications
 
-This is where my custom apps reside.
+- **artskorner-api**: API for the Artskorner app.
+- **gramnuri-api**: API for the Gramnuri app.
 
-| Name             | Description                |
-| ---------------- | -------------------------- |
-| `artskorner-api` | API for the Artskorner app |
-| `gramnuri-api`   | API for the Gramnuri app   |
+### Core Components
 
-### Infrastructure
-
-Every infrastructure applications I use for managing my homelab cluster
-
-<table>
-    <tr>
-        <th>Logo</th>
-        <th>Name</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://raw.githubusercontent.com/cncf/artwork/master/projects/k3s/icon/color/k3s-icon-color.svg"></td>
-        <td><a href="https://k3s.io/">k3s</a></td>
-        <td>Lightweight Kubernetes distribution.</td>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://raw.githubusercontent.com/cncf/artwork/main/projects/argo/icon/color/argo-icon-color.svg"></td>
-        <td><a href="https://argo-cd.readthedocs.io/">ArgoCD</a></td>
-        <td>Declarative, GitOps continuous delivery tool for Kubernetes.</td>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://github.com/cncf/artwork/blob/main/projects/cilium/icon/color/cilium_icon-color.png?raw=true"></td>
-        <td><a href="https://cilium.io/">Cilium</a></td>
-        <td>eBPF-based Networking, Observability, Security. Used for CNI, LoadBalancer, and Ingress Controller.</td>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://cdn.brandfetch.io/idJ3Cg8ymG/theme/dark/logo.svg?c=1bxid64Mup7aczewSAYMX&t=1667589504295"></td>
-        <td><a href="https://www.cloudflare.com/products/tunnel/">Cloudflared Tunnel</a></td>
-        <td>Used for private tunnels to expose public services without a publicly routable IP</td>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://github.com/cncf/artwork/blob/main/projects/cloudnativepg/icon/color/cloudnativepg-icon-color.png?raw=true"></td>
-        <td><a href="https://cloudnative-pg.io/">CloudNativePG</a></td>
-        <td>Postgres operator for Kubernetes-native environment.</td>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://raw.githubusercontent.com/cncf/artwork/main/projects/prometheus/icon/color/prometheus-icon-color.svg"></td>
-        <td><a href="https://prometheus.io/">Prometheus</a></td>
-        <td>Open-source monitoring system with a dimensional data model, flexible query language, efficient time series database and modern alerting approach.</td>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://raw.githubusercontent.com/grafana/grafana/main/public/img/grafana_icon.svg"></td>
-        <td><a href="https://grafana.com/">Grafana</a></td>
-        <td>The open observability dashboards.</td>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://raw.githubusercontent.com/grafana/loki/main/docs/sources/logo.png"></td>
-        <td><a href="https://grafana.com/oss/loki/">Loki</a></td>
-        <td>Log aggregation system.</td>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://grafana.com/media/oss/alloy/alloy-logo.svg"></td>
-        <td><a href="https://grafana.com/oss/alloy/">Grafana Alloy</a></td>
-        <td>Open-source OpenTelemetry collector</td>
-    </tr>
-</table>
+- <img src="https://raw.githubusercontent.com/cncf/artwork/master/projects/k3s/icon/color/k3s-icon-color.svg" width="20" valign="middle"> **[k3s](https://k3s.io/)**: Lightweight Kubernetes distribution.
+- <img src="https://raw.githubusercontent.com/cncf/artwork/main/projects/argo/icon/color/argo-icon-color.svg" width="20" valign="middle"> **[ArgoCD](https://argo-cd.readthedocs.io/)**: Declarative, GitOps continuous delivery tool for Kubernetes.
+- <img src="https://github.com/cncf/artwork/blob/main/projects/cilium/icon/color/cilium_icon-color.png?raw=true" width="20" valign="middle"> **[Cilium](https://cilium.io/)**: eBPF-based Networking, Observability, Security. Used for CNI, LoadBalancer, and Ingress Controller.
+- <img src="https://cdn.brandfetch.io/idJ3Cg8ymG/theme/dark/logo.svg?c=1bxid64Mup7aczewSAYMX&t=1667589504295" width="20" valign="middle"> **[Cloudflared Tunnel](https://www.cloudflare.com/products/tunnel/)**: Used for private tunnels to expose public services without a publicly routable IP.
+- <img src="https://github.com/cncf/artwork/blob/main/projects/cloudnativepg/icon/color/cloudnativepg-icon-color.png?raw=true" width="20" valign="middle"> **[CloudNativePG](https://cloudnative-pg.io/)**: Postgres operator for Kubernetes-native environment.
+- <img src="https://raw.githubusercontent.com/cncf/artwork/main/projects/prometheus/icon/color/prometheus-icon-color.svg" width="20" valign="middle"> **[Prometheus](https://prometheus.io/)**: Open-source monitoring system with a dimensional data model, flexible query language, efficient time series database and modern alerting approach.
+- <img src="https://raw.githubusercontent.com/grafana/grafana/main/public/img/grafana_icon.svg" width="20" valign="middle"> **[Grafana](https://grafana.com/)**: The open observability dashboards.
+- <img src="https://raw.githubusercontent.com/grafana/loki/main/docs/sources/logo.png" width="20" valign="middle"> **[Loki](https://grafana.com/oss/loki/)**: Log aggregation system.
+- <img src="https://grafana.com/media/oss/alloy/alloy-logo.svg" width="20" valign="middle"> **[Grafana Alloy](https://grafana.com/oss/alloy/)**: Open-source OpenTelemetry collector.
 
 ## Networking
 
-I use [Cilium](https://cilium.io/) as my CNI. I use its LoadBalancer IPAM to assign IP addresses to my LoadBalancer services and also use Cilium as an Ingress controller. This way, I don't need to install and maintain a seperate ingress controller.
+[Cilium](https://cilium.io/) is the cornerstone of my cluster's network architecture. It serves as the CNI and provides both LoadBalancer IPAM and Ingress functionality, allowing for a more streamlined setup without a dedicated ingress controller.
 
 For external access, I use [Cloudflared Tunnel](https://www.cloudflare.com/products/tunnel/) to expose services to the internet securely without needing a public IP address.
 
