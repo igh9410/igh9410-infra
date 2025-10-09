@@ -94,8 +94,9 @@ Open-source OpenTelemetry collector.
 
 ## Networking
 
-In my setup, [Cilium](https://cilium.io/) acts as the CNI, LoadBalancer IPAM, and Ingress controller, which streamlines the entire network stack. I find it more versatile and feature-rich than other CNIs like Calico. Its rapid adoption in enterprise environments also signals its maturity. Other factor in my decision was that Cilium's open-source version offers advanced capabilities that often require a paid enterprise license with alternatives such as Calico.
-For external access, I use [Cloudflared Tunnel](https://www.cloudflare.com/products/tunnel/) to expose services to the internet securely without needing a public IP address.
+In my setup, [Cilium](https://cilium.io/) acts as the CNI, LoadBalancer IPAM, and Ingress controller, streamlining the entire network stack. I chose it over alternatives like Calico for its enterprise-grade features available in the open-source version and rapid adoption in production environments.
+
+For external access, I use [Cloudflared Tunnel](https://www.cloudflare.com/products/tunnel/) to expose services securely without a public IP address.
 
 ## Database
 
