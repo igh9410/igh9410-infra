@@ -19,6 +19,6 @@ l2announcements:
   enabled: true
 operator:
   replicas: 1
-routingMode: native
+routingMode: tunnel
 socketLB.hostNamespaceOnly: true
 tunnelProtocol: vxlan

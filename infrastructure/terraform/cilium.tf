@@ -1,4 +1,4 @@
-resource "helm_release" "cilium" {
+/* resource "helm_release" "cilium" {
   name       = "cilium"
   repository = "https://helm.cilium.io/"
   chart      = "cilium"
@@ -8,4 +8,4 @@ resource "helm_release" "cilium" {
   values = [
     file("values/cilium.yaml")
   ]
-}
+} */
