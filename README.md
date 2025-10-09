@@ -64,10 +64,10 @@ Everything needed to run my cluster & deploy my applications.
     <tr>
         <td><img width="32" src="https://raw.githubusercontent.com/cncf/artwork/main/projects/argo/icon/color/argo-icon-color.svg"></td>
         <td><a href="https://argo-cd.readthedocs.io/">ArgoCD</a></td>
-        <td>My GitOps solution of choice.</td>
+        <td>Declarative, GitOps continuous delivery tool for Kubernetes.</td>
     </tr>
     <tr>
-        <td><img width="32" src="https://cdn.jsdelivr.net/gh/cilium/cilium@main/Documentation/images/logo.png"></td>
+        <td><img width="32" src="https://github.com/cncf/artwork/blob/main/projects/cilium/icon/color/cilium_icon-color.png?raw=true"></td>
         <td><a href="https://cilium.io/">Cilium</a></td>
         <td>eBPF-based Networking, Observability, Security. Used for CNI, LoadBalancer, and Ingress Controller.</td>
     </tr>
@@ -77,14 +77,14 @@ Everything needed to run my cluster & deploy my applications.
         <td>Used for private tunnels to expose public services without a publicly routable IP</td>
     </tr>
     <tr>
-        <td><img width="32" src="https://github.com/cncf/artwork/blob/main/examples/sandbox.md?plain=1#cloudnativepg-logo"></td>
+        <td><img width="32" src="https://github.com/cncf/artwork/blob/main/projects/cloudnativepg/icon/color/cloudnativepg-icon-color.png?raw=true"></td>
         <td><a href="https://cloudnative-pg.io/">CloudNativePG</a></td>
         <td>Postgres operator for Kubernetes-native environment.</td>
     </tr>
     <tr>
         <td><img width="32" src="https://raw.githubusercontent.com/cncf/artwork/main/projects/prometheus/icon/color/prometheus-icon-color.svg"></td>
         <td><a href="https://prometheus.io/">Prometheus</a></td>
-        <td>An open-source monitoring system with a dimensional data model, flexible query language, efficient time series database and modern alerting approach.</td>
+        <td>Open-source monitoring system with a dimensional data model, flexible query language, efficient time series database and modern alerting approach.</td>
     </tr>
     <tr>
         <td><img width="32" src="https://raw.githubusercontent.com/grafana/grafana/main/public/img/grafana_icon.svg"></td>
@@ -97,14 +97,9 @@ Everything needed to run my cluster & deploy my applications.
         <td>Log aggregation system.</td>
     </tr>
     <tr>
-        <td><img width="32" src="https://raw.githubusercontent.com/grafana/alloy/main/docs/sources/assets/logo_and_name.svg"></td>
-        <td><a href="https://grafana.com/oss/alloy/">Alloy</a></td>
-        <td>Open-source metrics aggregator.</td>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://cdn.brandfetch.io/idwet7pIqW/theme/dark/logo.svg?c=1bxid64Mup7aczewSAYMX&t=1756419139511"></td>
-        <td><a href="https://www.terraform.io/">Terraform</a></td>
-        <td>Infrastructure as Code to provision and manage any cloud, infrastructure, or service.</td>
+        <td><img width="32" src="https://grafana.com/media/oss/alloy/alloy-logo.svg"></td>
+        <td><a href="https://grafana.com/oss/alloy/">Grafana Alloy</a></td>
+        <td>Open-source OpenTelemetry collector</td>
     </tr>
 </table>
 
@@ -133,20 +128,3 @@ For stateful workloads, I use [CloudNativePG](https://cloudnative-pg.io/) to man
 2. **Plan & Apply**: Review and apply Terraform changes
 3. **ArgoCD Config**: Update ArgoCD applications if needed
 4. **Verification**: Ensure services are healthy
-
-## 📈 Future Improvements
-
-- [ ] Implement comprehensive CI/CD pipeline testing
-- [ ] Add automated security scanning
-- [ ] Implement disaster recovery procedures
-- [ ] Add performance testing automation
-- [ ] Implement multi-cluster deployment
-- [ ] Add cost optimization monitoring
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make changes following the established patterns
-4. Test changes in development environment
-5. Submit pull request with detailed description
