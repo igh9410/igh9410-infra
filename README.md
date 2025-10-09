@@ -2,6 +2,7 @@
 
 All the infrastructure-as-code, configurations, and documentation for my homelab are stored in this repository.
 I use my homelab for deploying my side projects and experiment new technologies and Kubernetes cluster.
+Additional details can be found on my [blog](https://geonhyukim.com)
 
 ## 🏗️ System Architecture & Automation
 
@@ -93,7 +94,7 @@ Open-source OpenTelemetry collector.
 
 ## Networking
 
-[Cilium](https://cilium.io/) is the cornerstone of my cluster's network architecture. It serves as the CNI and provides both LoadBalancer IPAM and Ingress functionality, allowing for a more streamlined setup without a dedicated ingress controller.
+My cluster's networking is built on [Cilium](https://cilium.io/), which I selected for several key reasons. Beyond its powerful eBPF foundation, I find it more versatile and feature-rich than other CNIs like Calico. Its rapid adoption in enterprise environments also signals its maturity. A significant factor in my decision was that Cilium's open-source version offers advanced capabilities that often require a paid enterprise license with alternatives such as Calico. In my setup, Cilium acts as the CNI, LoadBalancer, and Ingress controller, which streamlines the entire network stack. streamlines the entire network stack.
 
 For external access, I use [Cloudflared Tunnel](https://www.cloudflare.com/products/tunnel/) to expose services to the internet securely without needing a public IP address.
 
@@ -111,6 +112,8 @@ For stateful workloads, I use [CloudNativePG](https://cloudnative-pg.io/) to man
 4. **ArgoCD Sync**: ArgoCD detects changes and deploys automatically
 
 ### Infrastructure Updates
+
+![GitOps Flow](diagram/github-actions-gitops/github-actions-gitops-pipeline.png)
 
 1. **Terraform Changes**: Modify infrastructure code
 2. **Plan & Apply**: Review and apply Terraform changes
