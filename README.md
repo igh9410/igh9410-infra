@@ -44,15 +44,32 @@ igh9410-infra/
 
 ### Core Components
 
-- <img src="https://raw.githubusercontent.com/cncf/artwork/master/projects/k3s/icon/color/k3s-icon-color.svg" width="20" valign="middle"> **[k3s](https://k3s.io/)**: Lightweight Kubernetes distribution.
-- <img src="https://raw.githubusercontent.com/cncf/artwork/main/projects/argo/icon/color/argo-icon-color.svg" width="20" valign="middle"> **[ArgoCD](https://argo-cd.readthedocs.io/)**: Declarative, GitOps continuous delivery tool for Kubernetes.
-- <img src="https://github.com/cncf/artwork/blob/main/projects/cilium/icon/color/cilium_icon-color.png?raw=true" width="20" valign="middle"> **[Cilium](https://cilium.io/)**: eBPF-based Networking, Observability, Security. Used for CNI, LoadBalancer, and Ingress Controller.
-- <img src="https://cdn.brandfetch.io/idJ3Cg8ymG/theme/dark/logo.svg?c=1bxid64Mup7aczewSAYMX&t=1667589504295" width="20" valign="middle"> **[Cloudflared Tunnel](https://www.cloudflare.com/products/tunnel/)**: Used for private tunnels to expose public services without a publicly routable IP.
-- <img src="https://github.com/cncf/artwork/blob/main/projects/cloudnativepg/icon/color/cloudnativepg-icon-color.png?raw=true" width="20" valign="middle"> **[CloudNativePG](https://cloudnative-pg.io/)**: Postgres operator for Kubernetes-native environment.
-- <img src="https://raw.githubusercontent.com/cncf/artwork/main/projects/prometheus/icon/color/prometheus-icon-color.svg" width="20" valign="middle"> **[Prometheus](https://prometheus.io/)**: Open-source monitoring system with a dimensional data model, flexible query language, efficient time series database and modern alerting approach.
-- <img src="https://raw.githubusercontent.com/grafana/grafana/main/public/img/grafana_icon.svg" width="20" valign="middle"> **[Grafana](https://grafana.com/)**: The open observability dashboards.
-- <img src="https://raw.githubusercontent.com/grafana/loki/main/docs/sources/logo.png" width="20" valign="middle"> **[Loki](https://grafana.com/oss/loki/)**: Log aggregation system.
-- <img src="https://grafana.com/media/oss/alloy/alloy-logo.svg" width="20" valign="middle"> **[Grafana Alloy](https://grafana.com/oss/alloy/)**: Open-source OpenTelemetry collector.
+#### <img src="https://raw.githubusercontent.com/cncf/artwork/master/projects/k3s/icon/color/k3s-icon-color.svg" width="20" valign="middle"> [k3s](https://k3s.io/)
+Lightweight Kubernetes distribution.
+
+#### <img src="https://raw.githubusercontent.com/cncf/artwork/main/projects/argo/icon/color/argo-icon-color.svg" width="20" valign="middle"> [ArgoCD](https://argo-cd.readthedocs.io/)
+Declarative, GitOps continuous delivery tool for Kubernetes.
+
+#### <img src="https://github.com/cncf/artwork/blob/main/projects/cilium/icon/color/cilium_icon-color.png?raw=true" width="20" valign="middle"> [Cilium](https://cilium.io/)
+eBPF-based Networking, Observability, Security. Used for CNI, LoadBalancer, and Ingress Controller.
+
+#### <img src="https://cdn.brandfetch.io/idJ3Cg8ymG/theme/dark/logo.svg?c=1bxid64Mup7aczewSAYMX&t=1667589504295" width="20" valign="middle"> [Cloudflared Tunnel](https://www.cloudflare.com/products/tunnel/)
+Used for private tunnels to expose public services without a publicly routable IP.
+
+#### <img src="https://github.com/cncf/artwork/blob/main/projects/cloudnativepg/icon/color/cloudnativepg-icon-color.png?raw=true" width="20" valign="middle"> [CloudNativePG](https://cloudnative-pg.io/)
+Postgres operator for Kubernetes-native environment.
+
+#### <img src="https://raw.githubusercontent.com/cncf/artwork/main/projects/prometheus/icon/color/prometheus-icon-color.svg" width="20" valign="middle"> [Prometheus](https://prometheus.io/)
+Open-source monitoring system with a dimensional data model, flexible query language, efficient time series database and modern alerting approach.
+
+#### <img src="https://raw.githubusercontent.com/grafana/grafana/main/public/img/grafana_icon.svg" width="20" valign="middle"> [Grafana](https://grafana.com/)
+The open observability dashboards.
+
+#### <img src="https://raw.githubusercontent.com/grafana/loki/main/docs/sources/logo.png" width="20" valign="middle"> [Loki](https://grafana.com/oss/loki/)
+Log aggregation system.
+
+#### <img src="https://grafana.com/media/oss/alloy/alloy-logo.svg" width="20" valign="middle"> [Grafana Alloy](https://grafana.com/oss/alloy/)
+Open-source OpenTelemetry collector.
 
 ## Networking
 
