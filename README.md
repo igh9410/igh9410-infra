@@ -1,4 +1,4 @@
-# 🏠 Homelab Infra
+# 🔬 Homelab Infra
 
 This repository contains all of the configuration and documentation of my homelab.
 I use my homelab for deploying my side projects and experiment new technologies and Kubernetes cluster.
@@ -35,7 +35,7 @@ igh9410-infra/
 └── Makefile                        # Automation scripts
 ```
 
-## :rocket: Installed Apps & Tools
+## 🛠️ Installed Apps & Tools
 
 ### Apps
 
@@ -48,7 +48,7 @@ This is where my custom apps reside.
 
 ### Infrastructure
 
-Everything needed to run my cluster & deploy my applications.
+Every infrastructure applications I use for managing my homelab cluster
 
 <table>
     <tr>
