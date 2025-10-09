@@ -67,19 +67,19 @@ Everything needed to run my cluster & deploy my applications.
         <td>My GitOps solution of choice.</td>
     </tr>
     <tr>
-        <td><img width="32" src="https://raw.githubusercontent.com/cncf/artwork/main/projects/cilium/icon/color/cilium-icon-color.svg"></td>
+        <td><img width="32" src="https://cdn.jsdelivr.net/gh/cilium/cilium@main/Documentation/images/logo.png"></td>
         <td><a href="https://cilium.io/">Cilium</a></td>
-        <td>My CNI of choice. Used for CNI, LoadBalancer, and Ingress Controller. eBPF-based Networking, Observability, Security.</td>
+        <td>eBPF-based Networking, Observability, Security. Used for CNI, LoadBalancer, and Ingress Controller.</td>
     </tr>
     <tr>
-        <td><img width="32" src="https://raw.githubusercontent.com/cloudflare/cloudflare-docs/production/products/tunnel/static/cloudflare-tunnel-icon.svg"></td>
+        <td><img width="32" src="https://cdn.brandfetch.io/idJ3Cg8ymG/theme/dark/logo.svg?c=1bxid64Mup7aczewSAYMX&t=1667589504295"></td>
         <td><a href="https://www.cloudflare.com/products/tunnel/">Cloudflared Tunnel</a></td>
-        <td>Used for private tunnels to expose public services (without requiring a public IP).</td>
+        <td>Used for private tunnels to expose public services without a publicly routable IP</td>
     </tr>
     <tr>
-        <td><img width="32" src="https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/main/docs/src/assets/logo.png"></td>
+        <td><img width="32" src="https://github.com/cncf/artwork/blob/main/examples/sandbox.md?plain=1#cloudnativepg-logo"></td>
         <td><a href="https://cloudnative-pg.io/">CloudNativePG</a></td>
-        <td>Database operator for running PostgreSQL clusters.</td>
+        <td>Postgres operator for Kubernetes-native environment.</td>
     </tr>
     <tr>
         <td><img width="32" src="https://raw.githubusercontent.com/cncf/artwork/main/projects/prometheus/icon/color/prometheus-icon-color.svg"></td>
@@ -89,7 +89,7 @@ Everything needed to run my cluster & deploy my applications.
     <tr>
         <td><img width="32" src="https://raw.githubusercontent.com/grafana/grafana/main/public/img/grafana_icon.svg"></td>
         <td><a href="https://grafana.com/">Grafana</a></td>
-        <td>The open observability platform.</td>
+        <td>The open observability dashboards.</td>
     </tr>
     <tr>
         <td><img width="32" src="https://raw.githubusercontent.com/grafana/loki/main/docs/sources/logo.png"></td>
@@ -99,17 +99,12 @@ Everything needed to run my cluster & deploy my applications.
     <tr>
         <td><img width="32" src="https://raw.githubusercontent.com/grafana/alloy/main/docs/sources/assets/logo_and_name.svg"></td>
         <td><a href="https://grafana.com/oss/alloy/">Alloy</a></td>
-        <td>Open-source observability pipelines.</td>
+        <td>Open-source metrics aggregator.</td>
     </tr>
     <tr>
-        <td><img width="32" src="https://raw.githubusercontent.com/hashicorp/terraform-website/main/content/assets/images/terraform-logo-150x150.png"></td>
+        <td><img width="32" src="https://cdn.brandfetch.io/idwet7pIqW/theme/dark/logo.svg?c=1bxid64Mup7aczewSAYMX&t=1756419139511"></td>
         <td><a href="https://www.terraform.io/">Terraform</a></td>
         <td>Infrastructure as Code to provision and manage any cloud, infrastructure, or service.</td>
-    </tr>
-    <tr>
-        <td><img width="32" src="https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/logo/kustomize-color.png"></td>
-        <td><a href="https://kustomize.io/">Kustomize</a></td>
-        <td>Kubernetes native configuration management.</td>
     </tr>
 </table>
 
