@@ -7,9 +7,7 @@ I use my homelab for deploying my side projects and experiment new technologies 
 
 The cluster is built on virtual machines provisioned by [XCP-ng](https://xcp-ng.org/). After the initial VM setup, I use [Ansible](https://www.ansible.com/) to perform baseline configuration and hardening. The playbooks for this process are located in the `ansible` directory. On top of this foundation, I run [k3s](https://k3s.io/) as my lightweight Kubernetes distribution.
 
-My infrastructure management follows a two-stage approach.  
-Core, foundational components like ArgoCD and Cloudflared are initially provisioned using Terraform (see the `infrastructure/terraform` directory).  
-Once ArgoCD is operational, it takes over the management of all other cluster resources, including applications and services, by following GitOps principles. It continuously synchronizes the cluster state with the configurations defined in this repository.
+My infrastructure management follows a two-stage approach. Core, foundational components like ArgoCD and Cloudflared are initially provisioned using Terraform (see the `infrastructure/terraform` directory). Once ArgoCD is operational, it takes over the management of all other cluster resources, including applications and services, by following GitOps principles. It continuously synchronizes the cluster state with the configurations defined in this repository.
 
 ## ⚙️ Hardware
 
