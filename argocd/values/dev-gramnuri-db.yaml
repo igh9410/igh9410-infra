@@ -48,13 +48,13 @@ recovery:
 
   ##
   # -- The original cluster name when used in backups. Also known as serverName.
-  clusterName: "dev-cnpg-cluster"
+  clusterName: "dev-gramnuri-db-cluster"
   # -- Name of the database used by the application. Default: `app`.
   database: gramnuri_db
   # -- Name of the owner of the database in the instance to be used by applications. Defaults to the value of the `database` key.
   owner: "gramnuri_db_owner"
   # -- External cluster source name for recovery
-  source: "dev-cnpg-cluster"
+  source: "dev-gramnuri-db-cluster"
   # -- Overrides the provider specific default endpoint. Defaults to:
   # S3: https://s3.<region>.amazonaws.com"
   # Leave empty if using the default S3 endpoint
@@ -70,7 +70,7 @@ recovery:
   # S3: s3://<bucket><path>
   # Azure: https://<storageAccount>.<serviceName>.core.windows.net/<containerName><path>
   # Google: gs://<bucket><path>
-  destinationPath: "s3://igh9410-backup/postgres/dev"
+  destinationPath: "s3://igh9410-backup/dev/gramnuri-db"
   # -- One of `s3`, `azure` or `google`
   provider: s3
   s3:
@@ -386,9 +386,9 @@ cluster:
   additionalLabels: {}
   annotations: {}
 externalClusters:
-  - name: dev-cnpg-cluster
+  - name: dev-gramnuri-db-cluster
     barmanObjectStore:
-      destinationPath: "s3://igh9410-backup/postgres/dev"
+      destinationPath: "s3://igh9410-backup/dev/gramnuri-db"
       endpointURL: "https://c3b77c4aca2f20de101a1452ef946655.r2.cloudflarestorage.com"
       s3Credentials:
         accessKeyId:
@@ -421,13 +421,13 @@ backups:
   # S3: s3://<bucket><path>
   # Azure: https://<storageAccount>.<serviceName>.core.windows.net/<containerName><path>
   # Google: gs://<bucket><path>
-  destinationPath: "s3://igh9410-backup/dev/gramnuri-db"
+  destinationPath: "s3://igh9410-backup/postgres/dev"
   # -- One of `s3`, `azure` or `google`
   provider: s3
   s3:
     region: "apac"
     bucket: "igh9410-backup"
-    path: "/dev/gramnuri-db"
+    path: "/postgres/dev"
     accessKey: ""
     secretKey: ""
     # -- Use the role based authentication without providing explicitly the keys

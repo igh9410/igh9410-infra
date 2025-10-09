@@ -11,7 +11,7 @@ ingressController:
   loadbalancerMode: shared
 ipam:
   operator:
-    clusterPoolIPv4PodCIDRList: 192.168.0.0/16
+    clusterPoolIPv4PodCIDRList: 10.42.0.0/16 # default k3s CIDR block
 k8sServiceHost: 192.168.45.199
 k8sServicePort: 6443
 kubeProxyReplacement: true
@@ -19,6 +19,6 @@ l2announcements:
   enabled: true
 operator:
   replicas: 1
-routingMode: native
+routingMode: tunnel
 socketLB.hostNamespaceOnly: true
 tunnelProtocol: vxlan

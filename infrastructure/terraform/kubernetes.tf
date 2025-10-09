@@ -23,6 +23,18 @@ resource "kubernetes_secret" "github_app_private_key" {
   }
 }
 
+resource "kubernetes_secret" "cloudflared_tunnel_credentials" {
+  metadata {
+    name      = "cloudflared-tunnel-credentials"
+    namespace = "cloudflared"
+  }
+  data = {
+    "credentials.json" = var.cloudflare_tunnel_credentials
+    "token"            = var.cloudflare_tunnel_cert_pem
+  }
+  type = "Opaque"
+}
+
 /* resource "kubernetes_namespace" "dev" {
   metadata {
     name = "dev"

@@ -47,20 +47,19 @@ recovery:
   backupName: "" # Name of the backup to recover from. Required if method is `backup`.
 
   ##
-
-  # -- Specifies a CA bundle to validate a privately signed certificate.
   # -- The original cluster name when used in backups. Also known as serverName.
-  clusterName: "prod-artskorner-db-cluster"
+  clusterName: "dev-cnpg-cluster"
   # -- Name of the database used by the application. Default: `app`.
-  database: artskorner_db
+  database: gramnuri_db
   # -- Name of the owner of the database in the instance to be used by applications. Defaults to the value of the `database` key.
-  owner: "artskorner_db_owner"
+  owner: "gramnuri_db_owner"
   # -- External cluster source name for recovery
-  source: "prod-artskorner-db-cluster"
+  source: "dev-cnpg-cluster"
   # -- Overrides the provider specific default endpoint. Defaults to:
   # S3: https://s3.<region>.amazonaws.com"
   # Leave empty if using the default S3 endpoint
   endpointURL: "https://c3b77c4aca2f20de101a1452ef946655.r2.cloudflarestorage.com"
+  # -- Specifies a CA bundle to validate a privately signed certificate.
   endpointCA:
     # -- Creates a secret with the given value if true, otherwise uses an existing secret.
     create: false
@@ -71,7 +70,7 @@ recovery:
   # S3: s3://<bucket><path>
   # Azure: https://<storageAccount>.<serviceName>.core.windows.net/<containerName><path>
   # Google: gs://<bucket><path>
-  destinationPath: "s3://igh9410-backup/prod/artskorner-db"
+  destinationPath: "s3://igh9410-backup/postgres/dev"
   # -- One of `s3`, `azure` or `google`
   provider: s3
   s3:
@@ -183,8 +182,8 @@ recovery:
         key: ""
 
 cluster:
-  # -- Number of instances (single instance due to hardware constraints on other nodes)
-  instances: 3
+  # -- Number of instances
+  instances: 2
 
   # -- Name of the container image, supporting both tags (<image>:<tag>) and digests for deterministic and repeatable deployments:
   # <image>:<tag>@sha256:<digestValue>
@@ -205,13 +204,13 @@ cluster:
   imagePullSecrets: []
 
   storage:
-    size: 5Gi
+    size: 2Gi
     storageClass: "local-path"
 
   walStorage:
     enabled: true
     size: 100Mi
-    storageClass: "local-path"
+    storageClass: ""
 
   # -- The UID of the postgres user inside the image, defaults to 26
   postgresUID: -1
@@ -226,13 +225,13 @@ cluster:
         updateStrategy: patch
         serviceTemplate:
           metadata:
-            name: "prod-artskorner-db"
+            name: "dev-gramnuri-db"
             labels:
-              environment: production
+              test-label: "true"
             annotations:
-              external-dns.alpha.kubernetes.io/hostname: prod-artskorner-db.local
+              external-dns.alpha.kubernetes.io/hostname: dev-gramnuri-db.local
               tailscale.com/expose: "true"
-              tailscale.com/hostname: "prod-artskorner-db"
+              tailscale.com/hostname: "dev-gramnuri-db"
           spec:
             type: LoadBalancer
 
@@ -241,11 +240,8 @@ cluster:
   # We strongly advise you use the same setting for limits and requests so that your cluster pods are given a Guaranteed QoS.
   # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-qos/
   resources:
-    #limits:
-    #  cpu: 3500m # 3.5 cores (leaving 0.5 for system on node04)
-    # memory: 9Gi # 9GB (leaving 1GB for system on node04)
     requests:
-      memory: 200Mi
+      memory: 100Mi
 
   priorityClassName: ""
 
@@ -264,11 +260,6 @@ cluster:
   # See: https://cloudnative-pg.io/documentation/current/cloudnative-pg.v1/#postgresql-cnpg-io-v1-AffinityConfiguration
   affinity:
     topologyKey: topology.kubernetes.io/zone
-    tolerations:
-      - key: "dedicated"
-        operator: "Equal"
-        value: "prod-database"
-        effect: "NoSchedule"
 
   # -- The configuration for the CA and related certificates.
   # See: https://cloudnative-pg.io/documentation/current/cloudnative-pg.v1/#postgresql-cnpg-io-v1-CertificatesConfiguration
@@ -283,7 +274,6 @@ cluster:
 
   # -- Allow to disable PDB, mainly useful for upgrade of single-instance clusters or development purposes
   # See: https://cloudnative-pg.io/documentation/current/kubernetes_upgrade/#pod-disruption-budgets
-  # Disable PDB for single instance cluster
   enablePDB: true
 
   # -- This feature enables declarative management of existing roles, as well as the creation of new roles if they are not
@@ -301,7 +291,7 @@ cluster:
     #     - pg_signal_backend
 
   monitoring:
-    # -- Whether to enable monitoring (enabled for production)
+    # -- Whether to enable monitoring
     enabled: true
     podMonitor:
       # -- Whether to enable the PodMonitor
@@ -395,11 +385,10 @@ cluster:
 
   additionalLabels: {}
   annotations: {}
-
 externalClusters:
-  - name: prod-artskorner-db-cluster
+  - name: dev-cnpg-cluster
     barmanObjectStore:
-      destinationPath: "s3://igh9410-backup/prod/artskorner-db"
+      destinationPath: "s3://igh9410-backup/postgres/dev"
       endpointURL: "https://c3b77c4aca2f20de101a1452ef946655.r2.cloudflarestorage.com"
       s3Credentials:
         accessKeyId:
@@ -413,13 +402,13 @@ externalClusters:
       data:
         compression: gzip
 
+  # -- You need to configure backups manually, so backups are disabled by default.
 backups:
-  # -- Backups enabled for production
   enabled: true
 
   # -- Overrides the provider specific default endpoint. Defaults to:
   # S3: https://s3.<region>.amazonaws.com"
-  endpointURL: "https://c3b77c4aca2f20de101a1452ef946655.r2.cloudflarestorage.com"
+  endpointURL: "https://c3b77c4aca2f20de101a1452ef946655.r2.cloudflarestorage.com" # Leave empty if using the default S3 endpoint
   # -- Specifies a CA bundle to validate a privately signed certificate.
   endpointCA:
     # -- Creates a secret with the given value if true, otherwise uses an existing secret.
@@ -432,13 +421,13 @@ backups:
   # S3: s3://<bucket><path>
   # Azure: https://<storageAccount>.<serviceName>.core.windows.net/<containerName><path>
   # Google: gs://<bucket><path>
-  destinationPath: "s3://igh9410-backup/prod/artskorner-db"
+  destinationPath: "s3://igh9410-backup/dev/gramnuri-db"
   # -- One of `s3`, `azure` or `google`
   provider: s3
   s3:
     region: "apac"
     bucket: "igh9410-backup"
-    path: "/postgres/prod"
+    path: "/dev/gramnuri-db"
     accessKey: ""
     secretKey: ""
     # -- Use the role based authentication without providing explicitly the keys
@@ -460,7 +449,7 @@ backups:
   secret:
     # -- Whether to create a secret for the backup credentials
     create: false
-    # -- Name of the backup credentials secret (must exist in prod-cnpg-database namespace)
+    # -- Name of the backup credentials secret
     name: "cnpg-cluster-backup-credentials"
 
   wal:
@@ -469,7 +458,7 @@ backups:
     # -- Whether to instruct the storage provider to encrypt WAL files. One of `` (use the storage container default), `AES256` or `aws:kms`.
     encryption: AES256
     # -- Number of WAL files to be archived or restored in parallel.
-    maxParallel: 2
+    maxParallel: 1
   data:
     # -- Data compression method. One of `` (for no compression), `gzip`, `bzip2` or `snappy`.
     compression: gzip
@@ -479,13 +468,16 @@ backups:
     jobs: 2
 
   scheduledBackups:
-    - name: daily-backup
-      schedule: "0 0 19 * * *" # Daily at 7 PM (KST: 4 PM)
+    # -- Scheduled backup name
+    - name: weekly-backup
+      # -- Schedule in cron format
+      schedule: "0 0 18 * * 0"
+      # -- Backup owner reference
       backupOwnerReference: self
+      # -- Backup method, can be `barmanObjectStore` (default) or `volumeSnapshot`
       method: barmanObjectStore
-
   # -- Retention policy for backups
-  retentionPolicy: "7d"
+  retentionPolicy: "30d"
 
 imageCatalog:
   # -- Whether to provision an image catalog. If imageCatalog.images is empty this option will be ignored.
