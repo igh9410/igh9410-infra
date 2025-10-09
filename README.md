@@ -94,8 +94,7 @@ Open-source OpenTelemetry collector.
 
 ## Networking
 
-My cluster's networking is built on [Cilium](https://cilium.io/), which I selected for several key reasons. Beyond its powerful eBPF foundation, I find it more versatile and feature-rich than other CNIs like Calico. Its rapid adoption in enterprise environments also signals its maturity. A significant factor in my decision was that Cilium's open-source version offers advanced capabilities that often require a paid enterprise license with alternatives such as Calico. In my setup, Cilium acts as the CNI, LoadBalancer, and Ingress controller, which streamlines the entire network stack. streamlines the entire network stack.
-
+In my setup, [Cilium](https://cilium.io/) acts as the CNI, LoadBalancer IPAM, and Ingress controller, which streamlines the entire network stack. I find it more versatile and feature-rich than other CNIs like Calico. Its rapid adoption in enterprise environments also signals its maturity. Other factor in my decision was that Cilium's open-source version offers advanced capabilities that often require a paid enterprise license with alternatives such as Calico.
 For external access, I use [Cloudflared Tunnel](https://www.cloudflare.com/products/tunnel/) to expose services to the internet securely without needing a public IP address.
 
 ## Database
@@ -106,14 +105,14 @@ For stateful workloads, I use [CloudNativePG](https://cloudnative-pg.io/) to man
 
 ### Application Deployment Flow
 
+![GitOps Flow](diagram/github-actions-gitops/github-actions-gitops-pipeline.png)
+
 1. **Code Changes**: Push application code to respective repositories
 2. **Image Build**: GitHub Actions builds and pushes container images
 3. **Manifest Update**: Update image tags in Kustomize overlays
 4. **ArgoCD Sync**: ArgoCD detects changes and deploys automatically
 
 ### Infrastructure Updates
-
-![GitOps Flow](diagram/github-actions-gitops/github-actions-gitops-pipeline.png)
 
 1. **Terraform Changes**: Modify infrastructure code
 2. **Plan & Apply**: Review and apply Terraform changes
