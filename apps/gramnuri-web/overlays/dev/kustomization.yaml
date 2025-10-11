@@ -15,4 +15,4 @@ patches:
       name: gramnuri-web-ingress
 images:
   - name: ghcr.io/igh9410/gramnuri-web
-    newTag: ""
+    newTag: "4774aab007239cd27bb43906d679fd3619f23f2d"
