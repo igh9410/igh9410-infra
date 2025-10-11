@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gramnuri-web
+spec:
+  selector:
+    matchLabels:
+      app: gramnuri-web
+  template:
+    spec:
+      imagePullSecrets:
+        - name: ghcr-creds
+      containers:
+        - name: gramnuri-web
+          envFrom:
+            - secretRef:
+                name: gramnuri-client-secrets

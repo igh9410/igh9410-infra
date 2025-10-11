@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gramnuri-web
+  labels:
+    app: gramnuri-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gramnuri-web
+  template:
+    metadata:
+      labels:
+        app: gramnuri-web
+    spec:
+      containers:
+        - name: gramnuri-web
+          image: ghcr.io/igh9410/gramnuri-web
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: 100m
+              memory: 50Mi
+            limits:
+              cpu: 100m
+              memory: 50Mi
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        kubernetes.io/os: linux
