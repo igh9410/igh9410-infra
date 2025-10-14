@@ -98,3 +98,8 @@ variable "tailscale_oauth_client_secret" {
   type        = string
   sensitive   = true
 }
+
+variable "app_namespaces" {
+  type    = set(string)
+  default = ["default", "dev", "prod", "github"]
+}

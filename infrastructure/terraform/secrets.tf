@@ -43,3 +43,30 @@ resource "kubernetes_secret" "tailscale_oauth_credentials" {
     "client_secret" = var.tailscale_oauth_client_secret
   }
 }
+
+resource "kubernetes_secret" "ghcr_image_pull_secrets" {
+  for_each = var.app_namespaces
+  metadata {
+    name      = "ghcr-image-pull-secrets"
+    namespace = each.value
+  }
+  type = "kubernetes.io/dockerconfigjson"
+  data = {
+    # Placeholder data. The actual auth token will be managed by an external process.
+    ".dockerconfigjson" = jsonencode({
+      auths = {
+        "ghcr.io" = {
+          username = "x-access-token"
+          password = var.github_token # This will be overwritten by the token refresh mechanism
+          auth     = base64encode("x-access-token:${var.github_token}")
+        }
+      }
+    })
+  }
+  lifecycle {
+    ignore_changes = [
+      data, # Tell Terraform to ignore changes to the data field, as it's managed externally
+    ]
+  }
+}
+

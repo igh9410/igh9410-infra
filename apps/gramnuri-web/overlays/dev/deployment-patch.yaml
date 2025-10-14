@@ -9,7 +9,7 @@ spec:
   template:
     spec:
       imagePullSecrets:
-        - name: ghcr-creds
+        - name: ghcr-image-pull-secrets
       containers:
         - name: gramnuri-web
           envFrom:

@@ -9,9 +9,9 @@ spec:
   template:
     spec:
       imagePullSecrets:
-      - name: ghcr-creds
+        - name: ghcr-image-pull-secrets
       containers:
-      - name: artskorner-api
-        envFrom:
-        - secretRef:
-            name: artskorner-secrets
+        - name: artskorner-api
+          envFrom:
+            - secretRef:
+                name: artskorner-secrets
