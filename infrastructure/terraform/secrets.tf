@@ -56,17 +56,13 @@ resource "kubernetes_secret" "ghcr_image_pull_secrets" {
     ".dockerconfigjson" = jsonencode({
       auths = {
         "ghcr.io" = {
-          username = "x-access-token"
-          password = var.github_token # This will be overwritten by the token refresh mechanism
-          auth     = base64encode("x-access-token:${var.github_token}")
+          username = "igh9410"
+          password = var.github_token
+          email    = var.cloudflare_email
+          auth     = base64encode("igh9410:${var.github_token}")
         }
       }
     })
-  }
-  lifecycle {
-    ignore_changes = [
-      data, # Tell Terraform to ignore changes to the data field, as it's managed externally
-    ]
   }
 }
 
