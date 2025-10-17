@@ -57,9 +57,9 @@ resource "kubernetes_secret" "ghcr_image_pull_secrets" {
       auths = {
         "ghcr.io" = {
           username = "igh9410"
-          password = var.github_token
+          password = var.github_pat
           email    = var.cloudflare_email
-          auth     = base64encode("igh9410:${var.github_token}")
+          auth     = base64encode("igh9410:${var.github_pat}")
         }
       }
     })

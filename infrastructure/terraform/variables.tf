@@ -103,3 +103,9 @@ variable "app_namespaces" {
   type    = set(string)
   default = ["default", "dev", "prod", "github"]
 }
+
+variable "github_pat" {
+  description = "GitHub Personal Access Token"
+  type        = string
+  sensitive   = true
+}

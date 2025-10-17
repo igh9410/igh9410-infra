@@ -23,7 +23,8 @@ spec:
             requests:
               cpu: 100m
               memory: 100Mi
-
+      imagePullSecrets:
+        - name: ghcr-image-pull-secrets
       nodeSelector:
         kubernetes.io/arch: amd64
         kubernetes.io/os: linux

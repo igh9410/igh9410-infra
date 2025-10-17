@@ -15,17 +15,19 @@ spec:
         app: gramnuri-api
     spec:
       containers:
-      - name: gramnuri-api
-        image: ghcr.io/igh9410/gramnuri-api
-        ports:
-        - containerPort: 8080
-        resources:
-          limits:
-            cpu: 250m
-            memory: 256Mi
-          requests:
-            cpu: 100m
-            memory: 128Mi
+        - name: gramnuri-api
+          image: ghcr.io/igh9410/gramnuri-api
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: 250m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+      imagePullSecrets:
+        - name: ghcr-image-pull-secrets
       nodeSelector:
         kubernetes.io/arch: amd64
         kubernetes.io/os: linux
