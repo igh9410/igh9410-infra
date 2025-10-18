@@ -1,6 +1,7 @@
 cluster:
   name: default
 hubble:
+  enabled: true
   relay:
     enabled: true
   ui:
@@ -19,9 +20,9 @@ l2announcements:
   enabled: true
 operator:
   replicas: 1
-routingMode: tunnel
+routingMode: native
+tunnelProtocol: vxlan
 socketLB.hostNamespaceOnly: true
 ipv4NativeRoutingCIDR: 10.42.0.0/16
 autoDirectNodeRoutes: true
 directRoutingSkipUnreachable: true
-tunnelProtocol: native
