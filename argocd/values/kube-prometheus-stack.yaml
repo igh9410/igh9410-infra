@@ -85,14 +85,12 @@ alertmanager:
       group_wait: 30s
       group_interval: 5m
       repeat_interval: 1h
-      receiver: "null"
+      receiver: "discord-webhook"
       routes:
         - receiver: "discord-webhook"
           matchers:
             - alertname = "Http5xxError"
-          continue: false
     receivers:
-      - name: "null"
       - name: "discord-webhook"
         discord_configs:
           - webhook_url_secret:
