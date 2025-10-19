@@ -46,20 +46,6 @@ prometheus:
       runAsGroup: 0
       runAsNonRoot: false
       allowPrivilegeEscalation: true
-    additionalPrometheusRules:
-      - name: custom-rules-http5xx
-        groups:
-          - name: http-errors
-            rules:
-              - alert: Http5xxError
-                expr: increase(http_requests_total{job="dev-gramnuri-api", code=~"5.."}[1m]) > 0
-                for: 0m
-                labels:
-                  severity: critical
-                  namespace: dev
-                annotations:
-                  summary: "HTTP 5xx error on dev-gramnuri-api"
-                  description: "Service {{ $labels.job }} in namespace {{ $labels.namespace }} is returning 5xx errors."
   initContainers:
     - name: chown-data
       image: busybox
@@ -95,19 +81,19 @@ alertmanager:
     global:
       resolve_timeout: 5m
     route:
-      group_by: ['job']
+      group_by: ["job"]
       group_wait: 30s
       group_interval: 5m
       repeat_interval: 1h
-      receiver: 'null'
+      receiver: "null"
       routes:
-        - receiver: 'discord-webhook'
+        - receiver: "discord-webhook"
           matchers:
             - alertname = "Http5xxError"
           continue: false
     receivers:
-      - name: 'null'
-      - name: 'discord-webhook'
+      - name: "null"
+      - name: "discord-webhook"
         webhook_configs:
           - url_secret:
               name: dev-alarms-webhook-url
@@ -202,3 +188,19 @@ defaultRules:
     nodeExporterRecording: true
     prometheus: true
     prometheusOperator: true
+
+# Custom Prometheus Rules
+additionalPrometheusRulesMap:
+  custom-http-errors:
+    groups:
+      - name: http-errors
+        rules:
+          - alert: Http5xxError
+            expr: increase(http_requests_total{job="dev-gramnuri-api", code=~"5.."}[1m]) > 0
+            for: 0m
+            labels:
+              severity: critical
+              namespace: dev
+            annotations:
+              summary: "HTTP 5xx error on dev-gramnuri-api"
+              description: "Service {{ $labels.job }} in namespace {{ $labels.namespace }} is returning 5xx errors."
