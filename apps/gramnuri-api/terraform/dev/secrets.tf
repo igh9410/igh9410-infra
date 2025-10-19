@@ -27,3 +27,4 @@ resource "kubernetes_secret" "gramnuri_secrets" {
     GEMINI_API_KEY               = var.gemini_api_key
   }
 }
+
