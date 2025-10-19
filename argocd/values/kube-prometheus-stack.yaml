@@ -191,11 +191,11 @@ additionalPrometheusRulesMap:
       - name: http-errors
         rules:
           - alert: Http5xxError
-            expr: increase(http_requests_total{job="dev-gramnuri-api", code=~"5.."}[1m]) > 0
+            expr: increase(http_requests_total{job="gramnuri-api", code=~"5.."}[1m]) > 0
             for: 0m
             labels:
               severity: critical
-              namespace: dev
+              app: gramnuri-api
             annotations:
-              summary: "HTTP 5xx error on dev-gramnuri-api"
+              summary: "HTTP 5xx error on gramnuri-api"
               description: "Service {{ $labels.job }} in namespace {{ $labels.namespace }} is returning 5xx errors."

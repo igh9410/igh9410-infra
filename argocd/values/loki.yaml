@@ -3059,7 +3059,7 @@ ruler:
   # -- Whether to enable the rules sidecar
   sidecar: false
   # -- Number of replicas for the ruler
-  replicas: 0
+  replicas: 1
   # -- hostAliases to add
   hostAliases: []
   #  - ip: 1.2.3.4
