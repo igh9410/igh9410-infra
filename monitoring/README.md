@@ -10,9 +10,16 @@ monitoring/
 │   ├── kustomization.yaml
 │   └── discord-config.yaml
 │
-└── loki/                  # Loki rules and configurations
+├── loki/                  # Loki rules and configurations
+│   ├── kustomization.yaml
+│   └── loki-rules.yaml
+│
+└── grafana/               # Grafana dashboards and datasources
     ├── kustomization.yaml
-    └── loki-rules.yaml
+    ├── dashboards/
+    │   └── gramnuri-api-dashboard.yaml
+    └── datasources/
+        └── loki-datasource.yaml
 ```
 
 ## Components
@@ -39,9 +46,16 @@ Contains Loki recording rules for log-based alerting.
 
 **Current Rules:**
 
-- `GoAPIErrorLogged` - Detects `ERROR:` in gramnuri-api logs across all namespaces (warning)
-- `GoAPICriticalError` - Detects `ERROR:.*5[0-9]{2}` in gramnuri-api logs (critical)
-- `GoAPIPanicDetected` - Detects `panic` or `fatal` in gramnuri-api logs (critical)
+- `GoAPIErrorLogged` - Detects JSON logs with `level="error"` in gramnuri-api (warning)
+- `GoAPICriticalError` - Detects 5xx errors in error logs (critical)
+- `GoAPIPanicDetected` - Detects `panic`, `fatal`, or `dpanic` level logs (critical)
+
+**Features:**
+
+- Parses JSON structured logs (Zap logger)
+- Extracts `msg` field for alert descriptions
+- Uses `sum by (namespace, msg)` for multi-environment support
+- Includes error message in Discord notifications
 
 **Note:** Rules use `sum by (namespace)` to match services across all environments (dev, prod, etc.) without hardcoding namespace names.
 
@@ -50,6 +64,34 @@ Contains Loki recording rules for log-based alerting.
 - Managed by ArgoCD application: `argocd/infra-apps/loki-rules.yaml`
 - Auto-syncs from Git
 - Namespace: `monitoring`
+
+### Grafana (`grafana/`)
+
+Contains Grafana dashboards and datasources managed via GitOps.
+
+**How It Works:**
+
+The kube-prometheus-stack Grafana includes a sidecar container that automatically loads:
+
+- ConfigMaps with label `grafana_dashboard: "1"` as dashboards
+- ConfigMaps with label `grafana_datasource: "1"` as datasources
+
+**Current Configurations:**
+
+- `loki-datasource.yaml` - Loki datasource pointing to `loki-gateway.monitoring.svc.cluster.local`
+- `gramnuri-api-dashboard.yaml` - Application monitoring dashboard with:
+  - HTTP request rate by status code
+  - HTTP 5xx error tracking
+  - Error logs panel (JSON parsed)
+  - Request latency (p95)
+  - Active connections
+
+**Deployment:**
+
+- Managed by ArgoCD application: `argocd/infra-apps/grafana-config.yaml`
+- Auto-syncs from Git
+- Namespace: `monitoring`
+- See `monitoring/grafana/README.md` for detailed documentation
 
 ## Why Kustomize Instead of Helm?
 

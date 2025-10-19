@@ -25,7 +25,8 @@ igh9410-infra/
 │
 └── monitoring/              # Monitoring configuration (Kustomize-managed)
     ├── alertmanager/        # AlertManager custom resources
-    └── loki/               # Loki rules and configuration
+    ├── loki/               # Loki rules and configuration
+    └── grafana/            # Grafana dashboards and datasources
 ```
 
 ## Coding Conventions
@@ -40,6 +41,7 @@ igh9410-infra/
   - `infrastructure/cilium/` - Cilium IPPool and L2Announcement
   - `monitoring/alertmanager/` - AlertmanagerConfig CRDs
   - `monitoring/loki/` - Loki recording rules ConfigMaps
+  - `monitoring/grafana/` - Grafana dashboards and datasources ConfigMaps
 
 **Use Helm for:**
 - Third-party applications (kube-prometheus-stack, Loki, ArgoCD)
@@ -78,6 +80,13 @@ monitoring/alertmanager/
 monitoring/loki/
 ├── kustomization.yaml
 └── loki-rules.yaml
+
+monitoring/grafana/
+├── kustomization.yaml
+├── dashboards/
+│   └── gramnuri-api-dashboard.yaml
+└── datasources/
+    └── loki-datasource.yaml
 ```
 
 ### 3. ArgoCD Application Pattern
@@ -152,6 +161,12 @@ spec:
 **Prometheus:**
 - Custom PrometheusRules via `additionalPrometheusRulesMap` in Helm values
 - Managed in `argocd/values/kube-prometheus-stack.yaml`
+
+**Grafana:**
+- Dashboards and datasources in ConfigMaps in `monitoring/grafana/`
+- Managed via Kustomize + ArgoCD
+- ConfigMaps must have label `grafana_dashboard: "1"` or `grafana_datasource: "1"`
+- Grafana sidecar automatically loads these ConfigMaps
 
 ### 7. YAML Formatting
 
