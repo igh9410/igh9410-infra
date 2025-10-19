@@ -14,9 +14,6 @@ spec:
       - name: alertname
         value: Http5xxError
         matchType: "="
-      - name: namespace
-        value: dev
-        matchType: "="
   receivers:
     - name: discord-webhook
       discordConfigs:
