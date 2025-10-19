@@ -62,6 +62,8 @@ alertmanager:
   enabled: true
   alertmanagerSpec:
     replicas: 1
+    secrets:
+      - dev-alarms-webhook-url
     storage:
       volumeClaimTemplate:
         spec:
@@ -85,17 +87,17 @@ alertmanager:
       group_wait: 30s
       group_interval: 5m
       repeat_interval: 1h
-      receiver: "discord-webhook"
+      receiver: "null"
       routes:
         - receiver: "discord-webhook"
           matchers:
             - alertname = "Http5xxError"
+          continue: false
     receivers:
+      - name: "null"
       - name: "discord-webhook"
         discord_configs:
-          - webhook_url_secret:
-              name: dev-alarms-webhook-url
-              key: webhook_url
+          - webhook_url_file: /etc/alertmanager/secrets/dev-alarms-webhook-url/webhook_url
             send_resolved: true
             title: '{{ template "discord.default.title" . }}'
             message: '{{ template "discord.default.message" . }}'
