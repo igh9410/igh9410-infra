@@ -112,3 +112,9 @@ variable "gemini_api_key" {
   type        = string
   sensitive   = true
 }
+
+variable "discord_webhook_url" {
+  description = "Discord Webhook URL"
+  type        = string
+  sensitive   = true
+}

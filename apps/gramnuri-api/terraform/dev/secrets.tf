@@ -27,3 +27,16 @@ resource "kubernetes_secret" "gramnuri_secrets" {
     GEMINI_API_KEY               = var.gemini_api_key
   }
 }
+
+resource "kubernetes_secret" "gramnuri_discord_webhook_url" {
+  metadata {
+    name      = "gramnuri-discord-webhook-url"
+    namespace = "monitoring"
+  }
+
+  type = "Opaque"
+
+  data = {
+    webhook_url = var.discord_webhook_url
+  }
+}
