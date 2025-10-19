@@ -1,0 +1,286 @@
+# Infrastructure Repository Coding Conventions
+
+## Project Structure
+
+This repository follows a GitOps approach using ArgoCD, Helm, Kustomize, and Terraform.
+
+### Directory Organization
+
+```
+igh9410-infra/
+├── apps/                      # Application deployments
+│   ├── {app-name}/
+│   │   ├── base/             # Base Kubernetes manifests
+│   │   ├── overlays/         # Environment-specific overlays (dev, prod)
+│   │   └── terraform/        # App-specific infrastructure (secrets, DNS)
+│
+├── argocd/
+│   ├── apps/                 # Application ArgoCD definitions
+│   ├── infra-apps/          # Infrastructure component ArgoCD definitions
+│   └── values/              # Helm chart values files
+│
+├── infrastructure/
+│   ├── cilium/              # Cilium CNI configuration (Kustomize)
+│   └── terraform/           # Core infrastructure (ArgoCD, secrets, etc.)
+│
+└── monitoring/              # Monitoring configuration (Kustomize-managed)
+    ├── alertmanager/        # AlertManager custom resources
+    └── loki/               # Loki rules and configuration
+```
+
+## Coding Conventions
+
+### 1. Kustomize vs Helm
+
+**Use Kustomize for:**
+- Custom resources (CRDs) that need to be managed independently
+- Configuration that should NOT be part of Helm chart lifecycle
+- Resources that need to be version-controlled separately from Helm releases
+- Examples:
+  - `infrastructure/cilium/` - Cilium IPPool and L2Announcement
+  - `monitoring/alertmanager/` - AlertmanagerConfig CRDs
+  - `monitoring/loki/` - Loki recording rules ConfigMaps
+
+**Use Helm for:**
+- Third-party applications (kube-prometheus-stack, Loki, ArgoCD)
+- Complex deployments with many interdependent resources
+- Applications that benefit from templating
+
+### 2. Kustomize Structure
+
+Every Kustomize directory MUST have:
+```yaml
+# kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - resource1.yaml
+  - resource2.yaml
+```
+
+**Naming Convention:**
+- Use descriptive, kebab-case filenames
+- Group related resources in the same directory
+- One resource type per file when possible
+
+**Example:**
+```
+infrastructure/cilium/
+├── kustomization.yaml
+├── ippool.yaml
+└── l2-announcement.yaml
+
+monitoring/alertmanager/
+├── kustomization.yaml
+└── discord-config.yaml
+
+monitoring/loki/
+├── kustomization.yaml
+└── loki-rules.yaml
+```
+
+### 3. ArgoCD Application Pattern
+
+For each Kustomize directory, create a corresponding ArgoCD Application in `argocd/infra-apps/`:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {component-name}
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/igh9410/igh9410-infra.git
+    targetRevision: main
+    path: {path-to-kustomize-directory}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: {target-namespace}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+  revisionHistoryLimit: 10
+```
+
+### 4. Secrets Management
+
+**Never commit secrets to Git!**
+
+- Use Terraform to create Kubernetes secrets from variables
+- Reference secrets in manifests, never hardcode values
+- Example:
+  ```yaml
+  apiVersion: monitoring.coreos.com/v1alpha1
+  kind: AlertmanagerConfig
+  spec:
+    receivers:
+      - name: discord-webhook
+        discordConfigs:
+          - apiURL:
+              name: dev-alarms-webhook-url  # Secret reference
+              key: webhook_url
+  ```
+
+### 5. Namespace Organization
+
+- `monitoring` - All monitoring stack components (Prometheus, Loki, Grafana, AlertManager)
+- `dev` - Development environment applications
+- `prod` - Production environment applications
+- `argocd` - ArgoCD control plane
+- `cnpg-database` / `prod-cnpg-database` - Database clusters
+
+### 6. Monitoring Configuration
+
+**AlertManager:**
+- Custom AlertmanagerConfig CRDs in `monitoring/alertmanager/`
+- Managed via Kustomize + ArgoCD
+- Use regex matchers for multiple alert types: `matchType: "=~"`
+
+**Loki:**
+- Recording rules in ConfigMaps in `monitoring/loki/`
+- Managed via Kustomize + ArgoCD
+- Use LogQL for log-based alerting
+
+**Prometheus:**
+- Custom PrometheusRules via `additionalPrometheusRulesMap` in Helm values
+- Managed in `argocd/values/kube-prometheus-stack.yaml`
+
+### 7. YAML Formatting
+
+- Use 2-space indentation
+- Double quotes for strings in YAML
+- Use `|` for multi-line strings (especially in LogQL/PromQL)
+- Add comments for complex configurations
+
+### 8. Git Workflow
+
+- One logical change per commit
+- Descriptive commit messages
+- Structure:
+  ```
+  Component: Brief description
+  
+  - Detailed change 1
+  - Detailed change 2
+  - Reason for change
+  ```
+
+### 9. Resource Naming
+
+**Application Resources:**
+- Use namespace-based separation instead of name prefixes
+- Applications deployed as `{app-name}` in `{environment}` namespace
+  - Example: `gramnuri-api` in `dev` namespace (not `dev-gramnuri-api`)
+  - Service DNS: `gramnuri-api.dev.svc.cluster.local`
+- Kustomize overlays should NOT use `namePrefix` for environment separation
+
+**Infrastructure Resources:**
+- AlertmanagerConfig names should be descriptive: `discord-webhook-config`
+- ConfigMap names should indicate purpose: `loki-rules`
+- Secrets for environment-specific configs: `{env}-{purpose}` (e.g., `dev-alarms-webhook-url`)
+
+**Example Structure:**
+```
+apps/gramnuri-api/
+├── base/
+│   ├── deployment.yaml      # name: gramnuri-api
+│   └── service.yaml         # name: gramnuri-api
+└── overlays/
+    ├── dev/
+    │   └── kustomization.yaml   # namespace: dev (NO namePrefix)
+    └── prod/
+        └── kustomization.yaml   # namespace: prod (NO namePrefix)
+```
+
+### 10. Documentation
+
+- Add inline comments for non-obvious configurations
+- Document regex patterns and LogQL queries
+- Include examples in comments when helpful
+
+## Examples
+
+### Good: Kustomize-managed AlertmanagerConfig
+```yaml
+# monitoring/alertmanager/discord-config.yaml
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: discord-webhook-config
+  namespace: monitoring
+spec:
+  route:
+    receiver: discord-webhook
+    matchers:
+      - name: alertname
+        value: Http5xxError|GoAPIErrorLogged
+        matchType: "=~"
+  receivers:
+    - name: discord-webhook
+      discordConfigs:
+        - apiURL:
+            name: dev-alarms-webhook-url
+            key: webhook_url
+```
+
+### Good: Loki Rules ConfigMap
+```yaml
+# monitoring/loki/loki-rules.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: loki-rules
+  namespace: monitoring
+data:
+  loki-rules.yaml: |
+    groups:
+      - name: application-errors
+        interval: 1m
+        rules:
+          - alert: GoAPIErrorLogged
+            expr: |
+              sum(rate({app="gramnuri-api"} |~ "ERROR:" [1m])) > 0
+```
+
+### Bad: Hardcoded secrets
+```yaml
+# ❌ NEVER DO THIS
+discordConfigs:
+  - webhook_url: "https://discord.com/api/webhooks/..."
+```
+
+### Bad: Mixing Helm and Kustomize concerns
+```yaml
+# ❌ Don't put CRDs in Helm values when they should be separate
+# Use Kustomize for custom resources that need independent lifecycle
+```
+
+## When to Create New Kustomize Directories
+
+Create a new Kustomize directory when:
+1. Adding custom CRDs that aren't part of a Helm chart
+2. Configuration needs to be managed independently from Helm releases
+3. Resources are environment-agnostic but deployment-specific
+4. You want fine-grained control over resource lifecycle
+
+## Prometheus Operator Considerations
+
+- Set `alertmanagerConfigMatcherStrategy.type: None` to disable automatic namespace injection
+- Use `alertmanagerConfigSelector: {}` to select all AlertmanagerConfigs
+- Mount secrets to AlertManager using `alertmanagerSpec.secrets`
+
+## Maintenance
+
+- Regularly update Helm chart versions in ArgoCD applications
+- Review and prune unused resources
+- Keep `.cursorrules` updated with new conventions
+- Document breaking changes in commit messages
+
