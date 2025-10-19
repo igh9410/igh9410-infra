@@ -66,6 +66,8 @@ alertmanager:
       - dev-alarms-webhook-url
     alertmanagerConfigSelector: {}
     alertmanagerConfigNamespaceSelector: {}
+    alertmanagerConfigMatcherStrategy:
+      type: None
     storage:
       volumeClaimTemplate:
         spec:
