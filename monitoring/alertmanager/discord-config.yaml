@@ -12,8 +12,8 @@ spec:
     repeatInterval: 1h
     matchers:
       - name: alertname
-        value: Http5xxError
-        matchType: "="
+        value: Http5xxError|GoAPIErrorLogged|GoAPICriticalError|GoAPIPanicDetected
+        matchType: "=~"
   receivers:
     - name: discord-webhook
       discordConfigs:
