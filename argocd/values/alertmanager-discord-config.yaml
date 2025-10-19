@@ -17,9 +17,9 @@ spec:
   receivers:
     - name: discord-webhook
       discordConfigs:
-        - webhookURL:
+        - apiURL:
             name: dev-alarms-webhook-url
             key: webhook_url
           sendResolved: true
           title: '{{ template "discord.default.title" . }}'
-          message: '{{ template "discord.default.message" . }}'
+          content: '{{ template "discord.default.message" . }}'
