@@ -1,0 +1,120 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gramnuri-api-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  gramnuri-api-dashboard.json: |-
+    {
+      "dashboard": {
+        "title": "Gramnuri API Monitoring",
+        "tags": ["gramnuri", "api", "application"],
+        "timezone": "browser",
+        "schemaVersion": 16,
+        "version": 0,
+        "refresh": "30s",
+        "panels": [
+          {
+            "id": 1,
+            "title": "HTTP Request Rate",
+            "type": "graph",
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+            "targets": [
+              {
+                "expr": "sum(rate(http_requests_total{app=\"gramnuri-api\"}[5m])) by (namespace, code)",
+                "legendFormat": "{{namespace}} - {{code}}",
+                "refId": "A"
+              }
+            ],
+            "yaxes": [
+              {"format": "reqps", "label": "Requests/sec"},
+              {"format": "short"}
+            ]
+          },
+          {
+            "id": 2,
+            "title": "HTTP 5xx Errors",
+            "type": "graph",
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+            "targets": [
+              {
+                "expr": "sum(rate(http_requests_total{app=\"gramnuri-api\", code=~\"5..\"}[5m])) by (namespace)",
+                "legendFormat": "{{namespace}}",
+                "refId": "A"
+              }
+            ],
+            "alert": {
+              "conditions": [
+                {
+                  "evaluator": {"params": [0], "type": "gt"},
+                  "operator": {"type": "and"},
+                  "query": {"params": ["A", "5m", "now"]},
+                  "reducer": {"params": [], "type": "avg"},
+                  "type": "query"
+                }
+              ],
+              "executionErrorState": "alerting",
+              "frequency": "1m",
+              "handler": 1,
+              "name": "HTTP 5xx Errors alert",
+              "noDataState": "no_data"
+            }
+          },
+          {
+            "id": 3,
+            "title": "Error Logs (Last 1h)",
+            "type": "logs",
+            "gridPos": {"h": 10, "w": 24, "x": 0, "y": 8},
+            "targets": [
+              {
+                "expr": "{app=\"gramnuri-api\"} | json | level=\"error\"",
+                "refId": "A"
+              }
+            ],
+            "options": {
+              "showTime": true,
+              "showLabels": true,
+              "sortOrder": "Descending"
+            }
+          },
+          {
+            "id": 4,
+            "title": "Request Latency (p95)",
+            "type": "graph",
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 18},
+            "targets": [
+              {
+                "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{app=\"gramnuri-api\"}[5m])) by (le, namespace))",
+                "legendFormat": "{{namespace}} p95",
+                "refId": "A"
+              }
+            ],
+            "yaxes": [
+              {"format": "s", "label": "Latency"},
+              {"format": "short"}
+            ]
+          },
+          {
+            "id": 5,
+            "title": "Active Connections",
+            "type": "stat",
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 18},
+            "targets": [
+              {
+                "expr": "sum(http_connections_active{app=\"gramnuri-api\"}) by (namespace)",
+                "legendFormat": "{{namespace}}",
+                "refId": "A"
+              }
+            ],
+            "options": {
+              "colorMode": "value",
+              "graphMode": "area",
+              "justifyMode": "auto",
+              "orientation": "auto"
+            }
+          }
+        ]
+      }
+    }
