@@ -66,3 +66,15 @@ resource "kubernetes_secret" "ghcr_image_pull_secrets" {
   }
 }
 
+resource "kubernetes_secret" "dev_alarms_webhook_url" {
+  metadata {
+    name      = "dev-alarms-webhook-url"
+    namespace = "monitoring"
+  }
+
+  type = "Opaque"
+
+  data = {
+    webhook_url = var.dev_alarms_discord_webhook_url
+  }
+}

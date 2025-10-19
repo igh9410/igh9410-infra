@@ -109,3 +109,9 @@ variable "github_pat" {
   type        = string
   sensitive   = true
 }
+
+variable "dev_alarms_discord_webhook_url" {
+  description = "Dev Alarms Discord Webhook URL"
+  type        = string
+  sensitive   = true
+}
