@@ -1,0 +1,25 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: discord-webhook-config
+  namespace: monitoring
+spec:
+  route:
+    receiver: discord-webhook
+    groupBy: ["job"]
+    groupWait: 30s
+    groupInterval: 5m
+    repeatInterval: 1h
+    matchers:
+      - name: alertname
+        value: Http5xxError
+        matchType: "="
+  receivers:
+    - name: discord-webhook
+      discordConfigs:
+        - webhookURL:
+            name: dev-alarms-webhook-url
+            key: webhook_url
+          sendResolved: true
+          title: '{{ template "discord.default.title" . }}'
+          message: '{{ template "discord.default.message" . }}'
