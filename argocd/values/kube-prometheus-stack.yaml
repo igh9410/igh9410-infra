@@ -133,6 +133,8 @@ grafana:
     datasources:
       enabled: true
       searchNamespace: ALL
+  operator:
+    dashboardsConfigMapRefEnabled: true
 
 # Node Exporter
 nodeExporter:
