@@ -20,3 +20,10 @@ resource "cloudflare_r2_bucket" "gramnuri_r2_bucket" {
   location      = "APAC"
   storage_class = "Standard"
 }
+
+resource "cloudflare_r2_bucket" "gramnuri_static_bucket" {
+  account_id    = var.cloudflare_account_id
+  name          = "gramnuri-static-bucket"
+  location      = "APAC"
+  storage_class = "Standard"
+}
