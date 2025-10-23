@@ -13,6 +13,7 @@ resource "kubernetes_secret" "gramnuri_secrets" {
   data = {
     DATABASE_URL                 = var.database_url
     FIREBASE_CREDENTIALS_JSON    = file("${path.module}/credentials/gramnuri-${var.environment}-firebase-adminsdk.json")
+    FIREBASE_PROJECT_ID          = var.firebase_project_id
     ENVIRONMENT                  = var.environment
     CLIENT_DOMAIN                = var.client_domain
     CLOUDFLARE_ACCOUNT_ID        = var.cloudflare_account_id
