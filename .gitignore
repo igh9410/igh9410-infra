@@ -117,3 +117,6 @@ gitleaks-report.json
 
 # Ansibleㅁ
 ansible/files/id_rsa_ansible
+
+# Firebase credentials
+gramnuri-*-firebase-adminsdk.json
