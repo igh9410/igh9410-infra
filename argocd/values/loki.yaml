@@ -1610,8 +1610,13 @@ write:
   extraVolumes: []
   # -- volumeClaimTemplates to add to StatefulSet
   extraVolumeClaimTemplates: []
-  # -- Resource requests and limits for the write
-  resources: {}
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "200m"
   # -- Grace period to allow the write to shutdown before it is killed. Especially for the ingester,
   # this must be increased. It must be long enough so writes can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
@@ -1728,8 +1733,13 @@ read:
   extraVolumeMounts: []
   # -- Volumes to add to the read pods
   extraVolumes: []
-  # -- Resource requests and limits for the read
-  resources: {}
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "200m"
   # -- liveness probe settings for read pods. If empty, applies no livenessProbe
   livenessProbe: {}
   # -- Grace period to allow the read to shutdown before it is killed
@@ -1838,8 +1848,13 @@ backend:
   extraVolumeMounts: []
   # -- Volumes to add to the backend pods
   extraVolumes: []
-  # -- Resource requests and limits for the backend
-  resources: {}
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "200m"
   # -- Grace period to allow the backend to shutdown before it is killed. Especially for the ingester,
   # this must be increased. It must be long enough so backends can be gracefully shutdown flushing/transferring
   # all data and to successfully leave the member ring on shutdown.
