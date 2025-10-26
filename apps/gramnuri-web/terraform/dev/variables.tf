@@ -66,3 +66,8 @@ variable "cloudflare_api_key" {
   type        = string
   sensitive   = true
 }
+
+variable "internal_api_url" {
+  description = "Internal API URL"
+  type        = string
+}

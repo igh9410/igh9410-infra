@@ -19,5 +19,6 @@ resource "kubernetes_secret" "gramnuri_client_secrets" {
     VITE_FIREBASE_APP_ID = var.firebase_app_id
     VITE_FIREBASE_MEASUREMENT_ID = var.firebase_measurement_id
     VITE_BACKEND_API_URL = var.backend_api_url
+    VITE_INTERNAL_API_URL = var.internal_api_url
   }
 }
