@@ -4,7 +4,7 @@ metadata:
   name: gramnuri-web-ingress # This must match the name of the Ingress in the base
 spec:
   rules:
-    - host: dev.gramnuri.com # This is the overridden host for the dev environment
+    - host: dev.landskipifyai.com # This is the overridden host for the dev environment
       http:
         paths:
           - path: / # You need to repeat the paths here for the merge to work correctly
