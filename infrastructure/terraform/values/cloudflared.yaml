@@ -80,15 +80,11 @@ tunnelSecrets:
   # -- This is for setting up the existing secret for the cloudflared tunnel certificate PEM file. If not set, the base64EncodedPemFile will be used.
   existingPemFileSecret:
     # -- This is the name of the existing secret.
-    name: cloudflared-tunnel-credentials
-    # -- This is the key of the certificate PEM file in the existing secret.
-    key: token
+    name: "cloudflared-tunnel-credentials"
   # -- This is for setting up the existing secret for the cloudflared tunnel configuration JSON file. If not set, the base64EncodedConfigJsonFile will be used.
   existingConfigJsonFileSecret:
     # -- This is the name of the existing secret.
-    name: cloudflared-tunnel-credentials
-    # -- This is the key of the configuration JSON file in the existing secret.
-    key: "credentials.json"
+    name: "cloudflared-tunnel-credentials"
 
 # -- Please find more configuration from https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/configuration/arguments/
 tunnelConfig:
@@ -112,6 +108,10 @@ ingress:
   - hostname: "*.geonhyukim.com"
     service: http://cilium-ingress.kube-system.svc.cluster.local:80
   - hostname: "*.gramnuri.com"
+    service: http://cilium-ingress.kube-system.svc.cluster.local:80
+  - hostname: "landskipifyai.com"
+    service: http://cilium-ingress.kube-system.svc.cluster.local:80
+  - hostname: "*.landskipifyai.com"
     service: http://cilium-ingress.kube-system.svc.cluster.local:80
   - service: http_status:404
 

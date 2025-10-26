@@ -6,7 +6,7 @@ metadata:
 spec:
   ingressClassName: cilium # Added ingressClassName under spec
   rules:
-    - host: gramnuri.com
+    - host: landskipifyai.com
       http:
         paths:
           - path: /
