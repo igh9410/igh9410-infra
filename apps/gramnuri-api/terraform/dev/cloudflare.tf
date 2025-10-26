@@ -27,3 +27,27 @@ resource "cloudflare_r2_bucket" "gramnuri_static_bucket" {
   location      = "APAC"
   storage_class = "Standard"
 }
+
+resource "cloudflare_r2_bucket_lifecycle" "gramnuri_r2_bucket_lifecycle" {
+  account_id = var.cloudflare_account_id
+  bucket_name = "dev-gramnuri-bucket"
+  rules = [{
+    id = "Expire user uploaded images after 14 days"
+    conditions = {
+      prefix = "users/images/"
+    }
+    enabled = true
+    abort_multipart_uploads_transition = {
+      condition = {
+        max_age = 7 * 24 * 60 * 60
+        type = "Age"
+      }
+    }
+    delete_objects_transition = {
+      condition = {
+        max_age = 14 * 24 * 60 * 60
+        type = "Age"
+      }
+    }
+  }]
+}
