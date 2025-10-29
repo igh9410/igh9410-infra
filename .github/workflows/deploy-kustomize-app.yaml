@@ -59,5 +59,5 @@ jobs:
           git config --global user.name '${{ steps.app-token.outputs.app-slug }}[bot]'
           git config --global user.email '${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com'
           git add apps/${{ inputs.app_name }}/overlays/${{ inputs.environment }}/kustomization.yaml
-          git commit -m "chore: update ${{ inputs.app_name }} image to ${{ inputs.commit_sha }}"
+          git commit -m "chore: update ${{ inputs.environment }}-${{ inputs.app_name }} image to ${{ inputs.commit_sha }}"
           git push origin main
