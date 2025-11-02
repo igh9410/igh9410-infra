@@ -14,4 +14,4 @@ patches:
       name: gramnuri-api-ingress
 images:
   - name: ghcr.io/igh9410/gramnuri-api
-    newTag: 050ad2dfcbfa2b1b610cfe3f5d76df9e4f8ef35c
+    newTag: 1e04e8b14acdc674e773744679b52443ddc91b1f
