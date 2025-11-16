@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - ippool.yaml
   - l2-announcement.yaml
+  - gateway.yaml
