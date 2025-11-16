@@ -77,14 +77,15 @@ tunnelSecrets:
   base64EncodedConfigJsonFile: ""
   base64EncodedPemFile: ""
 
-  # -- This is for setting up the existing secret for the cloudflared tunnel certificate PEM file. If not set, the base64EncodedPemFile will be used.
-  existingPemFileSecret:
-    # -- This is the name of the existing secret.
-    name: "cloudflared-tunnel-credentials"
   # -- This is for setting up the existing secret for the cloudflared tunnel configuration JSON file. If not set, the base64EncodedConfigJsonFile will be used.
   existingConfigJsonFileSecret:
     # -- This is the name of the existing secret.
-    name: "cloudflared-tunnel-credentials"
+    name:
+      "config-json-file-secret"
+      # -- This is for setting up the existing secret for the cloudflared tunnel certificate PEM file. If not set, the base64EncodedPemFile will be used.
+  existingPemFileSecret:
+    # -- This is the name of the existing secret.
+    name: "cert-pem-file-secret"
 
 # -- Please find more configuration from https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/configuration/arguments/
 tunnelConfig:
@@ -105,14 +106,18 @@ tunnelConfig:
 
 # -- Cloudflare ingress rules. More information can be found here: https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/configure-tunnels/local-management/configuration-file/#how-traffic-is-matched
 ingress:
+  - hostname: "argocd.geonhyukim.com"
+    service: http://cilium-ingress.kube-system.svc.cluster.local:80
+  - hostname: "grafana.geonhyukim.com"
+    service: http://cilium-ingress.kube-system.svc.cluster.local:80
   - hostname: "*.geonhyukim.com"
-    service: http://cilium-ingress.kube-system.svc.cluster.local:80
+    service: http://cilium-gateway.kube-system.svc.cluster.local:80
   - hostname: "*.gramnuri.com"
-    service: http://cilium-ingress.kube-system.svc.cluster.local:80
+    service: http://cilium-gateway.kube-system.svc.cluster.local:80
   - hostname: "landskipifyai.com"
-    service: http://cilium-ingress.kube-system.svc.cluster.local:80
+    service: http://cilium-gateway.kube-system.svc.cluster.local:80
   - hostname: "*.landskipifyai.com"
-    service: http://cilium-ingress.kube-system.svc.cluster.local:80
+    service: http://cilium-gateway.kube-system.svc.cluster.local:80
   - service: http_status:404
 
 # -- This block is for setting up the resource management for the pod more information can be found here: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
