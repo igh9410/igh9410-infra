@@ -28,6 +28,7 @@ resource "cloudflare_r2_bucket" "gramnuri_static_bucket" {
   storage_class = "Standard"
 }
 
+/*
 resource "cloudflare_r2_bucket_lifecycle" "gramnuri_r2_bucket_lifecycle" {
   account_id = var.cloudflare_account_id
   bucket_name = "dev-gramnuri-bucket"
@@ -50,4 +51,4 @@ resource "cloudflare_r2_bucket_lifecycle" "gramnuri_r2_bucket_lifecycle" {
       }
     }
   }]
-}
+} */
