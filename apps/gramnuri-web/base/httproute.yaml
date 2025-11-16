@@ -10,7 +10,6 @@ spec:
   hostnames:
     - landskipifyai.com
   rules:
-    - matches:
-      backendRefs:
+    - backendRefs:
         - name: gramnuri-web
           port: 80
