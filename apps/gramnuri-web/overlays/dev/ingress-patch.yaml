@@ -11,6 +11,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: dev-gramnuri-web
+                name: gramnuri-web
                 port:
                   number: 80
