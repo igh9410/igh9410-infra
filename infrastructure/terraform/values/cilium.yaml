@@ -10,6 +10,8 @@ ingressController:
   default: true
   enabled: true
   loadbalancerMode: shared
+gatewayAPI:
+  enabled: true
 ipam:
   operator:
     clusterPoolIPv4PodCIDRList: 10.42.0.0/16 # default k3s CIDR block
