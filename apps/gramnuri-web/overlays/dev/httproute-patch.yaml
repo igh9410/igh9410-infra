@@ -3,12 +3,5 @@ kind: HTTPRoute
 metadata:
   namespace: dev
 spec:
-  rules:
-    - host: dev.landskipifyai.com # This is the overridden host for the dev environment
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backendRefs:
-              - name: gramnuri-web
-                port: 80
+  hostnames:
+    - dev.landskipifyai.com
