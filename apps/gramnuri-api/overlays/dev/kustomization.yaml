@@ -8,10 +8,6 @@ patches:
     target:
       kind: Deployment
       name: gramnuri-api
-  - path: ingress-patch.yaml
-    target:
-      kind: Ingress
-      name: gramnuri-api-ingress
   - path: httproute-patch.yaml
     target:
       kind: HTTPRoute

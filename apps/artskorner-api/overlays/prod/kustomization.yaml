@@ -8,10 +8,6 @@ patches:
     target:
       kind: Deployment
       name: artskorner-api
-  - path: ingress-patch.yaml
-    target:
-      kind: Ingress
-      name: artskorner-api-ingress
   - path: httproute-patch.yaml
     target:
       kind: HTTPRoute

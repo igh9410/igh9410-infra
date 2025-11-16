@@ -111,13 +111,13 @@ ingress:
   - hostname: "grafana.geonhyukim.com"
     service: http://cilium-ingress.kube-system.svc.cluster.local:80
   - hostname: "*.geonhyukim.com"
-    service: http://cilium-gateway.kube-system.svc.cluster.local:80
+    service: http://cilium-gateway-gateway.kube-system.svc.cluster.local:80
   - hostname: "*.gramnuri.com"
-    service: http://cilium-gateway.kube-system.svc.cluster.local:80
+    service: http://cilium-gateway-gateway.kube-system.svc.cluster.local:80
   - hostname: "landskipifyai.com"
-    service: http://cilium-gateway.kube-system.svc.cluster.local:80
+    service: http://cilium-gateway-gateway.kube-system.svc.cluster.local:80
   - hostname: "*.landskipifyai.com"
-    service: http://cilium-gateway.kube-system.svc.cluster.local:80
+    service: http://cilium-gateway-gateway.kube-system.svc.cluster.local:80
   - service: http_status:404
 
 # -- This block is for setting up the resource management for the pod more information can be found here: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
