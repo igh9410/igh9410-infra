@@ -13,6 +13,10 @@ patches:
     target:
       kind: Ingress
       name: artskorner-api-ingress
+  - path: httproute-patch.yaml
+    target:
+      kind: HTTPRoute
+      name: artskorner-api-httproute
 images:
   - name: ghcr.io/igh9410/artskorner-api
     newTag: dfd512e774807626c999833caf5e9c0f78396259

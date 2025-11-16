@@ -12,6 +12,10 @@ patches:
     target:
       kind: Ingress
       name: gramnuri-api-ingress
+  - path: httproute-patch.yaml
+    target:
+      kind: HTTPRoute
+      name: gramnuri-api-httproute
 images:
   - name: ghcr.io/igh9410/gramnuri-api
     newTag: 7d86d859728b275862cb4c06459b29a7df321417

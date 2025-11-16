@@ -1,0 +1,16 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  namespace: prod
+spec:
+  rules:
+    - host: test-artskorner.gramnuri.com # Temporarily use gramnuri.com before domain purchase
+      http:
+        paths:
+          - path: / # You need to repeat the paths here for the merge to work correctly
+            pathType: Prefix
+            backend:
+              service:
+                name: prod-artskorner-api
+                port:
+                  number: 80
