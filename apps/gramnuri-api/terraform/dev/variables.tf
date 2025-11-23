@@ -83,6 +83,12 @@ variable "cloudflare_secret_access_key" {
   sensitive   = true
 }
 
+variable "cloudflare_api_token" {
+  description = "Cloudflare API Token"
+  type        = string
+  sensitive   = true
+}
+
 variable "r2_bucket_name" {
   description = "R2 Bucket Name"
   type        = string
