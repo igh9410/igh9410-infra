@@ -1,7 +1,7 @@
 variable "environment" {
   description = "Environment"
   type        = string
-  default     = "dev"
+  default     = "prod"
 }
 
 variable "kubeconfig_path" {
