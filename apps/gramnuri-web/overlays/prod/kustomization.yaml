@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: prod
+resources:
+  - ../../base
+patches:
+  - path: deployment-patch.yaml
+    target:
+      kind: Deployment
+      name: gramnuri-web
+  - path: httproute-patch.yaml
+    target:
+      kind: HTTPRoute
+      name: gramnuri-web-httproute
+images:
+  - name: ghcr.io/igh9410/gramnuri-web
+    newTag: "49ce0ef56e4673d9dab6d4a756da8ae865740e4b"

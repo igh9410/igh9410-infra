@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gramnuri-web
+spec:
+  selector:
+    matchLabels:
+      app: gramnuri-web
+  template:
+    spec:
+      replicas: 2
+      imagePullSecrets:
+        - name: ghcr-image-pull-secrets
+      containers:
+        - name: gramnuri-web
+          resources:
+            requests:
+              cpu: 200m
+              memory: 500Mi
+            limits:
+              cpu: 200m
+              memory: 500Mi
+          envFrom:
+            - secretRef:
+                name: gramnuri-client-secrets
