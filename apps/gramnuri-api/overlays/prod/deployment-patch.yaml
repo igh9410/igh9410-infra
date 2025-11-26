@@ -3,12 +3,12 @@ kind: Deployment
 metadata:
   name: gramnuri-api
 spec:
+  replicas: 2
   selector:
     matchLabels:
       app: gramnuri-api
   template:
     spec:
-      replicas: 2
       imagePullSecrets:
         - name: ghcr-image-pull-secrets
       containers:

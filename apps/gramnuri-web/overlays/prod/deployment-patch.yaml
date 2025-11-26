@@ -6,9 +6,9 @@ spec:
   selector:
     matchLabels:
       app: gramnuri-web
+  replicas: 2
   template:
     spec:
-      replicas: 2
       imagePullSecrets:
         - name: ghcr-image-pull-secrets
       containers:
