@@ -23,10 +23,3 @@ spec:
           envFrom:
             - secretRef:
                 name: gramnuri-client-secrets
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 3000
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            failureThreshold: 3
