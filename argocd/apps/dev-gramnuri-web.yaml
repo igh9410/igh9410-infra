@@ -10,7 +10,10 @@ spec:
   source:
     repoURL: https://github.com/igh9410/igh9410-infra.git
     targetRevision: main
-    path: apps/gramnuri-web/overlays/dev
+    path: charts/generic-app
+    helm:
+      valueFiles:
+        - values/gramnuri-web-dev.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: dev
