@@ -2,13 +2,13 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "generic-app.name" . }}
+  name: {{ .Chart.Name }}
   labels:
-    app: {{ include "generic-app.name" . }}
+    app: {{ .Chart.Name }}
 spec:
   selector:
     matchLabels:
-      app: {{ include "generic-app.name" . }}
+      app: {{ .Chart.Name }}
   endpoints:
     - port: {{ .Values.service.portName | default "http" }}
       path: {{ .Values.serviceMonitor.path | default "/metrics" }}

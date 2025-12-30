@@ -1,6 +1,4 @@
 # Default values for generic-app chart
-nameOverride: ""
-
 replicas: 1
 
 image:
