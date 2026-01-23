@@ -17,9 +17,10 @@ spec:
   syncPolicy:
     automated:
       prune: true
-      selfHeal: true
+      selfHeal: false
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
       - PruneLast=true
-  revisionHistoryLimit: 10
+      - ApplyOutOfSyncOnly=true
+  revisionHistoryLimit: 5
