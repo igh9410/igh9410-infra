@@ -48,6 +48,8 @@ configs:
       connectors: []
     # Explicitly set the URL in the ConfigMap
     url: "https://argocd.geonhyukim.com"
+     # Add this line to create the account
+    accounts.geonhyuk: login, apiKey
   rbac:
     # Populates argocd-rbac-cm
     policy.csv: |
@@ -68,7 +70,7 @@ configs:
       p, role:admin, extensions, *, *, allow
     policy.default: role:readonly
   secret:
-    githubSecret: ${secret:argocd-github-webhook-secret}
+    "webhook.github.secret": "${secret:argocd-github-webhook-secret}"
 
 repoServer:
   resources:
