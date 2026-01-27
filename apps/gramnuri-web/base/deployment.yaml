@@ -25,19 +25,19 @@ spec:
               memory: 100Mi
           startupProbe:
             httpGet:
-              path: /
+              path: /healthcheck
               port: http
             failureThreshold: 10
             periodSeconds: 5
           readinessProbe:
             httpGet:
-              path: /
+              path: /healthcheck
               port: http
             initialDelaySeconds: 2
             periodSeconds: 10
           livenessProbe:
             httpGet:
-              path: /
+              path: /healthcheck
               port: http
             periodSeconds: 30
       terminationGracePeriodSeconds: 30
