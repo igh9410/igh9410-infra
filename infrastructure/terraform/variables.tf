@@ -115,3 +115,9 @@ variable "dev_alarms_discord_webhook_url" {
   type        = string
   sensitive   = true
 }
+
+variable "argocd_github_webhook_secret" {
+  description = "ArgoCD GitHub Webhook Secret"
+  type        = string
+  sensitive   = true
+}

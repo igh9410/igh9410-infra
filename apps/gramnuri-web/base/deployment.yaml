@@ -23,6 +23,24 @@ spec:
             requests:
               cpu: 100m
               memory: 100Mi
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            failureThreshold: 10
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 2
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 30
+      terminationGracePeriodSeconds: 30
       imagePullSecrets:
         - name: ghcr-image-pull-secrets
       nodeSelector:

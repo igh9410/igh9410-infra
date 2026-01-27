@@ -67,6 +67,8 @@ configs:
       p, role:admin, applicationsets, *, *, allow
       p, role:admin, extensions, *, *, allow
     policy.default: role:readonly
+  secret:
+    githubSecret: ${secret:argocd-github-webhook-secret}
 
 repoServer:
   resources:
@@ -81,4 +83,4 @@ applicationSet:
 
 notifications:
   # This is a top-level key for the sub-chart
-  enabled: false
+  enabled: true

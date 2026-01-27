@@ -78,3 +78,13 @@ resource "kubernetes_secret" "dev_alarms_webhook_url" {
     webhook_url = var.dev_alarms_discord_webhook_url
   }
 }
+
+resource "kubernetes_secret" "argocd_github_webhook_secret" {
+  metadata {
+    name      = "argocd-github-webhook-secret"
+    namespace = "argocd"
+  }
+  data = {
+    secret = var.argocd_github_webhook_secret
+  }
+}
