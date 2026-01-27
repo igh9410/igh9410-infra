@@ -18,7 +18,8 @@ spec:
         - name: gramnuri-web
           image: ghcr.io/igh9410/gramnuri-web
           ports:
-            - containerPort: 3000
+            - name: http
+              containerPort: 3000
           resources:
             requests:
               cpu: 100m
