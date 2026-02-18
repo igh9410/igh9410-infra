@@ -241,10 +241,10 @@ cluster:
   # See: https://kubernetes.io/docs/concepts/workloads/pods/pod-qos/
   resources:
     requests:
-      cpu: 100m
+      cpu: 500m
       memory: 200Mi
     limits:
-      cpu: 100m
+      cpu: 500m
       memory: 200Mi
 
   priorityClassName: ""
@@ -311,7 +311,8 @@ cluster:
       enabled: true
       # -- Exclude specified rules
       excludeRules:
-        []
+        - CNPGClusterHAWarning
+        # Keep HAWarning excluded while dev runs with 2 instances (1 standby).
         # - CNPGClusterZoneSpreadWarning
     # -- Whether the default queries should be injected.
     # Set it to true if you don't want to inject default queries into the cluster.
