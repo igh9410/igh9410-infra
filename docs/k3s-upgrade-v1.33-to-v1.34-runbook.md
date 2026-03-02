@@ -1,5 +1,8 @@
 # K3s Upgrade Runbook: `v1.33.5+k3s1` -> `v1.34.x+k3s1`
 
+> Note: actual execution is now done via System Upgrade Controller (GitOps).
+> Use `docs/k3s-system-upgrade-controller-upgrade-plan.md` as the primary upgrade procedure.
+
 ## 1. Scope
 - Cluster context: `default`
 - Topology: 1 control-plane (`controlplane`) + 4 workers (`node01`..`node04`)
