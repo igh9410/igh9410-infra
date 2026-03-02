@@ -14,6 +14,7 @@ Measured downtime/impact analysis is documented separately in:
 - `commands-06-dev-primary-handover-before-node03.md`
 - `commands-07-prod-artskorner-primary-handover-before-node03.md`
 - `commands-08-prod-gramnuri-primary-handover-before-node03.md`
+- `commands-09-worker-node03-wave.md`
 
 ## Suggested blog flow
 1. Baseline and HA prechecks

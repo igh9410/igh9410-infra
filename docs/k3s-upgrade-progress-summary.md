@@ -110,3 +110,36 @@ Current live check shows these sync-replica settings are still pending:
 - Performed controlled primary handover for `cnpg-database/dev-gramnuri-db-cluster`.
 - Measured timeline and per-app impact stats are captured in a dedicated report:
   - `docs/k3s-failover-impact-report.md`
+
+## Step 13. Measured Prod DB Failover Impact Before Final Worker Wave (Completed)
+- Performed controlled primary handovers for:
+  - `prod-cnpg-database/prod-artskorner-db-cluster`
+  - `prod-cnpg-database/prod-gramnuri-db-cluster`
+- Recorded timestamps, durations, and per-app log impact in:
+  - `docs/k3s-failover-impact-report.md`
+
+## Step 14. Final Worker (`node03`) Upgrade Wave (Completed)
+- Triggered `agent-plan` for `node03` via label gate (`upgrade-wave=active`) after uncordon.
+- SUC upgrade job completed (`1/1`) and node reached `v1.34.4+k3s1`.
+- Post-upgrade checks confirmed:
+  - `node03` is `Ready`
+  - `prod-gramnuri-db-cluster` remained healthy with primary on `node01`
+  - `prod/gramnuri-api` and `prod/gramnuri-web` remained `2/2`
+- Cleared trigger label from `node03` after completion.
+
+## Current Cluster Version State
+- `controlplane`: `v1.34.4+k3s1`
+- `node01`: `v1.34.4+k3s1`
+- `node02`: `v1.34.4+k3s1`
+- `node03`: `v1.34.4+k3s1`
+- `node04`: `v1.34.4+k3s1`
+
+## Step 15. Final `prod-gramnuri` Downtime Verdict (Completed)
+- DB failover phase (`2026-03-02T10:25:44Z` to `10:28:57Z`):
+  - CNPG reported failover activity and pod readiness warnings for the old primary.
+  - `prod/gramnuri-api` logs showed no `500` entries during the observed failover window.
+- Worker upgrade phase on `node03` (`2026-03-02T10:37:25Z` to `10:38:29Z`):
+  - No app downtime signals detected (`prod/gramnuri-api`, `prod/gramnuri-web`).
+  - No DB downtime signals detected for `prod-gramnuri` (primary unchanged, no failover/recovery events, no DB pod restarts).
+- Detailed evidence remains in:
+  - `docs/k3s-failover-impact-report.md`
