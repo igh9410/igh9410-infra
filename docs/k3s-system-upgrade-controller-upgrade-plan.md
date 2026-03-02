@@ -1,83 +1,101 @@
 # K3s Upgrade Plan via System Upgrade Controller (GitOps)
 
-## Scope
+Date: 2026-03-02
+
+## 1. Scope
 - Upgrade mechanism: Rancher System Upgrade Controller (SUC)
+- Cluster shape: 1 control-plane (`controlplane`) + 4 workers (`node01`..`node04`)
 - Target version (pinned): `v1.34.4+k3s1`
-- Plans source: `infrastructure/system-upgrade-controller/plans.yaml`
-- Cluster shape: 1 control-plane + 4 workers
+- Git source for plans: `infrastructure/system-upgrade-controller/plans.yaml`
+- Quick command reference: `infrastructure/system-upgrade-controller/README.md`
 
-## What is configured in Git
-- `server-plan`
-  - Targets nodes with `node-role.kubernetes.io/control-plane`
-  - `concurrency: 1`
-  - `cordon: true`
-  - `version: v1.34.4+k3s1`
-- `agent-plan`
-  - Targets worker nodes only (`control-plane` label does not exist)
-  - Additional selector requires `upgrade-wave=active`
-  - `concurrency: 1`
-  - `cordon: true`
-  - `prepare: server-plan` (workers wait until server plan is complete)
-  - `version: v1.34.4+k3s1`
+## 2. What is pinned in Git
+`server-plan`:
+- `version: v1.34.4+k3s1`
+- `concurrency: 1`
+- `cordon: true`
+- Selector: control-plane nodes + `upgrade-server=active`
 
-## Execution model
-1. Commit and sync the SUC plans through ArgoCD.
-2. Control-plane upgrade starts automatically (single node).
-3. Workers do not start automatically until you label exactly one worker with `upgrade-wave=active`.
-4. Repeat one worker at a time.
+`agent-plan`:
+- `version: v1.34.4+k3s1`
+- `concurrency: 1`
+- `cordon: true`
+- `prepare: server-plan` (workers wait until server plan completes)
+- Selector: non-control-plane nodes + `upgrade-wave=active`
 
-## Worker order (recommended)
-Current DB primaries are concentrated on `node03`, so keep it last.
+Important: upgrades are not fully automatic. They are label-gated on purpose.
 
-1. `node02`
-2. `node04`
-3. `node01`
-4. `node03`
-
-## Commands to run during rollout
-Check controller/plans:
+## 3. Rollout Steps
+1. Sync ArgoCD app `system-upgrade-controller` so latest plans are applied.
+2. Confirm SUC objects exist:
 
 ```bash
+kubectl -n system-upgrade get deploy,pods
 kubectl -n system-upgrade get plans -o wide
-kubectl -n system-upgrade get jobs,pods
-kubectl get nodes -o wide
 ```
 
-Trigger one worker:
+3. Upgrade the control-plane node first by adding label:
 
 ```bash
+kubectl label node controlplane upgrade-server=active --overwrite
+```
+
+4. Monitor until control-plane finishes and returns `Ready` with target version:
+
+```bash
+kubectl -n system-upgrade get jobs,pods -w
+kubectl get node controlplane -o wide
+```
+
+5. Clear control-plane trigger label:
+
+```bash
+kubectl label node controlplane upgrade-server-
+```
+
+6. Upgrade workers one by one. Recommended order:
+   1. `node02`
+   2. `node04`
+   3. `node01`
+   4. `node03`
+
+7. For each worker, run this cycle:
+
+```bash
+# Trigger exactly one worker
 kubectl label node <worker-node> upgrade-wave=active --overwrite
-```
 
-Monitor completion for that node:
-
-```bash
-kubectl -n system-upgrade get jobs -w
+# Monitor SUC job and node version/readiness
+kubectl -n system-upgrade get jobs,pods -w
 kubectl get node <worker-node> -o wide
-```
 
-Remove label before moving to next worker:
-
-```bash
+# Clear label before next worker
 kubectl label node <worker-node> upgrade-wave-
 ```
 
-## Critical cautions
-- Single control-plane means temporary API interruption is expected while server upgrades.
-- SUC jobs are privileged (host namespaces and host root mount). Restrict write access to `system-upgrade` resources.
-- `cordon: true` can leave a node cordoned if a plan fails. Manually uncordon after fixing root cause:
-  - `kubectl uncordon <node>`
-- Do not set a lower `version` than current node version; k3s-upgrade blocks downgrades and leaves nodes cordoned.
-- Keep worker concurrency at `1` (already set) to minimize disruption with local-path stateful workloads.
-- Before upgrading `node01`, if it is still `SchedulingDisabled` from earlier operations, uncordon it first.
-
-## DB safety checks between worker waves
-Run after each worker:
+8. After each worker, verify apps and databases before continuing:
 
 ```bash
+kubectl get pods -A
 kubectl get clusters.postgresql.cnpg.io -A -o jsonpath='{range .items[*]}{.metadata.namespace}/{.metadata.name}{" primary="}{.status.currentPrimary}{" ready="}{.status.readyInstances}{"/"}{.spec.instances}{"\n"}{end}'
 kubectl get pods -n prod-cnpg-database -o wide
 kubectl get pods -n cnpg-database -o wide
 ```
 
-Proceed to next worker only when all clusters are healthy and full ready.
+## 4. Cautions
+- Single control-plane means brief API interruption is expected during `controlplane` upgrade.
+- Keep worker `concurrency: 1` (already configured) to avoid multi-node disruption.
+- `cordon: true` may leave node cordoned on failure. Fix cause, then:
+
+```bash
+kubectl uncordon <node>
+```
+
+- Do not set a lower version than currently running; SUC will fail downgrade attempts and leave nodes cordoned.
+- SUC jobs are privileged (host namespaces + host root mount). Keep `system-upgrade` namespace access restricted.
+
+## 5. Completion Criteria
+- `kubectl get nodes -o wide` shows all nodes on `v1.34.4+k3s1`
+- All nodes are `Ready` and schedulable as expected
+- `kubectl get pods -A` has no broken workloads
+- CNPG clusters show full ready instance counts and healthy replication

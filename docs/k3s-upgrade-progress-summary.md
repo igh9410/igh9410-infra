@@ -73,3 +73,29 @@ Current live check shows these sync-replica settings are still pending:
    - CNPG sync settings (`synchronous_standby_names`, standby `sync_state`)
    - CNPG pod placement
    - App and DB readiness/PDBs
+
+## Step 8. Upgrade Mechanism Migration to SUC (Completed in Git)
+- Replaced manual per-node upgrade approach with Rancher System Upgrade Controller (SUC) via GitOps.
+- Added SUC install manifests under:
+  - `infrastructure/system-upgrade-controller/crd.yaml`
+  - `infrastructure/system-upgrade-controller/system-upgrade-controller.yaml`
+  - `infrastructure/system-upgrade-controller/kustomization.yaml`
+- Added ArgoCD infra application:
+  - `argocd/infra-apps/system-upgrade-controller.yaml`
+
+## Step 9. Pinned and Label-Gated Upgrade Plans (Completed in Git)
+- Added pinned plans:
+  - `infrastructure/system-upgrade-controller/plans.yaml`
+- Plan properties:
+  - `version: v1.34.4+k3s1` (both server and agent plans)
+  - `concurrency: 1` and `cordon: true`
+  - Agent plan includes `prepare: server-plan`
+- Manual gating labels added to prevent unintended auto-rollout:
+  - Control-plane gate: `upgrade-server=active`
+  - Worker gate: `upgrade-wave=active` (apply to one worker at a time)
+
+## Step 10. Documentation Added (Completed in Git)
+- Detailed SUC runbook:
+  - `docs/k3s-system-upgrade-controller-upgrade-plan.md`
+- Operator quick-reference:
+  - `infrastructure/system-upgrade-controller/README.md`

@@ -10,6 +10,12 @@ spec:
     matchExpressions:
       - key: node-role.kubernetes.io/control-plane
         operator: Exists
+      # Manually trigger master upgrade by labeling the control-plane node:
+      # kubectl label node <control-plane-node> upgrade-server=active --overwrite
+      - key: upgrade-server
+        operator: In
+        values:
+          - active
   serviceAccountName: system-upgrade
   upgrade:
     image: rancher/k3s-upgrade
