@@ -160,3 +160,7 @@ kubectl -n prod delete pod app-probe-prod
 - All nodes are `Ready` and schedulable as expected
 - `kubectl get pods -A` has no broken workloads
 - CNPG clusters show full ready instance counts and healthy replication
+
+## 7. Observed Impact Report
+- Detailed measured downtime/impact stats are documented separately:
+  - `docs/k3s-failover-impact-report.md`

@@ -1,6 +1,8 @@
 # Upgrade Retrospective Command Logs
 
 These files capture commands executed during the SUC-based k3s upgrade preparation and rollout.
+Measured downtime/impact analysis is documented separately in:
+- `../k3s-failover-impact-report.md`
 
 ## Files
 - `commands-00-baseline-and-downtime-verification.md`
@@ -9,6 +11,7 @@ These files capture commands executed during the SUC-based k3s upgrade preparati
 - `commands-03-gitops-repo-and-docs.md`
 - `commands-04-worker-node04-wave.md`
 - `commands-05-worker-node01-wave.md`
+- `commands-06-dev-primary-handover-before-node03.md`
 
 ## Suggested blog flow
 1. Baseline and HA prechecks

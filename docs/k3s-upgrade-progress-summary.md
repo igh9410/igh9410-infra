@@ -105,3 +105,8 @@ Current live check shows these sync-replica settings are still pending:
 - Added explicit note: control-plane wave can briefly interrupt Kubernetes API.
 - Added concrete app uptime probes (dev/prod service HTTP checks).
 - Added DB health and synchronous replication verification checks between node waves.
+
+## Step 12. Measured Dev DB Failover Impact (Completed)
+- Performed controlled primary handover for `cnpg-database/dev-gramnuri-db-cluster`.
+- Measured timeline and per-app impact stats are captured in a dedicated report:
+  - `docs/k3s-failover-impact-report.md`
