@@ -260,6 +260,11 @@ cluster:
   # -- The instances' log level, one of the following values: error, warning, info (default), debug, trace
   logLevel: "info"
 
+  # -- Quorum-based synchronous replication.
+  # Keep at least one synchronous standby for stronger write durability during failover.
+  minSyncReplicas: 1
+  maxSyncReplicas: 1
+
   # -- Affinity/Anti-affinity rules for Pods.
   # See: https://cloudnative-pg.io/documentation/current/cloudnative-pg.v1/#postgresql-cnpg-io-v1-AffinityConfiguration
   affinity:

@@ -90,13 +90,51 @@ kubectl get pdb -A
 Do **not** treat all workers the same:
 - `node02`, `node04`: normal drain + upgrade.
 - `node03`: move CNPG primaries away first, then drain + upgrade.
-- `node01`: avoid full drain (it hosts two pods of `prod-gramnuri-db-cluster`); use cordon + in-place upgrade + uncordon.
+- `node01`: drain is safe only if `prod-gramnuri-db-cluster` is rebalanced first.
+
+### 5.1 Rebalance `prod-gramnuri-db-cluster` (recommended before upgrade)
+Current topology can place two replicas on `node01` because of historical `local-path` PVC pinning.  
+Rebuild one non-primary replica from `node01` to spread instances across more nodes.
+
+1. Check current primary and placement:
+
+```bash
+kubectl -n prod-cnpg-database get clusters.postgresql.cnpg.io prod-gramnuri-db-cluster -o jsonpath='{.status.currentPrimary}{"\n"}'
+kubectl -n prod-cnpg-database get pods -l cnpg.io/cluster=prod-gramnuri-db-cluster -o wide
+```
+
+2. Pick a non-primary replica currently on `node01` (example: `prod-gramnuri-db-cluster-3`).
+3. Cordon `node01` temporarily:
+
+```bash
+kubectl cordon node01
+```
+
+4. Rebuild only that replica (safe for HA, but it recreates replica-local data):
+
+```bash
+kubectl -n prod-cnpg-database delete pod prod-gramnuri-db-cluster-3 --wait=true
+kubectl -n prod-cnpg-database delete pvc prod-gramnuri-db-cluster-3 prod-gramnuri-db-cluster-3-wal
+```
+
+5. Wait for `3/3` ready and verify the rebuilt replica is on a different node:
+
+```bash
+kubectl -n prod-cnpg-database get pods -l cnpg.io/cluster=prod-gramnuri-db-cluster -o wide -w
+kubectl get clusters.postgresql.cnpg.io -n prod-cnpg-database prod-gramnuri-db-cluster -o jsonpath='{.status.readyInstances}{"/"}{.spec.instances}{" primary="}{.status.currentPrimary}{"\n"}'
+```
+
+6. Uncordon `node01`:
+
+```bash
+kubectl uncordon node01
+```
 
 Recommended order:
 1. `node02`
 2. `node04`
 3. `node03` (after CNPG primary relocation)
-4. `node01` (cordon-only upgrade, no drain)
+4. `node01` (drain if rebalanced, otherwise cordon-only)
 5. `controlplane` (last)
 
 ## 6. Worker Upgrade Steps
@@ -143,8 +181,17 @@ kubectl wait --for=condition=Ready node/node03 --timeout=10m
 kubectl uncordon node03
 ```
 
-### 6.3 `node01` (cordon-only, no drain)
-Reason: this node currently hosts two instances of `prod-gramnuri-db-cluster`; full drain can violate CNPG disruption constraints.
+### 6.3 `node01` option A (preferred if rebalanced): normal drain
+
+```bash
+kubectl cordon node01
+kubectl drain node01 --ignore-daemonsets --delete-emptydir-data --grace-period=30 --timeout=15m
+ssh igh9410@192.168.45.200 "curl -sfL https://get.k3s.io | sudo env INSTALL_K3S_VERSION=${TARGET_K3S_VERSION} sh -"
+kubectl wait --for=condition=Ready node/node01 --timeout=10m
+kubectl uncordon node01
+```
+
+### 6.4 `node01` option B (fallback if not rebalanced): cordon-only
 
 ```bash
 kubectl cordon node01
