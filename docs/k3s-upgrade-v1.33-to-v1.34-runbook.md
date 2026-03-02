@@ -163,11 +163,14 @@ kubectl get pods -n cnpg-database -o wide
 kubectl get pods -n prod-cnpg-database -o wide
 ```
 
-If a primary is on the node you are about to upgrade, trigger controlled failover by deleting that primary pod (CNPG will promote another ready replica):
+If a primary is on the node you are about to upgrade, run a planned switchover to a ready replica on a different node:
 
 ```bash
-kubectl -n <NS> delete pod <PRIMARY_POD_NAME>
+kubectl -n <NS> get pods -l cnpg.io/cluster=<CLUSTER_NAME> -o wide
+kubectl cnpg promote <CLUSTER_NAME> <TARGET_REPLICA_POD_NAME> -n <NS>
 ```
+
+`<TARGET_REPLICA_POD_NAME>` must be a healthy replica and should not be on the node being drained.
 
 Wait until the cluster is healthy again and primary moved:
 

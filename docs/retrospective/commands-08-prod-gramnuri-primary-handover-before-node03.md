@@ -11,13 +11,13 @@ kubectl -n prod-cnpg-database get pods -l cnpg.io/cluster=prod-gramnuri-db-clust
 kubectl -n prod get deploy gramnuri-api gramnuri-web --no-headers
 ```
 
-## Trigger failover by deleting current primary
+## Trigger planned switchover to a replica
 
 ```bash
-PRIMARY=$(kubectl -n prod-cnpg-database get cluster prod-gramnuri-db-cluster -o jsonpath='{.status.currentPrimary}'); echo "Deleting primary: $PRIMARY"; kubectl -n prod-cnpg-database delete pod "$PRIMARY"
+TARGET=prod-gramnuri-db-cluster-1; echo "Switchover target: $TARGET"; kubectl cnpg promote prod-gramnuri-db-cluster "$TARGET" -n prod-cnpg-database
 ```
 
-## Continuous monitoring during failover
+## Continuous monitoring during switchover
 
 ```bash
 for i in {1..40}; do echo "--- $(date -Iseconds)"; kubectl -n prod-cnpg-database get cluster prod-gramnuri-db-cluster -o wide; kubectl -n prod-cnpg-database get pods -l cnpg.io/cluster=prod-gramnuri-db-cluster -o wide; echo; sleep 4; done

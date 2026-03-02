@@ -11,13 +11,13 @@ kubectl -n prod-cnpg-database get pods -l cnpg.io/cluster=prod-artskorner-db-clu
 kubectl -n prod get deploy artskorner-api gramnuri-api gramnuri-web --no-headers
 ```
 
-## Trigger failover by deleting current primary
+## Trigger planned switchover to a replica
 
 ```bash
-PRIMARY=$(kubectl -n prod-cnpg-database get cluster prod-artskorner-db-cluster -o jsonpath='{.status.currentPrimary}'); echo "Deleting primary: $PRIMARY"; kubectl -n prod-cnpg-database delete pod "$PRIMARY"
+TARGET=prod-artskorner-db-cluster-2; echo "Switchover target: $TARGET"; kubectl cnpg promote prod-artskorner-db-cluster "$TARGET" -n prod-cnpg-database
 ```
 
-## Continuous monitoring during failover
+## Continuous monitoring during switchover
 
 ```bash
 for i in {1..30}; do echo "--- $(date -Iseconds)"; kubectl -n prod-cnpg-database get cluster prod-artskorner-db-cluster -o wide; kubectl -n prod-cnpg-database get pods -l cnpg.io/cluster=prod-artskorner-db-cluster -o wide; echo; sleep 4; done
@@ -32,4 +32,3 @@ kubectl -n cnpg-system logs deploy/cloudnative-pg-operator --since=30m | rg 'pro
 kubectl -n prod-cnpg-database get cluster prod-artskorner-db-cluster -o jsonpath='{.status.phase}{"\n"}{.status.currentPrimary}{"\n"}{.status.currentPrimaryTimestamp}{"\n"}{.status.targetPrimary}{"\n"}{.status.targetPrimaryTimestamp}{"\n"}'
 for d in artskorner-api gramnuri-api gramnuri-web; do echo "=== prod/$d ==="; kubectl -n prod logs deploy/$d --since-time=2026-03-02T10:18:30Z 2>/dev/null | rg '"status":500' || true; done
 ```
-
