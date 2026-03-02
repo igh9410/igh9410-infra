@@ -48,14 +48,14 @@ Cluster context: `default`
   - `argocd/values/prod-gramnuri-db.yaml`
   - `argocd/values/prod-artskorner-db.yaml`
   - Added:
-    - `minSyncReplicas: 1`
-    - `maxSyncReplicas: 1`
+    - `cluster.postgresql.synchronous.method: any`
+    - `cluster.postgresql.synchronous.number: 1`
 - Updated runbook with explicit replica rebalancing procedure for `prod-gramnuri-db` and node01 drain decision:
   - `docs/k3s-upgrade-v1.33-to-v1.34-runbook.md`
 
 Current live check shows these sync-replica settings are still pending:
-- `prod-artskorner-db-cluster minSync=0 maxSync=0`
-- `prod-gramnuri-db-cluster minSync=0 maxSync=0`
+- `synchronous_standby_names` is empty on both prod primaries
+- `pg_stat_replication` shows both standbys as `async`
 
 ## Step 6. Current Known HA Gap
 - `prod-gramnuri-db-cluster` currently has 2 replicas on `node01` (primary on `node03`), so node-level spread is not ideal yet.
@@ -70,6 +70,6 @@ Current live check shows these sync-replica settings are still pending:
    - Wait for `3/3` and confirm placement on a different node
    - Uncordon `node01`
 3. Re-verify before k3s upgrade:
-   - CNPG sync settings (`minSync/maxSync`)
+   - CNPG sync settings (`synchronous_standby_names`, standby `sync_state`)
    - CNPG pod placement
    - App and DB readiness/PDBs

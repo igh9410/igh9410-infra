@@ -183,8 +183,10 @@ recovery:
         key: ""
 
 cluster:
-  # -- Number of instances (single instance due to hardware constraints on other nodes)
-  instances: 3
+  # -- Number of instances.
+  # TEMP: set to 2 for one sync cycle to clear the pending replica after PVC removal.
+  # After reconciliation, set back to 3 to recreate the third replica on another node.
+  instances: 2
 
   # -- Name of the container image, supporting both tags (<image>:<tag>) and digests for deterministic and repeatable deployments:
   # <image>:<tag>@sha256:<digestValue>
@@ -259,11 +261,6 @@ cluster:
 
   # -- The instances' log level, one of the following values: error, warning, info (default), debug, trace
   logLevel: "info"
-
-  # -- Quorum-based synchronous replication.
-  # Keep at least one synchronous standby for stronger write durability during failover.
-  minSyncReplicas: 1
-  maxSyncReplicas: 1
 
   # -- Affinity/Anti-affinity rules for Pods.
   # See: https://cloudnative-pg.io/documentation/current/cloudnative-pg.v1/#postgresql-cnpg-io-v1-AffinityConfiguration
@@ -351,9 +348,8 @@ cluster:
       # max_connections: 300
     # -- Quorum-based Synchronous Replication
     synchronous:
-      {}
-      # method: any
-      # number: 1
+      method: any
+      number: 1
     # -- PostgreSQL Host Based Authentication rules (lines to be appended to the pg_hba.conf file)
     pg_hba:
       []
