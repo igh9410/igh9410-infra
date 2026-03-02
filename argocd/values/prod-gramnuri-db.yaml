@@ -183,8 +183,10 @@ recovery:
         key: ""
 
 cluster:
-  # -- Number of instances (single instance due to hardware constraints on other nodes)
-  instances: 3
+  # -- Number of instances.
+  # TEMP: set to 2 for one sync cycle to clear the pending replica after PVC removal.
+  # After reconciliation, set back to 3 to recreate the third replica on another node.
+  instances: 2
 
   # -- Name of the container image, supporting both tags (<image>:<tag>) and digests for deterministic and repeatable deployments:
   # <image>:<tag>@sha256:<digestValue>
