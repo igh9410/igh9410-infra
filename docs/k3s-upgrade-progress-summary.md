@@ -99,3 +99,9 @@ Current live check shows these sync-replica settings are still pending:
   - `docs/k3s-system-upgrade-controller-upgrade-plan.md`
 - Operator quick-reference:
   - `infrastructure/system-upgrade-controller/README.md`
+
+## Step 11. Downtime Verification Procedure Documented (Completed in Git)
+- Added explicit preflight to uncordon `node01` before upgrade waves.
+- Added explicit note: control-plane wave can briefly interrupt Kubernetes API.
+- Added concrete app uptime probes (dev/prod service HTTP checks).
+- Added DB health and synchronous replication verification checks between node waves.
