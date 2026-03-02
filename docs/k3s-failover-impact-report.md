@@ -125,11 +125,41 @@ Collection window: `--since-time=2026-03-02T10:37:00Z`
 - No CNPG failover/recovery events for `prod-gramnuri` were observed at or after `2026-03-02T10:37:00Z`.
 - DB pod restart counters remained `0` in post-upgrade checks (`prod-gramnuri-db-cluster-{1,2,4}`).
 
+## Case E: Prometheus Primary-Writer Uptime/Availability Results
+
+### Query Snapshot (UTC)
+- Snapshot time: `2026-03-02T12:37:54Z`
+
+PromQL used:
+
+```promql
+topk by (namespace, job) (1, cnpg_pg_replication_in_recovery == bool 0)
+max by (namespace, job) ((time() - cnpg_pg_postmaster_start_time) * on(namespace, job, pod) (cnpg_pg_replication_in_recovery == bool 0))
+max by (namespace, job) (cnpg_collector_up * on(namespace, job, pod) (cnpg_pg_replication_in_recovery == bool 0))
+```
+
+Observed results:
+
+| Cluster (job) | Namespace | Current primary pod | Primary availability | Primary writer uptime |
+| --- | --- | --- | --- | --- |
+| `cnpg-database/dev-gramnuri-db-cluster` | `cnpg-database` | `dev-gramnuri-db-cluster-2` | `1` | `13343.2s` (~`222.4m`) |
+| `prod-cnpg-database/prod-artskorner-db-cluster` | `prod-cnpg-database` | `prod-artskorner-db-cluster-2` | `1` | `13345.7s` (~`222.4m`) |
+| `prod-cnpg-database/prod-gramnuri-db-cluster` | `prod-cnpg-database` | `prod-gramnuri-db-cluster-4` | `1` | `12532.8s` (~`208.9m`) |
+
+### Switchover-Window Range Check (`prod-gramnuri`)
+- Window checked: `2026-03-02T12:13:40Z` to `2026-03-02T12:14:20Z` (`UTC`)
+- Metric: primary availability expression for `prod-gramnuri-db-cluster`
+- Step: `2s`, samples: `21`
+- Observed: `min=0`, `max=1`, zero-value samples=`10` (from `12:13:56Z` to `12:14:14Z`)
+
+This indicates the DB primary-writer availability signal dipped during switchover, even though app logs in the same period did not show DB-related errors.
+
 ## Interpretation
 - There was a brief write-path disruption visible in `dev/gramnuri-api` during primary promotion.
 - `prod-artskorner` failover completed significantly faster than the dev case and no app `500` logs were observed.
 - `prod-gramnuri` promotion itself was fast, but total failover time was longer due to the old primary termination/stuck phase before final promotion.
 - For `prod-gramnuri`, API POST traffic existed during failover and returned `200/429` only; there were no observed `500` responses.
+- Prometheus primary-writer availability for `prod-gramnuri` temporarily dropped to `0` during planned switchover, consistent with a short internal DB transition window.
 - During `node03` upgrade, no `prod-gramnuri` app or DB downtime signal was detected from logs/events/pod restarts.
 - Application log observation is traffic-dependent; zero log errors is not a hard guarantee of zero user impact.
 
@@ -153,6 +183,10 @@ kubectl -n system-upgrade get jobs -o jsonpath='{range .items[?(@.metadata.name=
 kubectl -n prod-cnpg-database get events -o json | jq -r '.items[] | select(.lastTimestamp >= "2026-03-02T10:37:00Z") | [.lastTimestamp,.type,.reason,.involvedObject.kind,.involvedObject.name,.message] | @tsv'
 kubectl -n cnpg-system logs deploy/cloudnative-pg-operator --since-time=2026-03-02T10:37:00Z 2>/dev/null | rg 'prod-gramnuri-db-cluster|Failing over|initiating a failover|Cluster has become healthy|Cannot extract Pod status|ERROR|WARN' -i || true
 for p in $(kubectl -n prod get pods -o name | rg 'gramnuri-api|gramnuri-web'); do echo "=== $p ==="; kubectl -n prod logs "$p" --since-time=2026-03-02T10:37:00Z 2>/dev/null | rg '"status":500|ECONN|connection refused|database system is starting up|timeout|postgres|sqlstate|internal server error|error' -i || true; done
+kubectl -n monitoring exec prometheus-kube-prometheus-stack-prometheus-0 -- sh -lc 'wget -qO- "http://localhost:9090/api/v1/query?query=topk%20by%20(namespace%2Cjob)%20(1%2C%20cnpg_pg_replication_in_recovery%20%3D%3D%20bool%200)"'
+kubectl -n monitoring exec prometheus-kube-prometheus-stack-prometheus-0 -- sh -lc 'wget -qO- "http://localhost:9090/api/v1/query?query=max%20by%20(namespace%2Cjob)%20((time()%20-%20cnpg_pg_postmaster_start_time)%20*%20on(namespace%2Cjob%2Cpod)%20(cnpg_pg_replication_in_recovery%20%3D%3D%20bool%200))"'
+kubectl -n monitoring exec prometheus-kube-prometheus-stack-prometheus-0 -- sh -lc 'wget -qO- "http://localhost:9090/api/v1/query?query=max%20by%20(namespace%2Cjob)%20(cnpg_collector_up%20*%20on(namespace%2Cjob%2Cpod)%20(cnpg_pg_replication_in_recovery%20%3D%3D%20bool%200))"'
+kubectl -n monitoring exec prometheus-kube-prometheus-stack-prometheus-0 -- sh -lc 'wget -qO- "http://localhost:9090/api/v1/query_range?query=max%20by%20(namespace%2Cjob)%20(cnpg_collector_up%7Bnamespace%3D%22prod-cnpg-database%22%2Cjob%3D%22prod-cnpg-database%2Fprod-gramnuri-db-cluster%22%7D%20*%20on(namespace%2Cjob%2Cpod)%20(cnpg_pg_replication_in_recovery%7Bnamespace%3D%22prod-cnpg-database%22%2Cjob%3D%22prod-cnpg-database%2Fprod-gramnuri-db-cluster%22%7D%20%3D%3D%20bool%200))&start=1772453620&end=1772453660&step=2s"'
 ```
 
 ## Final Downtime Summary (Per App and DB)

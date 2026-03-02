@@ -104,11 +104,15 @@ Before the final worker wave, we intentionally triggered DB primary handovers to
 - Promotion window: ~`3.6s`
 - App impact: no observed `500` in measured window
 - POST traffic continued (`200` and one `429`), no DB-error signature
+- Additional planned switchover to `node04` (`2026-03-02T12:13:45Z`)
+- Primary election window: ~`3.8s` (`currentPrimaryTimestamp=2026-03-02T12:13:48.766Z`)
+- Full switchover to healthy: ~`29s` (`Cluster in healthy state` at `2026-03-02T12:14:14Z`)
 
 Reference:
 - `docs/retrospective/commands-06-dev-primary-handover-before-node03.md`
 - `docs/retrospective/commands-07-prod-artskorner-primary-handover-before-node03.md`
 - `docs/retrospective/commands-08-prod-gramnuri-primary-handover-before-node03.md`
+- `docs/retrospective/commands-10-prod-gramnuri-node04-switchover.md`
 - `docs/k3s-failover-impact-report.md`
 
 ### 4) Final worker wave: `node03`
@@ -161,6 +165,7 @@ One caveat:
 - `commands-06-dev-primary-handover-before-node03.md`
 - `commands-07-prod-artskorner-primary-handover-before-node03.md`
 - `commands-08-prod-gramnuri-primary-handover-before-node03.md`
+- `commands-10-prod-gramnuri-node04-switchover.md`
 - `commands-09-worker-node03-wave.md`
 - `../k3s-failover-impact-report.md`
 
@@ -277,11 +282,15 @@ One caveat:
 - promotion 구간: 약 `3.6s`
 - 앱 영향: 측정 구간 내 `500` 미관측
 - failover 중 POST 트래픽도 처리됨(`200` 및 `429` 1건)
+- 추가 planned switchover to `node04` (`2026-03-02T12:13:45Z`)
+- primary 선출 구간: 약 `3.8s` (`currentPrimaryTimestamp=2026-03-02T12:13:48.766Z`)
+- 클러스터 healthy 복귀까지: 약 `29s` (`2026-03-02T12:14:14Z`)
 
 참고:
 - `docs/retrospective/commands-06-dev-primary-handover-before-node03.md`
 - `docs/retrospective/commands-07-prod-artskorner-primary-handover-before-node03.md`
 - `docs/retrospective/commands-08-prod-gramnuri-primary-handover-before-node03.md`
+- `docs/retrospective/commands-10-prod-gramnuri-node04-switchover.md`
 - `docs/k3s-failover-impact-report.md`
 
 ### 4) 최종 워커 웨이브: `node03`
@@ -336,5 +345,6 @@ handover 검증 이후 `node03` 웨이브를 실행했습니다.
 - `commands-06-dev-primary-handover-before-node03.md`
 - `commands-07-prod-artskorner-primary-handover-before-node03.md`
 - `commands-08-prod-gramnuri-primary-handover-before-node03.md`
+- `commands-10-prod-gramnuri-node04-switchover.md`
 - `commands-09-worker-node03-wave.md`
 - `../k3s-failover-impact-report.md`
