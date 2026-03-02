@@ -28,6 +28,22 @@ spec:
               memory: 128Mi
       imagePullSecrets:
         - name: ghcr-image-pull-secrets
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: artskorner-api
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: artskorner-api
       nodeSelector:
         kubernetes.io/arch: amd64
         kubernetes.io/os: linux

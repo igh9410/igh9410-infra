@@ -44,6 +44,22 @@ spec:
       terminationGracePeriodSeconds: 30
       imagePullSecrets:
         - name: ghcr-image-pull-secrets
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: gramnuri-web
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: gramnuri-web
       nodeSelector:
         kubernetes.io/arch: amd64
         kubernetes.io/os: linux
