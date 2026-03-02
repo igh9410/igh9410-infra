@@ -6,6 +6,15 @@ metadata:
 spec:
   concurrency: 1
   cordon: true
+  tolerations:
+    # Required for clusters where control-plane nodes are tainted NoSchedule.
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+      effect: NoSchedule
+    # Backward compatibility for clusters still using master taint.
+    - key: node-role.kubernetes.io/master
+      operator: Exists
+      effect: NoSchedule
   nodeSelector:
     matchExpressions:
       - key: node-role.kubernetes.io/control-plane

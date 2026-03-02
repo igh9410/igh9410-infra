@@ -65,3 +65,5 @@ kubectl get clusters.postgresql.cnpg.io -A -o jsonpath='{range .items[*]}{.metad
 - Single control-plane upgrade can briefly interrupt Kubernetes API responses.
 - Workload traffic should still be observed through app/DB probe checks in:
   - `docs/k3s-system-upgrade-controller-upgrade-plan.md`
+- If `apply-server-plan` is `Pending` with `untolerated taint {node-role.kubernetes.io/control-plane}`,
+  ensure `server-plan` includes control-plane tolerations from `plans.yaml` and re-sync ArgoCD.

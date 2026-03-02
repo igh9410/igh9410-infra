@@ -14,6 +14,7 @@ Date: 2026-03-02
 - `version: v1.34.4+k3s1`
 - `concurrency: 1`
 - `cordon: true`
+- Tolerates control-plane taints (`node-role.kubernetes.io/control-plane` and `node-role.kubernetes.io/master`)
 - Selector: control-plane nodes + `upgrade-server=active`
 
 `agent-plan`:
