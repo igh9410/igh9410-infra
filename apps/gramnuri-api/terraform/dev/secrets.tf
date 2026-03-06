@@ -23,6 +23,7 @@ resource "kubernetes_secret" "gramnuri_secrets" {
     R2_BUCKET_NAME               = var.r2_bucket_name
     R2_CUSTOM_DOMAIN             = var.r2_custom_domain
     GEMINI_API_KEY               = var.gemini_api_key
+    SHARE_LINK_SIGNING_SECRET    = var.share_link_signing_secret
   }
 }
 
