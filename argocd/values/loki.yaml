@@ -394,9 +394,11 @@ loki:
   limits_config:
     reject_old_samples: true
     reject_old_samples_max_age: 168h
+    max_query_lookback: 672h
     max_cache_freshness_per_query: 10m
     split_queries_by_interval: 15m
     query_timeout: 300s
+    retention_period: 672h
     volume_enabled: true
   # -- Provides a reloadable runtime configuration file for some specific configuration
   runtimeConfig: {}
@@ -553,8 +555,14 @@ loki:
       at: "250ms"
       max_per_second: 20
       up_to: 3
-  # --  Optional compactor configuration
-  compactor: {}
+  # -- TSDB retention is enforced by the compactor, not by table_manager.
+  compactor:
+    working_directory: /var/loki/compactor
+    compaction_interval: 10m
+    retention_enabled: true
+    retention_delete_delay: 2h
+    retention_delete_worker_count: 150
+    delete_request_store: s3
   # --  Optional pattern ingester configuration
   pattern_ingester:
     enabled: false
@@ -774,7 +782,7 @@ kubectlImage:
 
 # -- Section for configuring optional Helm test
 test:
-  enabled: true
+  enabled: false
   # -- Used to directly query the metrics endpoint of the canary for testing, this approach avoids needing prometheus for testing.
   # This in a newer approach to using prometheusAddress such that tests do not have a dependency on prometheus
   canaryServiceAddress: "http://loki-canary:3500/metrics"
@@ -802,7 +810,7 @@ test:
 # The Loki canary pushes logs to and queries from this loki installation to test
 # that it's working correctly
 lokiCanary:
-  enabled: true
+  enabled: false
   # -- The type of the loki canary k8s rollout. This can be a DaemonSet or Deployment.
   kind: DaemonSet
   # -- If true, the canary will send directly to Loki via the address configured for verification --
@@ -4042,6 +4050,6 @@ tableManager:
   # -- Tolerations for table-manager pods
   tolerations: []
   # -- Enable deletes by retention
-  retention_deletes_enabled: true
+  retention_deletes_enabled: false
   # -- Set retention period
-  retention_period: 672h # 28 days retention
+  retention_period: ""
