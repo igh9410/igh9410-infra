@@ -106,3 +106,9 @@ variable "gemini_api_key" {
   type        = string
   sensitive   = true
 }
+
+variable "share_link_signing_secret" {
+  description = "Secret key used for signing share links"
+  type        = string
+  sensitive   = true
+}
