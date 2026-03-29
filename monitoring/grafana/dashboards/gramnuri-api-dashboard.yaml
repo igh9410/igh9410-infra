@@ -15,6 +15,35 @@ data:
       "schemaVersion": 16,
       "version": 0,
       "refresh": "30s",
+      "templating": {
+        "list": [
+          {
+            "name": "namespace",
+            "label": "Environment",
+            "type": "custom",
+            "query": "dev,prod",
+            "current": {
+              "selected": true,
+              "text": "prod",
+              "value": "prod"
+            },
+            "includeAll": false,
+            "multi": false,
+            "options": [
+              {
+                "selected": false,
+                "text": "dev",
+                "value": "dev"
+              },
+              {
+                "selected": true,
+                "text": "prod",
+                "value": "prod"
+              }
+            ]
+          }
+        ]
+      },
       "panels": [
         {
           "id": 1,
@@ -23,8 +52,8 @@ data:
           "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
           "targets": [
             {
-              "expr": "sum(rate(http_requests_total{job=\"gramnuri-api\", namespace=~\"dev|prod\"}[5m])) by (namespace, code)",
-              "legendFormat": "{{namespace}} - {{code}}",
+              "expr": "sum(rate(http_requests_total{job=\"gramnuri-api\", namespace=\"$namespace\"}[5m])) by (code)",
+              "legendFormat": "{{code}}",
               "refId": "A"
             }
           ],
@@ -40,7 +69,7 @@ data:
           "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
           "targets": [
             {
-              "expr": "gramnuri_api:http_5xx_error_rate:ratio5m{namespace=~\"dev|prod\"}",
+              "expr": "gramnuri_api:http_5xx_error_rate:ratio5m{namespace=\"$namespace\"}",
               "legendFormat": "{{namespace}}",
               "refId": "A"
             }
@@ -57,7 +86,7 @@ data:
           "gridPos": {"h": 10, "w": 24, "x": 0, "y": 8},
           "targets": [
             {
-              "expr": "{app=\"gramnuri-api\", namespace=~\"dev|prod\"} | json | level=\"error\"",
+              "expr": "{app=\"gramnuri-api\", namespace=\"$namespace\"} | json | level=\"error\"",
               "refId": "A"
             }
           ],
@@ -74,7 +103,7 @@ data:
           "gridPos": {"h": 8, "w": 12, "x": 0, "y": 18},
           "targets": [
             {
-              "expr": "gramnuri_api:latency:p99_5m{namespace=~\"dev|prod\"}",
+              "expr": "gramnuri_api:latency:p99_5m{namespace=\"$namespace\"}",
               "legendFormat": "{{namespace}} p99",
               "refId": "A"
             }
@@ -91,7 +120,7 @@ data:
           "gridPos": {"h": 8, "w": 12, "x": 12, "y": 18},
           "targets": [
             {
-              "expr": "sum(http_connections_active{job=\"gramnuri-api\", namespace=~\"dev|prod\"}) by (namespace)",
+              "expr": "sum(http_connections_active{job=\"gramnuri-api\", namespace=\"$namespace\"}) by (namespace)",
               "legendFormat": "{{namespace}}",
               "refId": "A"
             }
