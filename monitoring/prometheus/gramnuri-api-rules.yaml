@@ -1,0 +1,73 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: gramnuri-api-rules
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: gramnuri-api
+    app.kubernetes.io/part-of: monitoring
+spec:
+  groups:
+    - name: gramnuri-api.recording
+      interval: 1m
+      rules:
+        - record: gramnuri_api:requests:rate5m
+          expr: |
+            sum by (namespace) (
+              rate(http_requests_total{job="gramnuri-api", namespace=~"dev|prod"}[5m])
+            )
+        - record: gramnuri_api:http_5xx_requests:rate5m
+          expr: |
+            sum by (namespace) (
+              rate(http_requests_total{job="gramnuri-api", namespace=~"dev|prod", code=~"5.."}[5m])
+            )
+        - record: gramnuri_api:http_5xx_error_rate:ratio5m
+          expr: |
+            gramnuri_api:http_5xx_requests:rate5m
+            /
+            clamp_min(gramnuri_api:requests:rate5m, 0.001)
+        - record: gramnuri_api:latency:p99_5m
+          expr: |
+            histogram_quantile(
+              0.99,
+              sum by (le, namespace) (
+                rate(http_request_duration_seconds_bucket{job="gramnuri-api", namespace=~"dev|prod"}[5m])
+              )
+            )
+    - name: gramnuri-api.alerts
+      interval: 1m
+      rules:
+        - alert: GramnuriAPIHttp5xxErrorRateWarning
+          expr: |
+            (
+              gramnuri_api:http_5xx_error_rate:ratio5m > 0.01
+            )
+            and on (namespace)
+            (
+              sum by (namespace) (
+                increase(http_requests_total{job="gramnuri-api", namespace=~"dev|prod"}[5m])
+              ) > 20
+            )
+          labels:
+            severity: warning
+            app: gramnuri-api
+          annotations:
+            summary: "High HTTP 5xx error rate on gramnuri-api"
+            description: "{{ $labels.namespace }}/gramnuri-api HTTP 5xx error rate is above 1% over the last 5 minutes."
+        - alert: GramnuriAPIHighLatencyP99Warning
+          expr: |
+            (
+              gramnuri_api:latency:p99_5m > 1
+            )
+            and on (namespace)
+            (
+              sum by (namespace) (
+                increase(http_requests_total{job="gramnuri-api", namespace=~"dev|prod"}[5m])
+              ) > 20
+            )
+          labels:
+            severity: warning
+            app: gramnuri-api
+          annotations:
+            summary: "High p99 latency on gramnuri-api"
+            description: "{{ $labels.namespace }}/gramnuri-api p99 latency is above 1s over the last 5 minutes."
