@@ -5,6 +5,9 @@ metadata:
   labels:
     app: gramnuri-api
 spec:
+  jobLabel: app
+  targetLabels:
+    - app
   selector:
     matchLabels:
       app: gramnuri-api

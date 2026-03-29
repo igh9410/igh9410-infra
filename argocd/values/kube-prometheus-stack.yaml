@@ -186,19 +186,3 @@ defaultRules:
     nodeExporterRecording: true
     prometheus: true
     prometheusOperator: true
-
-# Custom Prometheus Rules
-additionalPrometheusRulesMap:
-  custom-http-errors:
-    groups:
-      - name: http-errors
-        rules:
-          - alert: Http5xxError
-            expr: increase(http_requests_total{job="gramnuri-api", code=~"5.."}[1m]) > 0
-            for: 0m
-            labels:
-              severity: critical
-              app: gramnuri-api
-            annotations:
-              summary: "HTTP 5xx error on gramnuri-api"
-              description: "Service {{ $labels.job }} in namespace {{ $labels.namespace }} is returning 5xx errors."

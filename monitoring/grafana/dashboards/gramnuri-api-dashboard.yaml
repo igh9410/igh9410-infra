@@ -9,6 +9,7 @@ data:
   gramnuri-api-dashboard.json: |-
     {
       "dashboard": {
+        "uid": "gramnuri-api-monitoring",
         "title": "Gramnuri API Monitoring",
         "tags": ["gramnuri", "api", "application"],
         "timezone": "browser",
@@ -23,7 +24,7 @@ data:
             "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
             "targets": [
               {
-                "expr": "sum(rate(http_requests_total{app=\"gramnuri-api\"}[5m])) by (namespace, code)",
+                "expr": "sum(rate(http_requests_total{job=\"gramnuri-api\", namespace=~\"dev|prod\"}[5m])) by (namespace, code)",
                 "legendFormat": "{{namespace}} - {{code}}",
                 "refId": "A"
               }
@@ -35,32 +36,20 @@ data:
           },
           {
             "id": 2,
-            "title": "HTTP 5xx Errors",
+            "title": "HTTP 5xx Error Rate (5m)",
             "type": "graph",
             "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
             "targets": [
               {
-                "expr": "sum(rate(http_requests_total{app=\"gramnuri-api\", code=~\"5..\"}[5m])) by (namespace)",
+                "expr": "gramnuri_api:http_5xx_error_rate:ratio5m{namespace=~\"dev|prod\"}",
                 "legendFormat": "{{namespace}}",
                 "refId": "A"
               }
             ],
-            "alert": {
-              "conditions": [
-                {
-                  "evaluator": {"params": [0], "type": "gt"},
-                  "operator": {"type": "and"},
-                  "query": {"params": ["A", "5m", "now"]},
-                  "reducer": {"params": [], "type": "avg"},
-                  "type": "query"
-                }
-              ],
-              "executionErrorState": "alerting",
-              "frequency": "1m",
-              "handler": 1,
-              "name": "HTTP 5xx Errors alert",
-              "noDataState": "no_data"
-            }
+            "yaxes": [
+              {"format": "percentunit", "label": "Error rate"},
+              {"format": "short"}
+            ]
           },
           {
             "id": 3,
@@ -69,7 +58,7 @@ data:
             "gridPos": {"h": 10, "w": 24, "x": 0, "y": 8},
             "targets": [
               {
-                "expr": "{app=\"gramnuri-api\"} | json | level=\"error\"",
+                "expr": "{app=\"gramnuri-api\", namespace=~\"dev|prod\"} | json | level=\"error\"",
                 "refId": "A"
               }
             ],
@@ -81,13 +70,13 @@ data:
           },
           {
             "id": 4,
-            "title": "Request Latency (p95)",
+            "title": "Request Latency (p99)",
             "type": "graph",
             "gridPos": {"h": 8, "w": 12, "x": 0, "y": 18},
             "targets": [
               {
-                "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{app=\"gramnuri-api\"}[5m])) by (le, namespace))",
-                "legendFormat": "{{namespace}} p95",
+                "expr": "gramnuri_api:latency:p99_5m{namespace=~\"dev|prod\"}",
+                "legendFormat": "{{namespace}} p99",
                 "refId": "A"
               }
             ],
@@ -103,7 +92,7 @@ data:
             "gridPos": {"h": 8, "w": 12, "x": 12, "y": 18},
             "targets": [
               {
-                "expr": "sum(http_connections_active{app=\"gramnuri-api\"}) by (namespace)",
+                "expr": "sum(http_connections_active{job=\"gramnuri-api\", namespace=~\"dev|prod\"}) by (namespace)",
                 "legendFormat": "{{namespace}}",
                 "refId": "A"
               }

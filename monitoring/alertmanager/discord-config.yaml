@@ -6,13 +6,13 @@ metadata:
 spec:
   route:
     receiver: discord-webhook
-    groupBy: ["job"]
+    groupBy: ["alertname", "namespace"]
     groupWait: 30s
     groupInterval: 5m
     repeatInterval: 1h
     matchers:
       - name: alertname
-        value: Http5xxError|GoAPIErrorLogged|GoAPICriticalError|GoAPIPanicDetected
+        value: GramnuriAPIHttp5xxErrorRateWarning|GramnuriAPIHighLatencyP99Warning|GoAPIErrorLogged|GoAPICriticalError|GoAPIPanicDetected
         matchType: "=~"
   receivers:
     - name: discord-webhook

@@ -10,6 +10,10 @@ monitoring/
 │   ├── kustomization.yaml
 │   └── discord-config.yaml
 │
+├── prometheus/            # Prometheus rules and recordings
+│   ├── kustomization.yaml
+│   └── gramnuri-api-rules.yaml
+│
 ├── loki/                  # Loki rules and configurations
 │   ├── kustomization.yaml
 │   └── loki-rules.yaml
@@ -31,12 +35,31 @@ Contains AlertmanagerConfig CRDs for routing alerts to external services.
 **Current Configurations:**
 
 - `discord-config.yaml` - Routes alerts to Discord webhook
-  - Matches: `Http5xxError`, `GoAPIErrorLogged`, `GoAPICriticalError`, `GoAPIPanicDetected`
+  - Matches: `GramnuriAPIHttp5xxErrorRateWarning`, `GramnuriAPIHighLatencyP99Warning`, `GoAPIErrorLogged`, `GoAPICriticalError`, `GoAPIPanicDetected`
   - Uses secret: `dev-alarms-webhook-url` (created via Terraform)
 
 **Deployment:**
 
 - Managed by ArgoCD application: `argocd/infra-apps/alertmanager-config.yaml`
+- Auto-syncs from Git
+- Namespace: `monitoring`
+
+### Prometheus (`prometheus/`)
+
+Contains `PrometheusRule` resources for metric-based recording and alerting rules.
+
+**Current Rules:**
+
+- `gramnuri-api-rules.yaml` - Recording and alerting rules for:
+  - `gramnuri_api:requests:rate5m`
+  - `gramnuri_api:http_5xx_error_rate:ratio5m`
+  - `gramnuri_api:latency:p99_5m`
+  - HTTP 5xx error-rate warning for `dev` and `prod`
+  - p99 latency warning for `dev` and `prod`
+
+**Deployment:**
+
+- Managed by ArgoCD application: `argocd/infra-apps/prometheus-rules.yaml`
 - Auto-syncs from Git
 - Namespace: `monitoring`
 
@@ -81,9 +104,9 @@ The kube-prometheus-stack Grafana includes a sidecar container that automaticall
 - `loki-datasource.yaml` - Loki datasource pointing to `loki-gateway.monitoring.svc.cluster.local`
 - `gramnuri-api-dashboard.yaml` - Application monitoring dashboard with:
   - HTTP request rate by status code
-  - HTTP 5xx error tracking
+  - HTTP 5xx error-rate tracking
   - Error logs panel (JSON parsed)
-  - Request latency (p95)
+  - Request latency (p99)
   - Active connections
 
 **Deployment:**
@@ -97,7 +120,7 @@ The kube-prometheus-stack Grafana includes a sidecar container that automaticall
 
 These resources are managed with Kustomize (not Helm) because:
 
-1. **Independent Lifecycle** - AlertmanagerConfig and Loki rules should be updated without touching Helm releases
+1. **Independent Lifecycle** - PrometheusRule, AlertmanagerConfig, and Loki rules should be updated without touching Helm releases
 2. **Separation of Concerns** - Helm manages the stack, Kustomize manages the configuration
 3. **Easier Updates** - Change alert rules without upgrading entire monitoring stack
 4. **GitOps-Friendly** - Direct mapping between Git files and Kubernetes resources
@@ -107,17 +130,23 @@ These resources are managed with Kustomize (not Helm) because:
 
 ### For Metrics-Based Alerts (Prometheus)
 
-Add to `argocd/values/kube-prometheus-stack.yaml`:
+Add a `PrometheusRule` manifest under `monitoring/prometheus/`:
 
 ```yaml
-additionalPrometheusRulesMap:
-  custom-rules:
-    groups:
-      - name: my-rules
-        rules:
-          - alert: MyAlert
-            expr: my_metric > 100
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: my-rules
+  namespace: monitoring
+spec:
+  groups:
+    - name: my-rules
+      rules:
+        - alert: MyAlert
+          expr: my_metric > 100
 ```
+
+Then add it to `monitoring/prometheus/kustomization.yaml`.
 
 ### For Log-Based Alerts (Loki)
 
@@ -136,7 +165,7 @@ Then add the alert name to `monitoring/alertmanager/discord-config.yaml`:
 ```yaml
 matchers:
   - name: alertname
-    value: Http5xxError|GoAPIErrorLogged|MyLogAlert
+    value: GramnuriAPIHttp5xxErrorRateWarning|GoAPIErrorLogged|MyLogAlert
     matchType: "=~"
 ```
 
@@ -194,8 +223,8 @@ kubectl port-forward -n monitoring svc/kube-prometheus-stack-alertmanager 9093:9
 # Send test alert
 curl -X POST http://localhost:9093/api/v2/alerts -H "Content-Type: application/json" -d '[{
   "labels": {
-    "alertname": "Http5xxError",
-    "severity": "critical",
+    "alertname": "GramnuriAPIHttp5xxErrorRateWarning",
+    "severity": "warning",
     "namespace": "dev"
   },
   "annotations": {
