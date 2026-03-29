@@ -42,9 +42,7 @@ metadata:
 data:
   my-dashboard.json: |-
     {
-      "dashboard": {
-        # Paste exported JSON here
-      }
+      # Paste the raw dashboard JSON here
     }
 ```
 
@@ -92,13 +90,14 @@ data:
 
 ```json
 {
-  "dashboard": {
-    "uid": "gramnuri-api-monitoring",
-    "title": "Gramnuri API Monitoring",
-    ...
-  }
+  "uid": "gramnuri-api-monitoring",
+  "title": "Gramnuri API Monitoring",
+  ...
 }
 ```
+
+For file-based sidecar provisioning, store the raw dashboard model at the JSON root.
+Do not wrap it in `{"dashboard": ...}` or Grafana will reject it.
 
 ### Namespace
 
@@ -196,28 +195,26 @@ Use Grafana variables to make dashboards work across environments:
 
 ```json
 {
-  "dashboard": {
-    "templating": {
-      "list": [
-        {
-          "name": "namespace",
-          "type": "query",
-          "query": "label_values(up{app=\"gramnuri-api\"}, namespace)",
-          "multi": false,
-          "includeAll": false
-        }
-      ]
-    },
-    "panels": [
+  "templating": {
+    "list": [
       {
-        "targets": [
-          {
-            "expr": "rate(http_requests_total{app=\"gramnuri-api\", namespace=\"$namespace\"}[5m])"
-          }
-        ]
+        "name": "namespace",
+        "type": "query",
+        "query": "label_values(up{app=\"gramnuri-api\"}, namespace)",
+        "multi": false,
+        "includeAll": false
       }
     ]
-  }
+  },
+  "panels": [
+    {
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{app=\"gramnuri-api\", namespace=\"$namespace\"}[5m])"
+        }
+      ]
+    }
+  ]
 }
 ```
 
