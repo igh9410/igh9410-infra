@@ -40,20 +40,20 @@ spec:
         - alert: GramnuriAPIHttp5xxErrorRateWarning
           expr: |
             (
-              gramnuri_api:http_5xx_error_rate:ratio5m > 0.01
+              gramnuri_api:http_5xx_error_rate:ratio5m{namespace="prod"} > 0.01
             )
             and on (namespace)
             (
               sum by (namespace) (
-                increase(http_requests_total{job="gramnuri-api", namespace=~"dev|prod"}[5m])
+                increase(http_requests_total{job="gramnuri-api", namespace="prod"}[5m])
               ) > 20
             )
           labels:
             severity: warning
             app: gramnuri-api
           annotations:
-            summary: "High HTTP 5xx error rate on gramnuri-api"
-            description: "{{ $labels.namespace }}/gramnuri-api HTTP 5xx error rate is above 1% over the last 5 minutes."
+            summary: "High HTTP 5xx error rate on prod gramnuri-api"
+            description: "prod/gramnuri-api HTTP 5xx error rate is above 1% over the last 5 minutes."
         - alert: GramnuriAPIHighLatencyP99Warning
           expr: |
             (

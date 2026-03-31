@@ -54,7 +54,7 @@ Contains `PrometheusRule` resources for metric-based recording and alerting rule
   - `gramnuri_api:requests:rate5m`
   - `gramnuri_api:http_5xx_error_rate:ratio5m`
   - `gramnuri_api:latency:p99_5m`
-  - HTTP 5xx error-rate warning for `dev` and `prod`
+  - HTTP 5xx error-rate warning for `prod` only
   - p99 latency warning for `dev` and `prod`
 
 **Deployment:**
@@ -105,9 +105,10 @@ The kube-prometheus-stack Grafana includes a sidecar container that automaticall
 - `gramnuri-api-dashboard.yaml` - Application monitoring dashboard with:
   - HTTP request rate by status code
   - HTTP 5xx error-rate tracking
-  - Error logs panel (JSON parsed)
   - Request latency (p99)
-  - Active connections
+  - Generation request and failure metrics
+  - Dependency error rate and credit deduction failures
+  - Error logs panel (JSON parsed)
 
 **Deployment:**
 

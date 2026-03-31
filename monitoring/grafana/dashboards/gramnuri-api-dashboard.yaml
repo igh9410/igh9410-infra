@@ -48,6 +48,7 @@ data:
         {
           "id": 1,
           "title": "HTTP Request Rate",
+          "datasource": "Prometheus",
           "type": "graph",
           "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
           "targets": [
@@ -65,6 +66,7 @@ data:
         {
           "id": 2,
           "title": "HTTP 5xx Error Rate (5m)",
+          "datasource": "Prometheus",
           "type": "graph",
           "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
           "targets": [
@@ -81,26 +83,10 @@ data:
         },
         {
           "id": 3,
-          "title": "Error Logs (Last 1h)",
-          "type": "logs",
-          "gridPos": {"h": 10, "w": 24, "x": 0, "y": 8},
-          "targets": [
-            {
-              "expr": "{app=\"gramnuri-api\", namespace=\"$namespace\"} | json | level=\"error\"",
-              "refId": "A"
-            }
-          ],
-          "options": {
-            "showTime": true,
-            "showLabels": true,
-            "sortOrder": "Descending"
-          }
-        },
-        {
-          "id": 4,
           "title": "Request Latency (p99)",
+          "datasource": "Prometheus",
           "type": "graph",
-          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 18},
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
           "targets": [
             {
               "expr": "gramnuri_api:latency:p99_5m{namespace=\"$namespace\"}",
@@ -114,14 +100,86 @@ data:
           ]
         },
         {
-          "id": 5,
-          "title": "Active Connections",
-          "type": "stat",
-          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 18},
+          "id": 4,
+          "title": "Generation Request Rate By Style",
+          "datasource": "Prometheus",
+          "type": "graph",
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
           "targets": [
             {
-              "expr": "sum(http_connections_active{job=\"gramnuri-api\", namespace=\"$namespace\"}) by (namespace)",
-              "legendFormat": "{{namespace}}",
+              "expr": "sum(rate(generation_requests_total{job=\"gramnuri-api\", namespace=\"$namespace\"}[5m])) by (style)",
+              "legendFormat": "{{style}}",
+              "refId": "A"
+            }
+          ],
+          "yaxes": [
+            {"format": "reqps", "label": "Requests/sec"},
+            {"format": "short"}
+          ]
+        },
+        {
+          "id": 5,
+          "title": "Generation Failure Rate By Stage / Reason",
+          "datasource": "Prometheus",
+          "type": "graph",
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+          "targets": [
+            {
+              "expr": "sum(rate(generation_failures_total{job=\"gramnuri-api\", namespace=\"$namespace\"}[5m])) by (stage, reason)",
+              "legendFormat": "{{stage}} / {{reason}}",
+              "refId": "A"
+            }
+          ],
+          "yaxes": [
+            {"format": "reqps", "label": "Failures/sec"},
+            {"format": "short"}
+          ]
+        },
+        {
+          "id": 6,
+          "title": "Dependency Error Rate (5m)",
+          "datasource": "Prometheus",
+          "type": "graph",
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+          "targets": [
+            {
+              "expr": "sum(rate(dependency_requests_total{job=\"gramnuri-api\", namespace=\"$namespace\", status=\"error\"}[5m])) by (dependency, operation)",
+              "legendFormat": "{{dependency}} / {{operation}}",
+              "refId": "A"
+            }
+          ],
+          "yaxes": [
+            {"format": "reqps", "label": "Errors/sec"},
+            {"format": "short"}
+          ]
+        },
+        {
+          "id": 7,
+          "title": "Generation Duration (p95)",
+          "datasource": "Prometheus",
+          "type": "graph",
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 24},
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.95, sum(rate(generation_duration_seconds_bucket{job=\"gramnuri-api\", namespace=\"$namespace\"}[5m])) by (le, status))",
+              "legendFormat": "{{status}} p95",
+              "refId": "A"
+            }
+          ],
+          "yaxes": [
+            {"format": "s", "label": "Duration"},
+            {"format": "short"}
+          ]
+        },
+        {
+          "id": 8,
+          "title": "Credits Deduction Failures (24h)",
+          "datasource": "Prometheus",
+          "type": "stat",
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 24},
+          "targets": [
+            {
+              "expr": "sum(increase(credits_deduction_failures_total{job=\"gramnuri-api\", namespace=\"$namespace\"}[24h]))",
               "refId": "A"
             }
           ],
@@ -130,6 +188,24 @@ data:
             "graphMode": "area",
             "justifyMode": "auto",
             "orientation": "auto"
+          }
+        },
+        {
+          "id": 9,
+          "title": "Error Logs (Last 1h)",
+          "datasource": "Loki",
+          "type": "logs",
+          "gridPos": {"h": 10, "w": 24, "x": 0, "y": 32},
+          "targets": [
+            {
+              "expr": "{app=\"gramnuri-api\", namespace=\"$namespace\"} | json | level=~\"error|panic|fatal|dpanic\"",
+              "refId": "A"
+            }
+          ],
+          "options": {
+            "showTime": true,
+            "showLabels": true,
+            "sortOrder": "Descending"
           }
         }
       ]
