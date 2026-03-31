@@ -108,21 +108,9 @@ alloy:
         }
 
         rule {
-          source_labels = ["__meta_kubernetes_pod_label_cnpg_io_instanceName"]
-          regex         = "(.+)"
-          target_label  = "db_instance"
-        }
-
-        rule {
           source_labels = ["__meta_kubernetes_pod_label_cnpg_io_instanceRole"]
           regex         = "(.+)"
           target_label  = "db_role"
-        }
-
-        rule {
-          source_labels = ["__meta_kubernetes_pod_label_cnpg_io_podRole"]
-          regex         = "(.+)"
-          target_label  = "db_pod_role"
         }
       }
 
@@ -171,7 +159,7 @@ alloy:
 
         rule {
           action = "labelkeep"
-          regex  = "namespace|app|db_cluster|db_instance|db_role|db_pod_role"
+          regex  = "namespace|app|db_cluster|db_role"
         }
       }
 
