@@ -126,13 +126,13 @@ alloy:
         // Promote it to the label name expected by the Grafana dashboards.
         stage.json {
           expressions = {
-            detected_level = "level"
+            detected_level = "level",
           }
         }
 
         stage.labels {
           values = {
-            detected_level = ""
+            detected_level = "",
           }
         }
       }
