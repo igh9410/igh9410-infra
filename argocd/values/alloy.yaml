@@ -110,7 +110,7 @@ alloy:
       // 3. Create a log source for the discovered application pods.
       loki.source.kubernetes "applications" {
         targets    = discovery.relabel.applications.output
-        forward_to = [loki.relabel.applications.receiver]
+        forward_to = [loki.process.applications.receiver]
       }
 
       // 4. Create a log source for the discovered database pods.
@@ -119,12 +119,30 @@ alloy:
         forward_to = [loki.relabel.database.receiver]
       }
 
+      loki.process "applications" {
+        forward_to = [loki.relabel.applications.receiver]
+
+        // Application logs are JSON and already emit a "level" field.
+        // Promote it to the label name expected by the Grafana dashboards.
+        stage.json {
+          expressions = {
+            detected_level = "level"
+          }
+        }
+
+        stage.labels {
+          values = {
+            detected_level = ""
+          }
+        }
+      }
+
       loki.relabel "applications" {
         forward_to = [loki.write.endpoint.receiver]
 
         rule {
           action = "labelkeep"
-          regex  = "namespace|app"
+          regex  = "namespace|app|detected_level"
         }
       }
 
