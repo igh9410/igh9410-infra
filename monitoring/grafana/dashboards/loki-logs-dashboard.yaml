@@ -18,7 +18,7 @@ data:
       "templating": {
         "list": [
           {
-            "allValue": ".*",
+            "allValue": ".+",
             "current": {
               "selected": true,
               "text": "prod",
@@ -43,7 +43,7 @@ data:
             "type": "query"
           },
           {
-            "allValue": ".*",
+            "allValue": ".+",
             "current": {
               "selected": true,
               "text": "All",
