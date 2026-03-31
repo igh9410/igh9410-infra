@@ -50,6 +50,27 @@ alloy:
         }
       }
 
+      discovery.relabel "applications" {
+        targets = discovery.kubernetes.applications.targets
+
+        rule {
+          source_labels = ["__meta_kubernetes_namespace"]
+          target_label  = "namespace"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
+          regex         = "(.+)"
+          target_label  = "app"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_label_app"]
+          regex         = "(.+)"
+          target_label  = "app"
+        }
+      }
+
       // 2. Discover CloudNative-PG database pods.
       discovery.kubernetes "database" {
         role = "pod"
@@ -64,17 +85,56 @@ alloy:
         }
       }
 
+      discovery.relabel "database" {
+        targets = discovery.kubernetes.database.targets
+
+        rule {
+          source_labels = ["__meta_kubernetes_namespace"]
+          target_label  = "namespace"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
+          regex         = "(.+)"
+          target_label  = "app"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_label_app"]
+          regex         = "(.+)"
+          target_label  = "app"
+        }
+      }
+
 
       // 3. Create a log source for the discovered application pods.
       loki.source.kubernetes "applications" {
-        targets    = discovery.kubernetes.applications.targets
-        forward_to = [loki.write.endpoint.receiver]
+        targets    = discovery.relabel.applications.output
+        forward_to = [loki.relabel.applications.receiver]
       }
 
       // 4. Create a log source for the discovered database pods.
       loki.source.kubernetes "database" {
-        targets    = discovery.kubernetes.database.targets
+        targets    = discovery.relabel.database.output
+        forward_to = [loki.relabel.database.receiver]
+      }
+
+      loki.relabel "applications" {
         forward_to = [loki.write.endpoint.receiver]
+
+        rule {
+          action = "labelkeep"
+          regex  = "namespace|app"
+        }
+      }
+
+      loki.relabel "database" {
+        forward_to = [loki.write.endpoint.receiver]
+
+        rule {
+          action = "labelkeep"
+          regex  = "namespace|app"
+        }
       }
 
       loki.write "endpoint" {
@@ -539,4 +599,3 @@ extraObjects: []
 #   stringData:
 #     PROMETHEUS_HOST: 'https://prometheus-us-central1.grafana.net/api/prom/push'
 #     PROMETHEUS_USERNAME: '123456'
-
