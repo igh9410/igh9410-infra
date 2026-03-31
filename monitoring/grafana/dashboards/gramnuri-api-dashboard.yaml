@@ -192,10 +192,29 @@ data:
         },
         {
           "id": 9,
+          "title": "Total Requests ($__range)",
+          "datasource": "Prometheus",
+          "type": "stat",
+          "gridPos": {"h": 8, "w": 24, "x": 0, "y": 32},
+          "targets": [
+            {
+              "expr": "sum(increase(http_requests_total{job=\"gramnuri-api\", namespace=\"$namespace\"}[$__range]))",
+              "refId": "A"
+            }
+          ],
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto"
+          }
+        },
+        {
+          "id": 10,
           "title": "Error Logs (Last 1h)",
           "datasource": "Loki",
           "type": "logs",
-          "gridPos": {"h": 10, "w": 24, "x": 0, "y": 32},
+          "gridPos": {"h": 10, "w": 24, "x": 0, "y": 40},
           "targets": [
             {
               "expr": "{app=\"gramnuri-api\", namespace=\"$namespace\"} | json | level=~\"error|panic|fatal|dpanic\"",

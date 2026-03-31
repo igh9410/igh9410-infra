@@ -57,17 +57,17 @@ spec:
         - alert: GramnuriAPIHighLatencyP99Warning
           expr: |
             (
-              gramnuri_api:latency:p99_5m > 1
+              gramnuri_api:latency:p99_5m{namespace="prod"} > 1
             )
             and on (namespace)
             (
               sum by (namespace) (
-                increase(http_requests_total{job="gramnuri-api", namespace=~"dev|prod"}[5m])
+                increase(http_requests_total{job="gramnuri-api", namespace="prod"}[5m])
               ) > 20
             )
           labels:
             severity: warning
             app: gramnuri-api
           annotations:
-            summary: "High p99 latency on gramnuri-api"
-            description: "{{ $labels.namespace }}/gramnuri-api p99 latency is above 1s over the last 5 minutes."
+            summary: "High p99 latency on prod gramnuri-api"
+            description: "prod/gramnuri-api p99 latency is above 1s over the last 5 minutes."

@@ -5,7 +5,7 @@ metadata:
   namespace: monitoring
 spec:
   route:
-    receiver: discord-webhook
+    receiver: dev-discord-webhook
     groupBy: ["alertname", "namespace"]
     groupWait: 30s
     groupInterval: 5m
@@ -14,11 +14,31 @@ spec:
       - name: alertname
         value: GramnuriAPIHttp5xxErrorRateWarning|GramnuriAPIHighLatencyP99Warning|GoAPIErrorLogged|GoAPICriticalError|GoAPIPanicDetected
         matchType: "=~"
+    routes:
+      - receiver: prod-discord-webhook
+        matchers:
+          - name: alertname
+            value: GramnuriAPIHttp5xxErrorRateWarning|GramnuriAPIHighLatencyP99Warning
+            matchType: "=~"
+          - name: namespace
+            value: prod
+            matchType: "="
+          - name: app
+            value: gramnuri-api
+            matchType: "="
   receivers:
-    - name: discord-webhook
+    - name: dev-discord-webhook
       discordConfigs:
         - apiURL:
             name: dev-alarms-webhook-url
+            key: webhook_url
+          sendResolved: true
+          title: '{{ template "discord.default.title" . }}'
+          content: '{{ template "discord.default.message" . }}'
+    - name: prod-discord-webhook
+      discordConfigs:
+        - apiURL:
+            name: prod-alarms-webhook-url
             key: webhook_url
           sendResolved: true
           title: '{{ template "discord.default.title" . }}'
