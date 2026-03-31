@@ -64,6 +64,7 @@ alertmanager:
     replicas: 1
     secrets:
       - dev-alarms-webhook-url
+      - prod-alarms-webhook-url
     alertmanagerConfigSelector: {}
     alertmanagerConfigNamespaceSelector: {}
     alertmanagerConfigMatcherStrategy:

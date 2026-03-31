@@ -79,6 +79,19 @@ resource "kubernetes_secret" "dev_alarms_webhook_url" {
   }
 }
 
+resource "kubernetes_secret" "prod_alarms_webhook_url" {
+  metadata {
+    name      = "prod-alarms-webhook-url"
+    namespace = "monitoring"
+  }
+
+  type = "Opaque"
+
+  data = {
+    webhook_url = var.prod_alarms_discord_webhook_url
+  }
+}
+
 resource "kubernetes_secret" "argocd_github_webhook_secret" {
   metadata {
     name      = "argocd-github-webhook-secret"

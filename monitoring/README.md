@@ -34,9 +34,9 @@ Contains AlertmanagerConfig CRDs for routing alerts to external services.
 
 **Current Configurations:**
 
-- `discord-config.yaml` - Routes alerts to Discord webhook
-  - Matches: `GramnuriAPIHttp5xxErrorRateWarning`, `GramnuriAPIHighLatencyP99Warning`, `GoAPIErrorLogged`, `GoAPICriticalError`, `GoAPIPanicDetected`
-  - Uses secret: `dev-alarms-webhook-url` (created via Terraform)
+- `discord-config.yaml` - Routes alerts to Discord webhooks
+  - `GramnuriAPIHttp5xxErrorRateWarning` and `GramnuriAPIHighLatencyP99Warning` for `prod/gramnuri-api` go to `prod-alarms-webhook-url`
+  - `GoAPIErrorLogged`, `GoAPICriticalError`, and `GoAPIPanicDetected` continue to use `dev-alarms-webhook-url`
 
 **Deployment:**
 
@@ -55,7 +55,7 @@ Contains `PrometheusRule` resources for metric-based recording and alerting rule
   - `gramnuri_api:http_5xx_error_rate:ratio5m`
   - `gramnuri_api:latency:p99_5m`
   - HTTP 5xx error-rate warning for `prod` only
-  - p99 latency warning for `dev` and `prod`
+  - p99 latency warning for `prod` only
 
 **Deployment:**
 
@@ -188,6 +188,17 @@ resource "kubernetes_secret" "dev_alarms_webhook_url" {
     webhook_url = var.dev_alarms_discord_webhook_url
   }
 }
+
+resource "kubernetes_secret" "prod_alarms_webhook_url" {
+  metadata {
+    name      = "prod-alarms-webhook-url"
+    namespace = "monitoring"
+  }
+
+  data = {
+    webhook_url = var.prod_alarms_discord_webhook_url
+  }
+}
 ```
 
 **Never commit webhook URLs to Git!**
@@ -255,6 +266,7 @@ curl -X POST http://localhost:9093/api/v2/alerts -H "Content-Type: application/j
 
    ```bash
    kubectl get secret -n monitoring dev-alarms-webhook-url
+   kubectl get secret -n monitoring prod-alarms-webhook-url
    ```
 
 4. Check AlertManager logs:
