@@ -212,12 +212,12 @@ data:
         {
           "id": 10,
           "title": "Error Logs (Last 1h)",
-          "datasource": "Loki",
+          "datasource": {"type": "loki", "uid": "loki"},
           "type": "logs",
           "gridPos": {"h": 10, "w": 24, "x": 0, "y": 40},
           "targets": [
             {
-              "expr": "{app=\"gramnuri-api\", namespace=\"$namespace\"} | json | level=~\"error|panic|fatal|dpanic\"",
+              "expr": "{app=\"gramnuri-api\", namespace=\"$namespace\", detected_level=~\"error|critical|fatal|panic|dpanic\"}",
               "refId": "A"
             }
           ],

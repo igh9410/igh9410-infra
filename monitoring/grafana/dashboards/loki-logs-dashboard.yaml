@@ -24,7 +24,7 @@ data:
               "text": "prod",
               "value": "prod"
             },
-            "datasource": "Loki",
+            "datasource": {"type": "loki", "uid": "loki"},
             "definition": "label_values({namespace=~\".+\"}, namespace)",
             "hide": 0,
             "includeAll": true,
@@ -49,7 +49,7 @@ data:
               "text": "All",
               "value": "$__all"
             },
-            "datasource": "Loki",
+            "datasource": {"type": "loki", "uid": "loki"},
             "definition": "label_values({namespace=~\"$namespace\"}, app)",
             "hide": 0,
             "includeAll": true,
@@ -73,7 +73,7 @@ data:
         {
           "id": 1,
           "title": "Total Log Lines ($__range)",
-          "datasource": "Loki",
+          "datasource": {"type": "loki", "uid": "loki"},
           "type": "stat",
           "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
           "targets": [
@@ -93,12 +93,12 @@ data:
         {
           "id": 2,
           "title": "Error Log Lines ($__range)",
-          "datasource": "Loki",
+          "datasource": {"type": "loki", "uid": "loki"},
           "type": "stat",
           "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
           "targets": [
             {
-              "expr": "sum(count_over_time({namespace=~\"$namespace\", app=~\"$app\"} | json | level=~\"error|panic|fatal|dpanic\" | __error__=\"\" [$__range]))",
+              "expr": "sum(count_over_time({namespace=~\"$namespace\", app=~\"$app\", detected_level=~\"error|critical|fatal|panic|dpanic\"}[$__range]))",
               "queryType": "instant",
               "refId": "A"
             }
@@ -113,7 +113,7 @@ data:
         {
           "id": 3,
           "title": "Log Volume",
-          "datasource": "Loki",
+          "datasource": {"type": "loki", "uid": "loki"},
           "type": "graph",
           "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
           "targets": [
@@ -131,12 +131,12 @@ data:
         {
           "id": 4,
           "title": "Error Volume",
-          "datasource": "Loki",
+          "datasource": {"type": "loki", "uid": "loki"},
           "type": "graph",
           "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
           "targets": [
             {
-              "expr": "sum(count_over_time({namespace=~\"$namespace\", app=~\"$app\"} | json | level=~\"error|panic|fatal|dpanic\" | __error__=\"\" [$__interval]))",
+              "expr": "sum(count_over_time({namespace=~\"$namespace\", app=~\"$app\", detected_level=~\"error|critical|fatal|panic|dpanic\"}[$__interval]))",
               "legendFormat": "error lines",
               "refId": "A"
             }
@@ -149,12 +149,30 @@ data:
         {
           "id": 5,
           "title": "Recent Logs",
-          "datasource": "Loki",
+          "datasource": {"type": "loki", "uid": "loki"},
           "type": "logs",
-          "gridPos": {"h": 14, "w": 24, "x": 0, "y": 16},
+          "gridPos": {"h": 14, "w": 12, "x": 0, "y": 16},
           "targets": [
             {
               "expr": "{namespace=~\"$namespace\", app=~\"$app\"}",
+              "refId": "A"
+            }
+          ],
+          "options": {
+            "showTime": true,
+            "showLabels": true,
+            "sortOrder": "Descending"
+          }
+        },
+        {
+          "id": 6,
+          "title": "Error Logs",
+          "datasource": {"type": "loki", "uid": "loki"},
+          "type": "logs",
+          "gridPos": {"h": 14, "w": 12, "x": 12, "y": 16},
+          "targets": [
+            {
+              "expr": "{namespace=~\"$namespace\", app=~\"$app\", detected_level=~\"error|critical|fatal|panic|dpanic\"}",
               "refId": "A"
             }
           ],
