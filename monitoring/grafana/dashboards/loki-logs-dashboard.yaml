@@ -1,0 +1,168 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: loki-logs-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  loki-logs-dashboard.json: |-
+    {
+      "uid": "loki-logs-monitoring",
+      "title": "Loki Logs Explorer",
+      "tags": ["loki", "logs", "kubernetes"],
+      "timezone": "browser",
+      "schemaVersion": 30,
+      "version": 0,
+      "refresh": "30s",
+      "templating": {
+        "list": [
+          {
+            "allValue": ".*",
+            "current": {
+              "selected": true,
+              "text": "prod",
+              "value": "prod"
+            },
+            "datasource": "Loki",
+            "definition": "label_values({namespace=~\".+\"}, namespace)",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Namespace",
+            "multi": false,
+            "name": "namespace",
+            "options": [],
+            "query": {
+              "query": "label_values({namespace=~\".+\"}, namespace)",
+              "refId": "GramnuriLoki-namespace-Variable-Query"
+            },
+            "refresh": 1,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 0,
+            "type": "query"
+          },
+          {
+            "allValue": ".*",
+            "current": {
+              "selected": true,
+              "text": "All",
+              "value": "$__all"
+            },
+            "datasource": "Loki",
+            "definition": "label_values({namespace=~\"$namespace\"}, app)",
+            "hide": 0,
+            "includeAll": true,
+            "label": "App",
+            "multi": false,
+            "name": "app",
+            "options": [],
+            "query": {
+              "query": "label_values({namespace=~\"$namespace\"}, app)",
+              "refId": "GramnuriLoki-app-Variable-Query"
+            },
+            "refresh": 1,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 0,
+            "type": "query"
+          }
+        ]
+      },
+      "panels": [
+        {
+          "id": 1,
+          "title": "Total Log Lines ($__range)",
+          "datasource": "Loki",
+          "type": "stat",
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+          "targets": [
+            {
+              "expr": "sum(count_over_time({namespace=~\"$namespace\", app=~\"$app\"}[$__range]))",
+              "queryType": "instant",
+              "refId": "A"
+            }
+          ],
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto"
+          }
+        },
+        {
+          "id": 2,
+          "title": "Error Log Lines ($__range)",
+          "datasource": "Loki",
+          "type": "stat",
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+          "targets": [
+            {
+              "expr": "sum(count_over_time({namespace=~\"$namespace\", app=~\"$app\"} | json | level=~\"error|panic|fatal|dpanic\" | __error__=\"\" [$__range]))",
+              "queryType": "instant",
+              "refId": "A"
+            }
+          ],
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto"
+          }
+        },
+        {
+          "id": 3,
+          "title": "Log Volume",
+          "datasource": "Loki",
+          "type": "graph",
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+          "targets": [
+            {
+              "expr": "sum(count_over_time({namespace=~\"$namespace\", app=~\"$app\"}[$__interval]))",
+              "legendFormat": "lines",
+              "refId": "A"
+            }
+          ],
+          "yaxes": [
+            {"format": "short", "label": "Lines"},
+            {"format": "short"}
+          ]
+        },
+        {
+          "id": 4,
+          "title": "Error Volume",
+          "datasource": "Loki",
+          "type": "graph",
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+          "targets": [
+            {
+              "expr": "sum(count_over_time({namespace=~\"$namespace\", app=~\"$app\"} | json | level=~\"error|panic|fatal|dpanic\" | __error__=\"\" [$__interval]))",
+              "legendFormat": "error lines",
+              "refId": "A"
+            }
+          ],
+          "yaxes": [
+            {"format": "short", "label": "Lines"},
+            {"format": "short"}
+          ]
+        },
+        {
+          "id": 5,
+          "title": "Recent Logs",
+          "datasource": "Loki",
+          "type": "logs",
+          "gridPos": {"h": 14, "w": 24, "x": 0, "y": 16},
+          "targets": [
+            {
+              "expr": "{namespace=~\"$namespace\", app=~\"$app\"}",
+              "refId": "A"
+            }
+          ],
+          "options": {
+            "showTime": true,
+            "showLabels": true,
+            "sortOrder": "Descending"
+          }
+        }
+      ]
+    }

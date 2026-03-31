@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - datasources/loki-datasource.yaml
   - dashboards/gramnuri-api-dashboard.yaml
+  - dashboards/loki-logs-dashboard.yaml
