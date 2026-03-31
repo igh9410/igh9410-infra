@@ -76,7 +76,7 @@ alloy:
         role = "pod"
         
         namespaces {
-          names = ["cnpg-database"]
+          names = ["cnpg-database", "prod-cnpg-database"]
         }
         
         selectors {
@@ -93,16 +93,36 @@ alloy:
           target_label  = "namespace"
         }
 
+        // Preserve the CNPG cluster name as the primary database identity.
         rule {
-          source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
+          source_labels = ["__meta_kubernetes_pod_label_cnpg_io_cluster"]
+          regex         = "(.+)"
+          target_label  = "db_cluster"
+        }
+
+        // Keep the legacy "app" label as an alias so existing dashboards still work.
+        rule {
+          source_labels = ["__meta_kubernetes_pod_label_cnpg_io_cluster"]
           regex         = "(.+)"
           target_label  = "app"
         }
 
         rule {
-          source_labels = ["__meta_kubernetes_pod_label_app"]
+          source_labels = ["__meta_kubernetes_pod_label_cnpg_io_instanceName"]
           regex         = "(.+)"
-          target_label  = "app"
+          target_label  = "db_instance"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_label_cnpg_io_instanceRole"]
+          regex         = "(.+)"
+          target_label  = "db_role"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_label_cnpg_io_podRole"]
+          regex         = "(.+)"
+          target_label  = "db_pod_role"
         }
       }
 
@@ -151,7 +171,7 @@ alloy:
 
         rule {
           action = "labelkeep"
-          regex  = "namespace|app"
+          regex  = "namespace|app|db_cluster|db_instance|db_role|db_pod_role"
         }
       }
 
