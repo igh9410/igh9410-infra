@@ -14,11 +14,16 @@ spec:
       labels:
         app: gramnuri-api
     spec:
+      terminationGracePeriodSeconds: 60
       containers:
         - name: gramnuri-api
           image: ghcr.io/igh9410/gramnuri-api
           ports:
             - containerPort: 8080
+          lifecycle:
+            preStop:
+              sleep:
+                seconds: 30
           resources:
             limits:
               cpu: 200m
