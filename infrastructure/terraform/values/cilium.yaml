@@ -5,7 +5,7 @@ hubble:
   relay:
     enabled: true
   ui:
-    enabled: false
+    enabled: true
 ingressController:
   default: true
   enabled: true
@@ -28,3 +28,7 @@ socketLB.hostNamespaceOnly: true
 ipv4NativeRoutingCIDR: 10.42.0.0/16
 autoDirectNodeRoutes: true
 directRoutingSkipUnreachable: true
+authentication:
+  enabled: true
+  mutual:
+    enabled: true
