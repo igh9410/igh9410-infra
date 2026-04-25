@@ -405,7 +405,7 @@ loki:
   # -- Check https://grafana.com/docs/loki/latest/configuration/#common_config for more info on how to provide a common configuration
   commonConfig:
     path_prefix: /var/loki
-    replication_factor: 3
+    replication_factor: 2
     compactor_address: '{{ include "loki.compactorAddress" . }}'
   # -- Storage config. Providing this will automatically populate all necessary storage configs in the templated config.
   # -- In case of using thanos storage, enable use_thanos_objstore and the configuration should be done inside the object_store section.
@@ -977,7 +977,7 @@ memberlist:
 # -- Configuration for the `admin-api` target
 adminApi:
   # -- Define the amount of instances
-  replicas: 1
+  replicas: 0
   # -- hostAliases to add
   hostAliases: []
   #  - ip: 1.2.3.4
