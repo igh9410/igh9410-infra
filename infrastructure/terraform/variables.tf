@@ -127,3 +127,26 @@ variable "argocd_github_webhook_secret" {
   type        = string
   sensitive   = true
 }
+
+variable "gcp_billing_account" {
+  description = "GCP Billing Account ID"
+  type        = string
+}
+
+variable "gcp_region" {
+  description = "GCP Region"
+  type        = string
+  default     = "asia-northeast3"
+}
+
+variable "gcp_project_id" {
+  description = "GCP Project ID"
+  type        = string
+  default     = "igh9410-infra"
+}
+
+variable "gcp_org_id" {
+  description = "GCP Organization ID (Optional)"
+  type        = string
+  default     = ""
+}
