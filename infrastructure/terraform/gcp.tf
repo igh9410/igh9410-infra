@@ -60,7 +60,7 @@ resource "google_service_account_key" "eso_sa_key" {
 resource "kubernetes_secret" "gcp_sa_key" {
   metadata {
     name      = "gcp-sa-key"
-    namespace = "argocd" # We'll put it here for now or move to eso namespace later
+    namespace = "external-secrets"
   }
 
   data = {
