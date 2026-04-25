@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: openclaw
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+    - repoURL: https://serhanekicii.github.io/openclaw-helm
+      chart: openclaw
+      targetRevision: 1.5.24
+      helm:
+        releaseName: openclaw
+        valueFiles:
+          - $values/argocd/values/openclaw.yaml
+    - repoURL: https://github.com/igh9410/igh9410-infra.git
+      targetRevision: main
+      ref: values
+    - repoURL: https://github.com/igh9410/igh9410-infra.git
+      targetRevision: main
+      path: apps/openclaw
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openclaw
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+  revisionHistoryLimit: 10
+  ignoreDifferences:
+    - group: ""
+      kind: ConfigMap
+      name: openclaw
+      jsonPointers:
+        - /data

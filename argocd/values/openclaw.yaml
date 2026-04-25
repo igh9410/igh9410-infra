@@ -1,0 +1,11 @@
+# OpenClaw Helm Values
+# Ref: https://github.com/serhanekicii/openclaw-helm
+
+app-template:
+  controllers:
+    main:
+      containers:
+        main:
+          envFrom:
+            - secretRef:
+                name: openclaw-env-secret
