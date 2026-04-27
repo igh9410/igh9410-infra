@@ -385,7 +385,7 @@ cluster:
 externalClusters:
   - name: prod-gramnuri-db-cluster
     barmanObjectStore:
-      destinationPath: "s3://igh9410-backup/postgres/prod"
+      destinationPath: "s3://igh9410-backup/prod/gramnuri-db"
       endpointURL: "https://c3b77c4aca2f20de101a1452ef946655.r2.cloudflarestorage.com"
       s3Credentials:
         accessKeyId:
@@ -418,7 +418,7 @@ backups:
   # S3: s3://<bucket><path>
   # Azure: https://<storageAccount>.<serviceName>.core.windows.net/<containerName><path>
   # Google: gs://<bucket><path>
-  destinationPath: "s3://igh9410-backup/prod/gramnuri-db"
+  destinationPath: "s3://igh9410-backup/prod"
   # -- One of `s3`, `azure` or `google`
   provider: s3
   s3:
