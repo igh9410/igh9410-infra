@@ -401,7 +401,7 @@ externalClusters:
 
 backups:
   # -- Backups enabled for production
-  enabled: true
+  enabled: false
 
   # -- Overrides the provider specific default endpoint. Defaults to:
   # S3: https://s3.<region>.amazonaws.com"

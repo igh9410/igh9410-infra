@@ -190,8 +190,7 @@ cluster:
   imageName: "" # Default value depends on type (postgresql/postgis/timescaledb)
 
   # -- Reference to `ImageCatalog` of `ClusterImageCatalog`, if specified takes precedence over `cluster.imageName`
-  imageCatalogRef:
-    {}
+  imageCatalogRef: {}
     # kind: ImageCatalog
     # name: postgresql
 
@@ -283,8 +282,7 @@ cluster:
   # -- This feature enables declarative management of existing roles, as well as the creation of new roles if they are not
   # already present in the database.
   # See: https://cloudnative-pg.io/documentation/current/declarative_role_management/
-  roles:
-    []
+  roles: []
     # - name: dante
     #   ensure: present
     #   comment: Dante Alighieri
@@ -336,29 +334,23 @@ cluster:
 
   postgresql:
     # -- PostgreSQL configuration options (postgresql.conf)
-    parameters:
-      {}
+    parameters: {}
       # max_connections: 300
     # -- Quorum-based Synchronous Replication
-    synchronous:
-      {}
+    synchronous: {}
       # method: any
       # number: 1
     # -- PostgreSQL Host Based Authentication rules (lines to be appended to the pg_hba.conf file)
-    pg_hba:
-      []
+    pg_hba: []
       # - host all all 10.244.0.0/16 md5
     # -- PostgreSQL User Name Maps rules (lines to be appended to the pg_ident.conf file)
-    pg_ident:
-      []
+    pg_ident: []
       # - mymap   /^(.*)@mydomain\.com$      \1
     # -- Lists of shared preload libraries to add to the default ones
-    shared_preload_libraries:
-      []
+    shared_preload_libraries: []
       # - pgaudit
     # -- PostgreSQL LDAP configuration (see https://cloudnative-pg.io/documentation/current/postgresql_conf/#ldap-configuration)
-    ldap:
-      {}
+    ldap: {}
       # https://cloudnative-pg.io/documentation/1.24/postgresql_conf/#ldap-configuration
       # server: 'openldap.default.svc.cluster.local'
       # bindSearchAuth:
@@ -372,8 +364,7 @@ cluster:
   # -- BootstrapInitDB is the configuration of the bootstrap process when initdb is used.
   # See: https://cloudnative-pg.io/documentation/current/bootstrap/
   # See: https://cloudnative-pg.io/documentation/current/cloudnative-pg.v1/#postgresql-cnpg-io-v1-bootstrapinitdb
-  initdb:
-    {}
+  initdb: {}
     # database: app
     # owner: "" # Defaults to the database name
     # secret:
@@ -409,7 +400,7 @@ externalClusters:
 
   # -- You need to configure backups manually, so backups are disabled by default.
 backups:
-  enabled: true
+  enabled: false
 
   # -- Overrides the provider specific default endpoint. Defaults to:
   # S3: https://s3.<region>.amazonaws.com"
@@ -488,14 +479,12 @@ imageCatalog:
   # -- Whether to provision an image catalog. If imageCatalog.images is empty this option will be ignored.
   create: true
   # -- List of images to be provisioned in an image catalog.
-  images:
-    []
+  images: []
     # - image: ghcr.io/your_repo/your_image:your_tag
     #   major: 16
 
 # -- List of PgBouncer poolers
-poolers:
-  []
+poolers: []
   # -
   #   # -- Pooler name
   #   name: rw
