@@ -385,7 +385,7 @@ cluster:
 externalClusters:
   - name: prod-gramnuri-db-cluster
     barmanObjectStore:
-      destinationPath: "s3://igh9410-backup/prod/gramnuri-db"
+      destinationPath: "s3://igh9410-backup/prod"
       endpointURL: "https://c3b77c4aca2f20de101a1452ef946655.r2.cloudflarestorage.com"
       s3Credentials:
         accessKeyId:
