@@ -29,6 +29,6 @@ ipv4NativeRoutingCIDR: 10.42.0.0/16
 autoDirectNodeRoutes: true
 directRoutingSkipUnreachable: true
 authentication:
-  enabled: true
+  enabled: false
   mutual:
-    enabled: true
+    enabled: false
