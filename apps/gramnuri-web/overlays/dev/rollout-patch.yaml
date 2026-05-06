@@ -8,6 +8,7 @@ spec:
     spec:
       containers:
         - name: gramnuri-web
+          image: ghcr.io/igh9410/gramnuri-web
           envFrom:
             - secretRef:
                 name: gramnuri-client-secrets
