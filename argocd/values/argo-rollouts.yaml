@@ -259,9 +259,9 @@ controller:
 
   # -- Configures 3rd party traffic router plugins for controller
   ## Ref: https://argo-rollouts.readthedocs.io/en/stable/features/traffic-management/plugins/
-  trafficRouterPlugins: []
-    # - name: "argoproj-labs/sample-nginx" # name of the plugin, it must match the name required by the plugin so it can find it's configuration
-    #   location: "file://./my-custom-plugin" # supports http(s):// urls and file://
+  trafficRouterPlugins:
+    - name: "argoproj-labs/gatewayAPI"
+      location: "https://github.com/argoproj-labs/rollouts-plugin-trafficrouter-gatewayapi/releases/download/v0.13.0/gatewayapi-plugin-linux-amd64"
 
   # -- Whether to create the argo-rollouts-config ConfigMap. Set to false when running multiple
   # controller instances in the same namespace (e.g. with different --instance-id values) to
