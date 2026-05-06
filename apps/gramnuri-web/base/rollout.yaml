@@ -72,8 +72,9 @@ spec:
       canaryService: gramnuri-web-canary
       stableService: gramnuri-web
       trafficRouting:
-        gatewayAPI:
-          httpRoute: gramnuri-web-httproute
+        plugins:
+          argoproj-labs/gatewayAPI:
+            httpRoute: gramnuri-web-httproute
       steps:
         - setWeight: 50
         - pause: { duration: 3m }
