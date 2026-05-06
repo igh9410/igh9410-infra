@@ -4,7 +4,6 @@ kind: Kustomization
 resources:
   - rollout.yaml
   - canary-service.yaml
-  - deployment.yaml
   - service.yaml
   - httproute.yaml
   - pdb.yaml
