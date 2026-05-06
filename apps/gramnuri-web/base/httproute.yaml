@@ -13,3 +13,7 @@ spec:
     - backendRefs:
         - name: gramnuri-web
           port: 80
+          weight: 100
+        - name: gramnuri-web-canary
+          port: 80
+          weight: 0
