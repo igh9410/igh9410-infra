@@ -8,10 +8,6 @@ patches:
     target:
       kind: Rollout
       name: gramnuri-web
-  - path: deployment-patch.yaml
-    target:
-      kind: Deployment
-      name: gramnuri-web
   - path: httproute-patch.yaml
     target:
       kind: HTTPRoute
