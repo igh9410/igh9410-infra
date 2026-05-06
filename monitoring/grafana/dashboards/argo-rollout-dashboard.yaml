@@ -1,0 +1,164 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argo-rollout-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  argo-rollout-dashboard.json: |-
+    {
+        "annotations": {
+            "list": [
+                {
+                    "builtIn": 1,
+                    "datasource": "-- Grafana --",
+                    "enable": true,
+                    "hide": true,
+                    "iconColor": "rgba(0, 211, 255, 1)",
+                    "name": "Annotations & Alerts",
+                    "type": "dashboard"
+                }
+            ]
+        },
+        "editable": true,
+        "gnetId": null,
+        "graphTooltip": 0,
+        "id": null,
+        "links": [],
+        "panels": [
+            {
+                "datasource": "Prometheus",
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {
+                            "mode": "thresholds"
+                        },
+                        "mappings": [
+                            {
+                                "id": 0,
+                                "op": "=",
+                                "text": "N/A",
+                                "type": 1,
+                                "value": "null"
+                            }
+                        ],
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {
+                                    "color": "green",
+                                    "value": null
+                                },
+                                {
+                                    "color": "red",
+                                    "value": 80
+                                }
+                            ]
+                        },
+                        "unit": "none"
+                    },
+                    "overrides": []
+                },
+                "gridPos": {
+                    "h": 4,
+                    "w": 6,
+                    "x": 0,
+                    "y": 0
+                },
+                "id": 14,
+                "options": {
+                    "colorMode": "value",
+                    "graphMode": "none",
+                    "justifyMode": "auto",
+                    "orientation": "horizontal",
+                    "reduceOptions": {
+                        "calcs": [
+                            "lastNotNull"
+                        ],
+                        "fields": "",
+                        "values": false
+                    },
+                    "textMode": "auto"
+                },
+                "targets": [
+                    {
+                        "expr": "sum(rollout_info)",
+                        "refId": "A"
+                    }
+                ],
+                "title": "Total Rollouts",
+                "type": "stat"
+            },
+            {
+                "datasource": "Prometheus",
+                "gridPos": {
+                    "h": 4,
+                    "w": 18,
+                    "x": 6,
+                    "y": 0
+                },
+                "id": 25,
+                "targets": [
+                    {
+                        "expr": "sum(rollout_info) by (strategy)",
+                        "legendFormat": "{{strategy}}",
+                        "refId": "A"
+                    }
+                ],
+                "title": "Rollouts by Strategy",
+                "type": "timeseries"
+            },
+            {
+                "datasource": "Prometheus",
+                "gridPos": {
+                    "h": 8,
+                    "w": 24,
+                    "x": 0,
+                    "y": 4
+                },
+                "id": 6,
+                "targets": [
+                    {
+                        "expr": "sum(increase(rollout_reconcile_count[10m]))",
+                        "refId": "A"
+                    }
+                ],
+                "title": "Reconcile Activity",
+                "type": "timeseries"
+            },
+            {
+                "datasource": "Prometheus",
+                "gridPos": {
+                    "h": 8,
+                    "w": 24,
+                    "x": 0,
+                    "y": 12
+                },
+                "id": 12,
+                "targets": [
+                    {
+                        "expr": "go_memstats_heap_alloc_bytes{job=~\"argo-rollouts.*\"}",
+                        "legendFormat": "{{pod}}",
+                        "refId": "A"
+                    }
+                ],
+                "title": "Controller Memory Usage",
+                "type": "timeseries"
+            }
+        ],
+        "refresh": "5s",
+        "schemaVersion": 30,
+        "style": "dark",
+        "tags": ["argo-rollouts"],
+        "templating": {
+            "list": []
+        },
+        "time": {
+            "from": "now-15m",
+            "to": "now"
+        },
+        "title": "Argo Rollouts",
+        "uid": "argo-rollouts",
+        "version": 1
+    }
