@@ -1,0 +1,13 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: gramnuri-web
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+        - name: gramnuri-web
+          envFrom:
+            - secretRef:
+                name: gramnuri-client-secrets

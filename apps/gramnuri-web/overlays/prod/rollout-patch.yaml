@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: gramnuri-web
+spec:
+  replicas: 2
+  strategy:
+    canary:
+      steps:
+        - setWeight: 50
+        - pause: { duration: 5m }
+  template:
+    spec:
+      containers:
+        - name: gramnuri-web
+          resources:
+            requests:
+              cpu: 200m
+              memory: 500Mi
+            limits:
+              cpu: 200m
+              memory: 500Mi
+          envFrom:
+            - secretRef:
+                name: gramnuri-client-secrets
