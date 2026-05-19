@@ -14,7 +14,7 @@ spec:
       labels:
         app: gramnuri-api
     spec:
-      terminationGracePeriodSeconds: 60
+      terminationGracePeriodSeconds: 120
       containers:
         - name: gramnuri-api
           image: ghcr.io/igh9410/gramnuri-api
@@ -24,7 +24,7 @@ spec:
           lifecycle:
             preStop:
               sleep:
-                seconds: 30
+                seconds: 10
           resources:
             limits:
               cpu: 200m
