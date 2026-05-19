@@ -15,8 +15,6 @@ spec:
         app: gramnuri-web
     spec:
       terminationGracePeriodSeconds: 120
-      securityContext:
-        runAsNonRoot: true
       containers:
         - name: gramnuri-web
           image: ghcr.io/igh9410/gramnuri-web
