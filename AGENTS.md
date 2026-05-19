@@ -110,3 +110,23 @@ If a task would require editing files that are already in another agent's scope,
 The recommended setup for parallel agent work is one coordinator session plus one terminal session per agent task, with each agent working on its own branch and preferably its own `git worktree`.
 
 Do not run multiple editing agents against the same checkout. Sharing one working tree is acceptable for read-only investigation, but concurrent file edits must happen in separate branches and separate worktrees.
+
+## Deployment & Rollouts
+- **Argo Rollouts**: All production-facing web/API applications should use `Rollout` instead of standard `Deployment`.
+- **Canary Strategy**:
+  - **Traffic Splitting**: Use **Gateway API** (`HTTPRoute`) via the `argoproj-labs/gatewayAPI` plugin.
+  - **Weights**: Default 50:50 split.
+  - **Grace Periods**:
+    - `dev`: 3 minutes.
+    - `prod`: 5 minutes.
+- **Service Naming**: Every Rollout must have a corresponding `canaryService` named `<app-name>-canary`.
+
+## Connectivity & Networking
+- **Cilium**:
+  - Version: 1.19.3.
+  - **mTLS**: Disabled (deemed overkill for this environment).
+  - Routing: Native mode with L2 Announcements.
+
+## Observability
+- **Dashboards**: Prefer custom Grafana dashboards over built-in component UIs (e.g., Argo Rollouts Dashboard) to save cluster resources.
+- **Monitoring**: Applications must provide `/metrics` and `/healthcheck` (or `/healthz`/`/readyz`) endpoints.
