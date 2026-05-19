@@ -15,6 +15,11 @@ spec:
         app: gramnuri-web
     spec:
       terminationGracePeriodSeconds: 120
+      securityContext: # ← 여기 (pod-level)
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
       containers:
         - name: gramnuri-web
           image: ghcr.io/igh9410/gramnuri-web
