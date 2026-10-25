@@ -1,5 +1,7 @@
 # 02. 메모리 (3–5주차)
 
+> 📖 이번 파트의 책: 『Systems Performance』 7장 Memory. 범위와 확인 질문은 [reading-plan.md](reading-plan.md)
+
 이 파트의 목표는 두 문장을 원리로 설명할 수 있게 되는 것이다.
 
 1. **"메모리 사용량"은 하나의 숫자가 아니다.** RSS, page cache, working set, cgroup usage는 서로 다른 것을 센다.

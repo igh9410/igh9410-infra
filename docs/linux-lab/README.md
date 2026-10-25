@@ -5,9 +5,10 @@
 > 커널 코드를 읽는 수준이 아니라, 시니어 SRE 시나리오 면접(노드가 느려졌다, 파드가 죽는다, 연결이 안 된다)을
 > 원리부터 답할 수 있는 수준이 기준이다.
 
-- 기간: 12주 (2026-10-26 ~ 2027-01-24 기준, 평일 30분 + 주말 1~2시간)
+- 기간: 12주 (2026-10-26 ~ 2027-01-24 기준, 평일 30분 실습 + 주말 2시간 중 1시간 책 스터디)
 - 환경: 데스크톱 안의 실습용 Ubuntu VM 1대 (단일 노드 k3s). 홈랩과 완전히 분리
-- 산출물: 랩별 노트, 노드 장애 대응 런북 1개, 영어 블로그 글 1개 이상
+- 책: Brendan Gregg, 『Systems Performance』 2판. 실습 주차에 맞춰 해당 장만 읽는다 → [reading-plan.md](reading-plan.md)
+- 산출물: 랩별 노트, 장별 독서 노트, 노드 장애 대응 런북 1개, 영어 블로그 글 1개 이상
 
 ## 원칙
 
@@ -30,19 +31,22 @@
 
 ## 커리큘럼
 
-| 주차 | 파트 | 문서 | 핵심 질문 |
-|---|---|---|---|
-| 0 | 환경 준비 | [00-setup.md](00-setup.md) | lab VM, 단일 노드 k3s, 관찰 도구 |
-| 1–2 | 컨테이너 = 프로세스 | [01-containers-are-processes.md](01-containers-are-processes.md) | namespace와 cgroup으로 컨테이너를 직접 만들고, 파드 스펙이 커널 값으로 어떻게 바뀌는가 |
-| 3–5 | 메모리 | [02-memory.md](02-memory.md) | RSS, page cache, working set. 커널 OOM과 런타임 OOM(Node, JVM, Go)은 어떻게 다른가 |
-| 6–7 | CPU와 프로세스 | [03-cpu-and-processes.md](03-cpu-and-processes.md) | throttling, load average, PID 1과 시그널, 좀비, PID 고갈 |
-| 8 | 스토리지 | [04-storage.md](04-storage.md) | 지운 파일이 공간을 안 돌려줄 때, inode 고갈, ephemeral-storage eviction |
-| 9–10 | 네트워킹 | [05-networking.md](05-networking.md) | TCP 상태와 TIME_WAIT, 포트 고갈, conntrack, DNS ndots, kube-proxy vs Cilium |
-| 11–12 | 종합 | [06-capstone.md](06-capstone.md) | 60초 체크리스트 런북, eBPF 도구, 게임데이, 블로그 |
+| 주차 | 파트 | 문서 | 핵심 질문 | 책 (Systems Performance) |
+|---|---|---|---|---|
+| 0 | 환경 준비 | [00-setup.md](00-setup.md) | lab VM, 단일 노드 k3s, 관찰 도구 | 2장 Methodologies |
+| 1–2 | 컨테이너 = 프로세스 | [01-containers-are-processes.md](01-containers-are-processes.md) | namespace와 cgroup으로 컨테이너를 직접 만들고, 파드 스펙이 커널 값으로 어떻게 바뀌는가 | 11장 Cloud Computing (OS 가상화) |
+| 3–5 | 메모리 | [02-memory.md](02-memory.md) | RSS, page cache, working set. 커널 OOM과 런타임 OOM(Node, JVM, Go)은 어떻게 다른가 | 7장 Memory |
+| 6–7 | CPU와 프로세스 | [03-cpu-and-processes.md](03-cpu-and-processes.md) | throttling, load average, PID 1과 시그널, 좀비, PID 고갈 | 6장 CPUs |
+| 8 | 스토리지 | [04-storage.md](04-storage.md) | 지운 파일이 공간을 안 돌려줄 때, inode 고갈, ephemeral-storage eviction | 8장 File Systems, 9장 Disks |
+| 9–10 | 네트워킹 | [05-networking.md](05-networking.md) | TCP 상태와 TIME_WAIT, 포트 고갈, conntrack, DNS ndots, kube-proxy vs Cilium | 10장 Network |
+| 11–12 | 종합 | [06-capstone.md](06-capstone.md) | 60초 체크리스트 런북, eBPF 도구, 게임데이, 블로그 | 4장 Observability Tools, 15장 BPF, 16장 Case Study |
+
+책은 해당 주차 **직전 주말**에 읽는다. 읽을 범위, 장별 확인 질문, 독서 노트 형식은 [reading-plan.md](reading-plan.md)에 있다.
 
 ## 진행 체크리스트
 
 랩을 끝내면 체크하고 노트 링크를 단다. 노트는 `docs/linux-lab/notes/`에 [TEMPLATE.md](notes/TEMPLATE.md)를 복사해서 쓴다.
+책 진도는 [reading-plan.md의 체크리스트](reading-plan.md#진행-체크리스트)에서 따로 관리하고, 독서 노트는 [BOOK-TEMPLATE.md](notes/BOOK-TEMPLATE.md)를 쓴다.
 포트폴리오로 쓸 수 있도록 노트는 영어로 쓰는 것을 추천한다.
 
 - [ ] 00 lab VM + 단일 노드 k3s + 도구 설치
@@ -76,12 +80,12 @@
 
 ## 완료 기준
 
-각 파트 문서 끝의 면접 질문을 **노트 없이, 영어로, 2분 안에** 답할 수 있으면 그 파트는 끝이다.
+각 파트 문서 끝의 면접 질문을 **노트 없이, 영어로, 2분 안에** 답할 수 있고, 해당 장의 확인 질문(reading-plan.md)에 책을 덮고 답할 수 있으면 그 파트는 끝이다.
 12주 뒤 최종 확인: 06-C 게임데이에서 무작위 장애 5개 중 4개 이상을 AI 없이 30분 안에 원인까지 찾는다.
 
 ## 참고 자료
 
-- Brendan Gregg, *Systems Performance* (2nd ed.) — 메모리, CPU, 디스크, 네트워크 장의 개념 부분
+- Brendan Gregg, *Systems Performance* (2nd ed.) — 주차별 읽기 범위는 [reading-plan.md](reading-plan.md)
 - Brendan Gregg, *Linux Performance Analysis in 60,000 Milliseconds* (Netflix Tech Blog) — 06-A 런북의 뼈대
 - Brendan Gregg, USE Method — 자원별로 사용률(Utilization), 포화도(Saturation), 에러(Errors)를 순서대로 본다
 - Linux kernel docs: `admin-guide/cgroup-v2` — `memory.*`, `cpu.*`, `pids.*` 파일의 정확한 의미

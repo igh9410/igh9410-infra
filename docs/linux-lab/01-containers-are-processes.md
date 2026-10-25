@@ -1,5 +1,7 @@
 # 01. 컨테이너는 프로세스다 (1–2주차)
 
+> 📖 이번 파트의 책: 『Systems Performance』 11장 Cloud Computing의 OS 가상화(컨테이너) 부분. 범위와 확인 질문은 [reading-plan.md](reading-plan.md)
+
 컨테이너는 커널 기능이 아니다. **namespace로 보이는 범위를 격리하고, cgroup으로 쓸 수 있는 자원을 제한한 평범한 프로세스**다.
 이걸 손으로 직접 만들어보면 이후 모든 랩(OOM, throttling, PID 1)이 같은 원리의 변형이라는 게 보인다.
 

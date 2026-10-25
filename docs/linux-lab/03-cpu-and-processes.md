@@ -1,5 +1,7 @@
 # 03. CPU와 프로세스 (6–7주차)
 
+> 📖 이번 파트의 책: 『Systems Performance』 6장 CPUs. 범위와 확인 질문은 [reading-plan.md](reading-plan.md)
+
 CPU limit은 메모리 limit과 다르게 **죽이지 않고 느리게 만든다.** 그래서 증상이 "가끔 느리다", "p99만 튄다"처럼 애매하게 나타난다.
 프로세스 쪽은 PID 1이 특별하다는 사실 하나가 graceful shutdown, 좀비, 시그널 문제를 대부분 설명한다.
 

@@ -1,5 +1,7 @@
 # 00. 환경 준비
 
+> 📖 이번 파트의 책: 『Systems Performance』 2장 Methodologies (실습 시작 전 주말). 범위와 확인 질문은 [reading-plan.md](reading-plan.md)
+
 ## 왜 데스크톱 안의 VM인가
 
 메인 클러스터 노드는 프로덕션 앱과 CNPG DB를 같이 돌리고, 홈랩 머신에는 VM을 더 띄울 메모리 여유가 없다.

@@ -1,5 +1,7 @@
 # 05. 네트워킹 (9–10주차)
 
+> 📖 이번 파트의 책: 『Systems Performance』 10장 Network. 범위와 확인 질문은 [reading-plan.md](reading-plan.md)
+
 네트워크 장애는 "연결이 가끔 실패한다", "DNS가 느리다"처럼 재현하기 어려운 모양으로 나타난다.
 이 파트는 그런 증상을 일부러 만들어서 커널 상태(TCP 상태, 포트, conntrack 테이블)로 설명하는 연습이다.
 

@@ -1,5 +1,7 @@
 # 04. 스토리지 (8주차)
 
+> 📖 이번 파트의 책: 『Systems Performance』 8장 File Systems, 9장 Disks. 범위와 확인 질문은 [reading-plan.md](reading-plan.md)
+
 "디스크가 꽉 찼다"는 사실 서로 다른 세 가지 문제다: 블록(용량)이 없거나, inode가 없거나, 지워진 파일을 누가 아직 잡고 있거나.
 쿠버네티스에서는 여기에 kubelet의 ephemeral-storage eviction이 하나 더 붙는다.
 

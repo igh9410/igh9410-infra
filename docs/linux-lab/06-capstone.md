@@ -1,5 +1,7 @@
 # 06. 종합 (11–12주차)
 
+> 📖 이번 파트의 책: 『Systems Performance』 4장 Observability Tools, 15장 BPF, 16장 Case Study (06-C 전에). 범위와 확인 질문은 [reading-plan.md](reading-plan.md)
+
 01~05에서 개별 현상을 만들어봤다. 마지막 2주는 그걸 **순서 있는 진단 습관**과 **남에게 보여줄 수 있는 결과물**로 바꾼다.
 
 ## 06-A. 노드 장애 대응 런북 작성
