@@ -55,7 +55,7 @@ kubectl --context linux-lab apply -k labs/linux-lab/01-cgroup-inspect
 kubectl --context linux-lab -n linux-lab get pod cgroup-inspect -o jsonpath='{.status.qosClass}{"\n"}'
 ```
 
-매니페스트의 `resources`를 보고 **아래 값을 먼저 노트에 예측**한 뒤, 노드에서 [00-setup의 6번 절차](00-setup.md#6-노드에서-컨테이너-찾는-법-모든-랩에서-반복)로 cgroup 디렉터리를 찾아 확인한다.
+매니페스트의 `resources`를 보고 **아래 값을 먼저 노트에 예측**한 뒤, 노드에서 [00-setup의 4번 절차](00-setup.md#4-노드에서-컨테이너-찾는-법-모든-랩에서-반복)로 cgroup 디렉터리를 찾아 확인한다.
 
 | 파일 | 예측 | 실제 |
 |---|---|---|

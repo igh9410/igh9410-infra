@@ -3,10 +3,10 @@
 네트워크 장애는 "연결이 가끔 실패한다", "DNS가 느리다"처럼 재현하기 어려운 모양으로 나타난다.
 이 파트는 그런 증상을 일부러 만들어서 커널 상태(TCP 상태, 포트, conntrack 테이블)로 설명하는 연습이다.
 
-호스트 실습은 `tcp-lab.py`(`labs/linux-lab/host/`)를 쓴다. 표준 라이브러리만 쓰므로 lab VM에 바로 복사해서 실행하면 된다.
+호스트 실습은 `tcp-lab.py`(`labs/linux-lab/host/`)를 쓴다. 표준 라이브러리만 쓰므로 VM 안의 레포 클론에서 바로 실행한다.
 
 ```bash
-scp labs/linux-lab/host/tcp-lab.py igh9410@<LAB_VM_IP>:~/
+cd ~/igh9410-infra/labs/linux-lab/host
 ```
 
 sysctl을 바꾸는 실습은 **별도 network namespace**에서 한다. `net.*` sysctl 대부분은 namespace마다 따로 있어서, 호스트 설정을 건드리지 않는다. 01-A에서 본 namespace가 여기서 다시 쓰인다.
@@ -110,7 +110,7 @@ kubectl --context linux-lab -n linux-lab exec -it dns-default -- \
 
 </details>
 
-메인 클러스터에서는 **읽기만** 해서 같은 현상을 Hubble로 본다.
+메인 클러스터에서는 VM 밖 평소 터미널에서 **읽기만** 해서 같은 현상을 Hubble로 본다.
 
 ```bash
 kubectl --context default -n kube-system exec ds/cilium -- hubble observe --namespace prod --port 53 --last 50
@@ -133,11 +133,14 @@ sudo iptables-save -t nat | grep echo
 sudo conntrack -L 2>/dev/null | head
 ```
 
-메인 클러스터 노드 (읽기 전용):
+메인 클러스터 (VM 밖 평소 터미널에서, 읽기 전용):
 
 ```bash
+# 워커 노드 하나에 SSH해서
 sudo iptables-save -t nat | grep -c KUBE-          # lab VM과 비교. 규칙이 남아 있다면 k3s 내장 kube-proxy가 꺼져 있는지(--disable-kube-proxy)부터 확인
 sudo iptables-save | grep -c CILIUM                # Cilium이 iptables에 남기는 규칙은 무엇을 위한 것인가
+
+# 데스크톱 터미널에서
 kubectl --context default -n kube-system exec ds/cilium -- cilium-dbg service list | head
 kubectl --context default -n kube-system exec ds/cilium -- cilium-dbg bpf ct list global | wc -l
 ```
