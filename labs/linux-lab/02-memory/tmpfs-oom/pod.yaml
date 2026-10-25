@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tmpfs-oom
+  labels:
+    app.kubernetes.io/part-of: "linux-lab"
+    lab: "02-memory-tmpfs-oom"
+spec:
+  restartPolicy: Never
+  terminationGracePeriodSeconds: 5
+  containers:
+    - name: writer
+      image: "busybox:1.37"
+      command: ["sh", "-c"]
+      # Same idea as page-cache, but the file goes to a memory-backed emptyDir.
+      # Compare the outcome with the page-cache lab and explain the difference.
+      args:
+        - |
+          trap 'exit 0' TERM
+          dd if=/dev/zero of=/shm/fill bs=1M count=200
+          echo "dd finished with exit code $?"
+          while true; do sleep 1; done
+      volumeMounts:
+        - name: shm
+          mountPath: /shm
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "128Mi"
+        limits:
+          cpu: "200m"
+          memory: "128Mi"
+  volumes:
+    - name: shm
+      emptyDir:
+        medium: Memory
+        # Larger than the container memory limit on purpose, so the kernel
+        # memory limit is hit before the kubelet sizeLimit check.
+        # Variant: set this to 64Mi and see which component reacts instead.
+        sizeLimit: "512Mi"

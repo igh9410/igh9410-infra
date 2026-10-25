@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: linux-lab-defaults
+  namespace: linux-lab
+spec:
+  limits:
+    - type: Container
+      # Applied to any container that forgets to set requests/limits.
+      defaultRequest:
+        cpu: "50m"
+        memory: "32Mi"
+      default:
+        cpu: "200m"
+        memory: "64Mi"
+      # Hard ceiling so a typo cannot ask for the whole VM.
+      max:
+        cpu: "1"
+        memory: "1Gi"

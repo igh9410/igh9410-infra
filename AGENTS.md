@@ -11,6 +11,7 @@ Use this layout as the default mental model:
 - `argocd/values/` for Helm values files
 - `infrastructure/` for cluster-level infrastructure configuration
 - `monitoring/` for Kustomize-managed monitoring resources
+- `labs/` for hands-on learning labs that break things on purpose. They are applied manually to the standalone `linux-lab` VM only, and no ArgoCD Application may reference them
 
 Application directories typically follow this pattern:
 

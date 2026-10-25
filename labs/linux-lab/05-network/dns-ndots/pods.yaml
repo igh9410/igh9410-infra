@@ -1,0 +1,49 @@
+# Two debug pods that differ only in the resolver `ndots` option.
+# Capture DNS traffic in each one while resolving an external name and count
+# the queries.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dns-default
+  labels:
+    app.kubernetes.io/part-of: "linux-lab"
+    lab: "05-dns-ndots"
+spec:
+  terminationGracePeriodSeconds: 5
+  containers:
+    - name: netshoot
+      image: "nicolaka/netshoot:latest"
+      command: ["sh", "-c", "trap 'exit 0' TERM; while true; do sleep 1; done"]
+      resources:
+        requests:
+          cpu: "50m"
+          memory: "64Mi"
+        limits:
+          cpu: "200m"
+          memory: "128Mi"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dns-ndots1
+  labels:
+    app.kubernetes.io/part-of: "linux-lab"
+    lab: "05-dns-ndots"
+spec:
+  terminationGracePeriodSeconds: 5
+  dnsConfig:
+    options:
+      # Names with at least one dot are tried as absolute names first.
+      - name: ndots
+        value: "1"
+  containers:
+    - name: netshoot
+      image: "nicolaka/netshoot:latest"
+      command: ["sh", "-c", "trap 'exit 0' TERM; while true; do sleep 1; done"]
+      resources:
+        requests:
+          cpu: "50m"
+          memory: "64Mi"
+        limits:
+          cpu: "200m"
+          memory: "128Mi"

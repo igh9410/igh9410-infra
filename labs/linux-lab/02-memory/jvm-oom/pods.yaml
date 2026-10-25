@@ -1,0 +1,97 @@
+# Same program and the same -Xmx64m heap, with and without
+# -XX:+ExitOnOutOfMemoryError. Watch `kubectl get pod -w` and the logs of both.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: jvm-oom-default
+  labels:
+    app.kubernetes.io/part-of: "linux-lab"
+    lab: "02-memory-jvm-oom"
+spec:
+  restartPolicy: Never
+  terminationGracePeriodSeconds: 5
+  initContainers:
+    # Compile once into a shared emptyDir, so the lab container's heap is not
+    # used by javac.
+    - name: compile
+      image: "eclipse-temurin:21-jdk-alpine"
+      command: ["javac", "-d", "/classes", "/src/OomLab.java"]
+      volumeMounts:
+        - name: src
+          mountPath: /src
+        - name: classes
+          mountPath: /classes
+      resources:
+        requests:
+          cpu: "200m"
+          memory: "256Mi"
+        limits:
+          cpu: "1"
+          memory: "512Mi"
+  containers:
+    - name: jvm
+      image: "eclipse-temurin:21-jdk-alpine"
+      command: ["java", "-Xmx64m", "-cp", "/classes", "OomLab"]
+      volumeMounts:
+        - name: classes
+          mountPath: /classes
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "256Mi"
+        limits:
+          cpu: "500m"
+          memory: "256Mi"
+  volumes:
+    - name: src
+      configMap:
+        name: jvm-oom-source
+    - name: classes
+      emptyDir: {}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: jvm-oom-exit
+  labels:
+    app.kubernetes.io/part-of: "linux-lab"
+    lab: "02-memory-jvm-oom"
+spec:
+  restartPolicy: Never
+  terminationGracePeriodSeconds: 5
+  initContainers:
+    - name: compile
+      image: "eclipse-temurin:21-jdk-alpine"
+      command: ["javac", "-d", "/classes", "/src/OomLab.java"]
+      volumeMounts:
+        - name: src
+          mountPath: /src
+        - name: classes
+          mountPath: /classes
+      resources:
+        requests:
+          cpu: "200m"
+          memory: "256Mi"
+        limits:
+          cpu: "1"
+          memory: "512Mi"
+  containers:
+    - name: jvm
+      image: "eclipse-temurin:21-jdk-alpine"
+      command: ["java", "-Xmx64m", "-XX:+ExitOnOutOfMemoryError", "-cp", "/classes", "OomLab"]
+      volumeMounts:
+        - name: classes
+          mountPath: /classes
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "256Mi"
+        limits:
+          cpu: "500m"
+          memory: "256Mi"
+  volumes:
+    - name: src
+      configMap:
+        name: jvm-oom-source
+    - name: classes
+      emptyDir: {}

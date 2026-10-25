@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cgroup-inspect
+  labels:
+    app.kubernetes.io/part-of: "linux-lab"
+    lab: "01-cgroup-inspect"
+spec:
+  terminationGracePeriodSeconds: 5
+  containers:
+    - name: sleeper
+      image: "busybox:1.37"
+      # The trap makes `sh` (PID 1) exit on SIGTERM. Lab 03 covers why it is needed.
+      command: ["sh", "-c", "trap 'exit 0' TERM; while true; do sleep 1; done"]
+      resources:
+        # Burstable QoS on purpose: request != limit.
+        # Predict the values of cpu.weight, cpu.max, memory.max and memory.min
+        # on the node before you look at them.
+        requests:
+          cpu: "250m"
+          memory: "64Mi"
+        limits:
+          cpu: "500m"
+          memory: "128Mi"

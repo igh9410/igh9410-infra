@@ -1,0 +1,69 @@
+# Three pods that run the same loop. Time `kubectl delete pod` for each one
+# and explain the difference in duration and exit code.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pid1-no-handler
+  labels:
+    app.kubernetes.io/part-of: "linux-lab"
+    lab: "03-pid1-signals"
+spec:
+  terminationGracePeriodSeconds: 20
+  containers:
+    - name: loop
+      image: "busybox:1.37"
+      # sh is PID 1 and installs no SIGTERM handler.
+      command: ["sh", "-c", "while true; do sleep 1; done"]
+      resources:
+        requests:
+          cpu: "10m"
+          memory: "8Mi"
+        limits:
+          cpu: "50m"
+          memory: "16Mi"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pid1-trap
+  labels:
+    app.kubernetes.io/part-of: "linux-lab"
+    lab: "03-pid1-signals"
+spec:
+  terminationGracePeriodSeconds: 20
+  containers:
+    - name: loop
+      image: "busybox:1.37"
+      # sh is still PID 1, but now it handles SIGTERM.
+      command: ["sh", "-c", "trap 'echo got SIGTERM; exit 0' TERM; while true; do sleep 1; done"]
+      resources:
+        requests:
+          cpu: "10m"
+          memory: "8Mi"
+        limits:
+          cpu: "50m"
+          memory: "16Mi"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pid1-shared-ns
+  labels:
+    app.kubernetes.io/part-of: "linux-lab"
+    lab: "03-pid1-signals"
+spec:
+  terminationGracePeriodSeconds: 20
+  # With a shared PID namespace the pause container becomes PID 1.
+  shareProcessNamespace: true
+  containers:
+    - name: loop
+      image: "busybox:1.37"
+      # Same command as pid1-no-handler.
+      command: ["sh", "-c", "while true; do sleep 1; done"]
+      resources:
+        requests:
+          cpu: "10m"
+          memory: "8Mi"
+        limits:
+          cpu: "50m"
+          memory: "16Mi"

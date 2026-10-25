@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: zombie
+  labels:
+    app.kubernetes.io/part-of: "linux-lab"
+    lab: "03-zombie"
+spec:
+  terminationGracePeriodSeconds: 5
+  containers:
+    - name: parent
+      image: "python:3.13-alpine"
+      command: ["python3", "-u", "-c"]
+      # PID 1 forks children that exit immediately, and never calls wait().
+      args:
+        - |
+          import os, signal, sys, time
+          signal.signal(signal.SIGTERM, lambda *_: sys.exit(0))
+          for _ in range(5):
+              if os.fork() == 0:
+                  os._exit(0)
+          print("forked 5 children and never waited for them; run `ps` in this container", flush=True)
+          while True:
+              time.sleep(3600)
+      resources:
+        requests:
+          cpu: "10m"
+          memory: "32Mi"
+        limits:
+          cpu: "50m"
+          memory: "64Mi"
