@@ -1,0 +1,64 @@
+# Two pods with the same container memory limit (256Mi) and the same V8 heap
+# limit (64MB). Only what the script allocates differs. Predict the
+# terminated reason and exit code of each pod before applying.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: node-heap-oom
+  labels:
+    app.kubernetes.io/part-of: "linux-lab"
+    lab: "02-memory-node-heap-oom"
+spec:
+  restartPolicy: Never
+  containers:
+    - name: node
+      image: "node:22-alpine"
+      command: ["node", "--max-old-space-size=64", "/lab/heap.js"]
+      env:
+        - name: MODE
+          value: "heap"
+      volumeMounts:
+        - name: script
+          mountPath: /lab
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "256Mi"
+        limits:
+          cpu: "500m"
+          memory: "256Mi"
+  volumes:
+    - name: script
+      configMap:
+        name: node-heap-script
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: node-buffer-oom
+  labels:
+    app.kubernetes.io/part-of: "linux-lab"
+    lab: "02-memory-node-heap-oom"
+spec:
+  restartPolicy: Never
+  containers:
+    - name: node
+      image: "node:22-alpine"
+      command: ["node", "--max-old-space-size=64", "/lab/heap.js"]
+      env:
+        - name: MODE
+          value: "buffer"
+      volumeMounts:
+        - name: script
+          mountPath: /lab
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "256Mi"
+        limits:
+          cpu: "500m"
+          memory: "256Mi"
+  volumes:
+    - name: script
+      configMap:
+        name: node-heap-script

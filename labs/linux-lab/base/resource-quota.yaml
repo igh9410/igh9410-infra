@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: linux-lab-quota
+  namespace: linux-lab
+spec:
+  # Sized for a 2 vCPU / 4GiB lab VM. Finished (Failed/Succeeded) pods do not
+  # count toward compute quota, so OOMKilled pods can be left around for
+  # inspection.
+  hard:
+    pods: "20"
+    requests.cpu: "2"
+    requests.memory: "2Gi"
+    limits.cpu: "4"
+    limits.memory: "3Gi"

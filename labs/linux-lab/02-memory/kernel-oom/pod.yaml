@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kernel-oom
+  labels:
+    app.kubernetes.io/part-of: "linux-lab"
+    lab: "02-memory-kernel-oom"
+spec:
+  # Never restart, so the terminated state (reason, exit code) stays readable.
+  restartPolicy: Never
+  containers:
+    - name: allocator
+      image: "python:3.13-alpine"
+      command: ["python3", "-u", "-c"]
+      args:
+        - |
+          import time
+          chunks = []
+          mib = 0
+          while True:
+              # Multiplying bytes writes every byte, so each chunk is really
+              # resident and charged to the container cgroup.
+              chunks.append(b"\x01" * (10 * 1024 * 1024))
+              mib += 10
+              rss = [l for l in open("/proc/self/status") if l.startswith("VmRSS")][0].split()[1]
+              print(f"allocated {mib} MiB, VmRSS={int(rss) // 1024} MiB", flush=True)
+              time.sleep(1)
+      resources:
+        # request == limit for every resource: Guaranteed QoS.
+        requests:
+          cpu: "100m"
+          memory: "128Mi"
+        limits:
+          cpu: "100m"
+          memory: "128Mi"

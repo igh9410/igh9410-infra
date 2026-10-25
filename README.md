@@ -44,6 +44,8 @@ igh9410-infra/
 │   └── cilium/                     # Cilium stack
 │   └── terraform/                  # Main infrastructure code
 ├── diagram/                        # Architecture diagrams
+├── docs/                           # Runbooks, retrospectives, Linux lab plan (docs/linux-lab)
+├── labs/                           # Hands-on Linux labs, applied manually to a separate lab VM (not synced by ArgoCD)
 └── Makefile                        # Automation scripts
 ```
 

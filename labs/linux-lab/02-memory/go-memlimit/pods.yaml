@@ -1,0 +1,120 @@
+# Same binary, same 70MiB live set, same 128Mi container limit.
+# The only difference is GOMEMLIMIT. Predict which pod survives.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: go-no-memlimit
+  labels:
+    app.kubernetes.io/part-of: "linux-lab"
+    lab: "02-memory-go-memlimit"
+spec:
+  restartPolicy: Never
+  initContainers:
+    # Build in an init container with more memory, so the compiler does not
+    # count against the 128Mi limit of the lab container.
+    - name: build
+      image: "golang:1.25-alpine"
+      command: ["go", "build", "-o", "/out/memlab", "/src/main.go"]
+      env:
+        - name: CGO_ENABLED
+          value: "0"
+        - name: GOCACHE
+          value: "/tmp/go-cache"
+      volumeMounts:
+        - name: src
+          mountPath: /src
+        - name: out
+          mountPath: /out
+      resources:
+        requests:
+          cpu: "200m"
+          memory: "256Mi"
+        limits:
+          cpu: "1"
+          memory: "1Gi"
+  containers:
+    - name: memlab
+      image: "busybox:1.37"
+      command: ["/out/memlab"]
+      env:
+        - name: LIVE_MIB
+          value: "70"
+        # Print a line per GC cycle with heap sizes before/after.
+        - name: GODEBUG
+          value: "gctrace=1"
+      volumeMounts:
+        - name: out
+          mountPath: /out
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "128Mi"
+        limits:
+          cpu: "500m"
+          memory: "128Mi"
+  volumes:
+    - name: src
+      configMap:
+        name: go-memlimit-source
+    - name: out
+      emptyDir: {}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: go-with-memlimit
+  labels:
+    app.kubernetes.io/part-of: "linux-lab"
+    lab: "02-memory-go-memlimit"
+spec:
+  restartPolicy: Never
+  initContainers:
+    - name: build
+      image: "golang:1.25-alpine"
+      command: ["go", "build", "-o", "/out/memlab", "/src/main.go"]
+      env:
+        - name: CGO_ENABLED
+          value: "0"
+        - name: GOCACHE
+          value: "/tmp/go-cache"
+      volumeMounts:
+        - name: src
+          mountPath: /src
+        - name: out
+          mountPath: /out
+      resources:
+        requests:
+          cpu: "200m"
+          memory: "256Mi"
+        limits:
+          cpu: "1"
+          memory: "1Gi"
+  containers:
+    - name: memlab
+      image: "busybox:1.37"
+      command: ["/out/memlab"]
+      env:
+        - name: LIVE_MIB
+          value: "70"
+        - name: GODEBUG
+          value: "gctrace=1"
+        # Soft limit below the 128Mi container limit, leaving room for
+        # non-heap memory (stacks, runtime metadata).
+        - name: GOMEMLIMIT
+          value: "100MiB"
+      volumeMounts:
+        - name: out
+          mountPath: /out
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "128Mi"
+        limits:
+          cpu: "500m"
+          memory: "128Mi"
+  volumes:
+    - name: src
+      configMap:
+        name: go-memlimit-source
+    - name: out
+      emptyDir: {}

@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: page-cache
+  labels:
+    app.kubernetes.io/part-of: "linux-lab"
+    lab: "02-memory-page-cache"
+spec:
+  terminationGracePeriodSeconds: 5
+  containers:
+    - name: reader
+      image: "busybox:1.37"
+      command: ["sh", "-c"]
+      # Writes a file 4x larger than the memory limit, then keeps reading it.
+      # Question: does this container get OOM-killed? Predict before applying.
+      args:
+        - |
+          trap 'exit 0' TERM
+          dd if=/dev/zero of=/data/big bs=1M count=512
+          echo "wrote 512MiB to an emptyDir on disk"
+          while true; do
+            cat /data/big > /dev/null
+            echo "read pass done"
+            sleep 5
+          done
+      volumeMounts:
+        - name: data
+          mountPath: /data
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "128Mi"
+          ephemeral-storage: "600Mi"
+        limits:
+          cpu: "200m"
+          memory: "128Mi"
+          ephemeral-storage: "1Gi"
+  volumes:
+    # Disk-backed emptyDir: file data goes to the page cache, not to tmpfs.
+    - name: data
+      emptyDir: {}

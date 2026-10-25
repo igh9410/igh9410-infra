@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ephemeral-eviction
+  labels:
+    app.kubernetes.io/part-of: "linux-lab"
+    lab: "04-ephemeral-eviction"
+spec:
+  restartPolicy: Never
+  terminationGracePeriodSeconds: 5
+  containers:
+    - name: writer
+      image: "busybox:1.37"
+      command: ["sh", "-c"]
+      # Writes twice the ephemeral-storage limit to a disk-backed emptyDir.
+      # Question: who stops it (kernel or kubelet), how fast, and what does
+      # the pod status say?
+      args:
+        - |
+          trap 'exit 0' TERM
+          dd if=/dev/zero of=/data/fill bs=1M count=200
+          echo "dd finished with exit code $?"
+          while true; do sleep 1; done
+      volumeMounts:
+        - name: data
+          mountPath: /data
+      resources:
+        requests:
+          cpu: "50m"
+          memory: "32Mi"
+          ephemeral-storage: "50Mi"
+        limits:
+          cpu: "200m"
+          memory: "64Mi"
+          ephemeral-storage: "100Mi"
+  volumes:
+    - name: data
+      emptyDir: {}
