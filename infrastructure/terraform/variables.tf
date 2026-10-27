@@ -150,3 +150,9 @@ variable "gcp_org_id" {
   type        = string
   default     = ""
 }
+
+variable "access_allowed_emails" {
+  description = "Emails allowed through Cloudflare Access for admin UIs (ArgoCD, Grafana)"
+  type        = list(string)
+  sensitive   = true
+}
