@@ -19,7 +19,9 @@ image:
   # -- This sets the pull policy for images.
   pullPolicy: IfNotPresent
   # -- Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  # Pinned to >= 2026.10.2 to drop trust in the compromised eMudhra (emSign)
+  # intermediates; chart 2.2.1 defaults to appVersion 2025.9.1.
+  tag: "2026.10.4"
 
 updateStrategy:
   type: RollingUpdate
