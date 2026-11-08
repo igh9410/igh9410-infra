@@ -1,28 +1,36 @@
-provider "kubernetes" {
-  config_path = var.kubeconfig_path
+provider "google" {
+  project = var.gcp_project_id
 }
 
-resource "kubernetes_secret" "gramnuri_secrets" {
-  metadata {
-    name      = "gramnuri-secrets"
-    namespace = var.environment
+# Runtime secrets for gramnuri-api in prod, synced into the Secret
+# gramnuri-secrets by apps/gramnuri-api/base/externalsecret.yaml.
+#
+# Terraform only creates the secret. The value is managed in the GCP console or
+# with: gcloud secrets versions add prod-gramnuri-api --data-file=-
+# It is one JSON object whose top-level keys are the env var names, e.g.
+#   { "R2_BUCKET_NAME": "...", "FIREBASE_CREDENTIALS_JSON": { ...nested... } }
+resource "google_project_service" "secretmanager" {
+  service            = "secretmanager.googleapis.com"
+  disable_on_destroy = false
+}
+
+resource "google_secret_manager_secret" "app" {
+  secret_id = "prod-gramnuri-api"
+  labels = {
+    app = "gramnuri-api"
+    env = "prod"
   }
 
-  type = "Opaque"
-
-  data = {
-    DATABASE_URL                 = var.database_url
-    FIREBASE_CREDENTIALS_JSON    = file("${path.module}/credentials/gramnuri-${var.environment}-firebase-adminsdk.json")
-    FIREBASE_PROJECT_ID          = var.firebase_project_id
-    ENVIRONMENT                  = var.environment
-    CLIENT_DOMAIN                = var.client_domain
-    CLOUDFLARE_ACCOUNT_ID        = var.cloudflare_account_id
-    CLOUDFLARE_ACCESS_KEY_ID     = var.cloudflare_access_key_id
-    CLOUDFLARE_SECRET_ACCESS_KEY = var.cloudflare_secret_access_key
-    CLOUDFLARE_API_TOKEN         = var.cloudflare_api_token
-    R2_BUCKET_NAME               = var.r2_bucket_name
-    R2_CUSTOM_DOMAIN             = var.r2_custom_domain
-    GEMINI_API_KEY               = var.gemini_api_key
-    SHARE_LINK_SIGNING_SECRET    = var.share_link_signing_secret
+  replication {
+    auto {}
   }
+
+  depends_on = [google_project_service.secretmanager]
+}
+
+# Read access for ESO on this secret only.
+resource "google_secret_manager_secret_iam_member" "eso" {
+  secret_id = google_secret_manager_secret.app.id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${var.eso_service_account}"
 }

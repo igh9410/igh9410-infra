@@ -1,28 +1,3 @@
-variable "database_url" {
-  description = "Database URL"
-  type        = string
-}
-
-variable "firebase_project_id" {
-  description = "Firebase Project ID"
-  type        = string
-}
-
-variable "firebase_client_email" {
-  description = "Firebase Client Email"
-  type        = string
-}
-
-variable "firebase_client_cert_url" {
-  description = "Firebase Client Cert URL"
-  type        = string
-}
-
-variable "environment" {
-  description = "Environment"
-  type        = string
-}
-
 variable "cloudflare_api_key" {
   description = "Cloudflare API Key"
   type        = string
@@ -38,12 +13,6 @@ variable "cloudflare_email" {
 variable "cloudflare_zone_id" {
   description = "Cloudflare Zone ID for your domain"
   type        = string
-}
-
-variable "client_domain" {
-  description = "Your domain name (e.g., gramnuri.com)"
-  type        = string
-  default     = "gramnuri.com"
 }
 
 variable "github_token" {
@@ -64,51 +33,14 @@ variable "cloudflare_account_id" {
   sensitive   = true
 }
 
-
-variable "kubeconfig_path" {
-  description = "Path to the kubeconfig file"
+variable "gcp_project_id" {
+  description = "GCP project that holds this environment's secrets (landskipify-dev)"
   type        = string
-  default     = "~/.kube/config"
+  default     = "gramnuri-dev-7d221"
 }
 
-variable "cloudflare_access_key_id" {
-  description = "Cloudflare Access Key ID"
+variable "eso_service_account" {
+  description = "External Secrets Operator service account (created in infrastructure/terraform/gcp.tf)"
   type        = string
-  sensitive   = true
-}
-
-variable "cloudflare_secret_access_key" {
-  description = "Cloudflare Secret Access Key"
-  type        = string
-  sensitive   = true
-}
-
-variable "cloudflare_api_token" {
-  description = "Cloudflare API Token"
-  type        = string
-  sensitive   = true
-}
-
-variable "r2_bucket_name" {
-  description = "R2 Bucket Name"
-  type        = string
-  default     = "dev-gramnuri-bucket"
-}
-
-variable "r2_custom_domain" {
-  description = "R2 Custom Domain"
-  type        = string
-  default     = "dev-cdn.gramnuri.com"
-}
-
-variable "gemini_api_key" {
-  description = "Gemini API Key"
-  type        = string
-  sensitive   = true
-}
-
-variable "share_link_signing_secret" {
-  description = "Secret key used for signing share links"
-  type        = string
-  sensitive   = true
+  default     = "external-secrets-operator@igh9410-infra.iam.gserviceaccount.com"
 }

@@ -14,6 +14,16 @@ patches:
     target:
       kind: HTTPRoute
       name: gramnuri-api-httproute
+  - target:
+      kind: ExternalSecret
+      name: gramnuri-secrets
+    patch: |-
+      - op: replace
+        path: /spec/dataFrom/0/extract/key
+        value: prod-gramnuri-api
+      - op: replace
+        path: /spec/secretStoreRef/name
+        value: gcp-secret-manager-prod
 images:
   - name: ghcr.io/igh9410/gramnuri-api
     newTag: build-130

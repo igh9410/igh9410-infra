@@ -37,7 +37,7 @@ resource "google_service_account" "eso_sa" {
   account_id   = "external-secrets-operator"
   display_name = "External Secrets Operator Service Account"
   project      = google_project.project.project_id
-  
+
   depends_on = [google_project_service.services]
 }
 
@@ -48,4 +48,27 @@ resource "google_project_iam_member" "eso_secret_accessor" {
   member  = "serviceAccount:${google_service_account.eso_sa.email}"
 
   depends_on = [google_service_account.eso_sa]
+}
+
+# Key for ESO to authenticate to Secret Manager from the homelab cluster.
+# Workload Identity Federation would need a publicly reachable OIDC issuer for
+# the cluster, so a single bootstrap key is used instead.
+# Rotate with: terraform apply -replace=google_service_account_key.eso
+resource "google_service_account_key" "eso" {
+  service_account_id = google_service_account.eso_sa.name
+}
+
+# Bootstrap Secret referenced by the gcp-secret-manager ClusterSecretStore
+# (infrastructure/external-secrets/cluster-secret-store.yaml).
+resource "kubernetes_secret" "gcp_secret_manager_credentials" {
+  metadata {
+    name      = "gcp-secret-manager-credentials"
+    namespace = "external-secrets"
+  }
+
+  type = "Opaque"
+
+  data = {
+    "secret-access-credentials" = base64decode(google_service_account_key.eso.private_key)
+  }
 }
