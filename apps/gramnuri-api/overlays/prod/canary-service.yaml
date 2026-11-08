@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  # No `app` label on purpose: the gramnuri-api ServiceMonitor selects Services
+  # by `app: gramnuri-api`, and labelling this one would scrape every pod twice.
+  name: gramnuri-api-canary
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+  # Argo Rollouts adds rollouts-pod-template-hash to this selector during a canary.
+  selector:
+    app: gramnuri-api
+  type: ClusterIP

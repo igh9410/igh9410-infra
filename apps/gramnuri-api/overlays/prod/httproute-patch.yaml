@@ -6,3 +6,13 @@ metadata:
 spec:
   hostnames:
     - api.landskipifyai.com
+  # Weights are managed by Argo Rollouts (gatewayAPI plugin) during a canary;
+  # at rest all traffic goes to the stable Service.
+  rules:
+    - backendRefs:
+        - name: gramnuri-api
+          port: 80
+          weight: 100
+        - name: gramnuri-api-canary
+          port: 80
+          weight: 0

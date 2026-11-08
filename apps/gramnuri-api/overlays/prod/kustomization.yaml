@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: prod
 resources:
   - ../../base
+  - canary-service.yaml
 components:
   - ../../components/db-migration
 patches:
@@ -10,6 +11,13 @@ patches:
     target:
       kind: Deployment
       name: gramnuri-api
+  # Must stay after deployment-patch.yaml: it turns the patched Deployment into a Rollout.
+  - path: rollout-patch.yaml
+    target:
+      kind: Deployment
+      name: gramnuri-api
+    options:
+      allowKindChange: true
   - path: httproute-patch.yaml
     target:
       kind: HTTPRoute
