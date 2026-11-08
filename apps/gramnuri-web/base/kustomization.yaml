@@ -3,8 +3,7 @@ kind: Kustomization
 
 resources:
   - externalsecret.yaml
-  - rollout.yaml
-  - canary-service.yaml
+  - deployment.yaml
   - service.yaml
   - httproute.yaml
   - pdb.yaml

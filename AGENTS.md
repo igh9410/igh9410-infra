@@ -125,13 +125,11 @@ The recommended setup for parallel agent work is one coordinator session plus on
 Do not run multiple editing agents against the same checkout. Sharing one working tree is acceptable for read-only investigation, but concurrent file edits must happen in separate branches and separate worktrees.
 
 ## Deployment & Rollouts
-- **Argo Rollouts**: All production-facing web/API applications should use `Rollout` instead of standard `Deployment`.
-- **Canary Strategy**:
+- **Argo Rollouts**: Only production API applications (in `prod`) use a canary `Rollout`. Web frontends, and every app in `dev`, use a standard `Deployment` with a `RollingUpdate` strategy.
+- **Canary Strategy** (prod APIs):
   - **Traffic Splitting**: Use **Gateway API** (`HTTPRoute`) via the `argoproj-labs/gatewayAPI` plugin.
   - **Weights**: Default 50:50 split.
-  - **Grace Periods**:
-    - `dev`: 3 minutes.
-    - `prod`: 5 minutes.
+  - **Pause**: 5 minutes at the 50% step.
 - **Service Naming**: Every Rollout must have a corresponding `canaryService` named `<app-name>-canary`.
 
 ## Connectivity & Networking

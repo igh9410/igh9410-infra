@@ -1,11 +1,17 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Rollout
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: gramnuri-web
   labels:
     app: gramnuri-web
 spec:
   replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      # Surge a new pod before removing an old one so a rollout never drops capacity.
+      maxSurge: 1
+      maxUnavailable: 0
   selector:
     matchLabels:
       app: gramnuri-web
@@ -74,14 +80,3 @@ spec:
       nodeSelector:
         kubernetes.io/arch: amd64
         kubernetes.io/os: linux
-  strategy:
-    canary:
-      canaryService: gramnuri-web-canary
-      stableService: gramnuri-web
-      trafficRouting:
-        plugins:
-          argoproj-labs/gatewayAPI:
-            httpRoute: gramnuri-web-httproute
-      steps:
-        - setWeight: 50
-        - pause: { duration: 3m }

@@ -4,9 +4,9 @@ namespace: prod
 resources:
   - ../../base
 patches:
-  - path: rollout-patch.yaml
+  - path: deployment-patch.yaml
     target:
-      kind: Rollout
+      kind: Deployment
       name: gramnuri-web
   - path: httproute-patch.yaml
     target:
