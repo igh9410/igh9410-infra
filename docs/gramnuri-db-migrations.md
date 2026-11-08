@@ -64,8 +64,21 @@ Order matters. Do dev first, then prod.
 6. Merge the infra PR that adds the `db-migration` component to the overlays.
    For prod, sync `applications-app-of-apps` and then `prod-gramnuri-api` manually.
 
-After the handover, `cluster_admin` can no longer run DDL on `gramnuri_db`, so
-`make migrate-up` against dev/prod with the old `.env` credentials stops working. That is intended.
+After the handover, do not run migrations against dev/prod as `cluster_admin`
+(`make migrate-up` with the old `.env` credentials). It no longer owns the tables,
+so `ALTER TABLE` on existing tables fails, but because it still owns schema `public`
+it can create tables (owned by `cluster_admin`, which the migrator then cannot alter)
+and drop tables. A partial run leaves ownership drift. Keep `cluster_admin` as a
+break-glass admin account only.
+
+To check or run migrations from a laptop, use the migrator credentials over Tailscale:
+
+```sh
+MIGRATION_DATABASE_URL='postgresql://gramnuri_migrator:<password>@dev-gramnuri-db.taild7ce30.ts.net:5432/gramnuri_db' \
+  go run ./cmd/gramnuri-api migrate status
+```
+
+The password is in the `gramnuri-migrator-credentials` Secret (CNPG namespace) or the Terraform state.
 
 ## Operating
 
