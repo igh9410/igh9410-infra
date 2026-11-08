@@ -72,11 +72,15 @@ PreSync Job) cannot alter them later:
 SET ROLE gramnuri_migrator;   -- before CREATE TABLE/INDEX/SEQUENCE ...
 ```
 
-For `make migrate-up` as `cluster_admin`, add the role to the connection string. Pass it
-as a make argument: the Makefile `include`s `.env`, which overrides an environment variable.
+The gramnuri `make goose-version` / `make migrate-up` / `make migrate-down` targets do
+this automatically: they append `options=-c role=gramnuri_migrator` to `.env`'s
+`DATABASE_URL`, so a `cluster_admin` connection runs goose as the migrator
+(`session_user=cluster_admin`, `current_user=gramnuri_migrator`). Use
+`MIGRATION_ROLE=` to disable it for a database without that role, such as a local Postgres:
 
 ```sh
-make migrate-up DATABASE_URL='postgresql://cluster_admin:<password>@dev-gramnuri-db.taild7ce30.ts.net:5432/gramnuri_db?options=-c%20role%3Dgramnuri_migrator'
+make migrate-up                    # dev/prod via .env, as gramnuri_migrator
+make migrate-up MIGRATION_ROLE=    # local Postgres without the role
 ```
 
 Alternatively, use the migrator credentials directly over Tailscale:
