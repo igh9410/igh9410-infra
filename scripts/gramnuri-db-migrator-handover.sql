@@ -27,6 +27,13 @@ BEGIN;
 -- Create (and own) new objects in public, without owning the schema itself.
 GRANT USAGE, CREATE ON SCHEMA public TO gramnuri_migrator;
 
+-- Keep cluster_admin (break-glass admin) able to ALTER/DROP the migrator-owned
+-- tables: members inherit the owner's privileges. To create objects owned by
+-- the migrator (no ownership drift), cluster_admin runs SET ROLE gramnuri_migrator
+-- first, or connects with options=-c role=gramnuri_migrator.
+-- Re-running only emits a NOTICE that the membership already exists.
+GRANT gramnuri_migrator TO cluster_admin WITH INHERIT TRUE, SET TRUE;
+
 DO $$
 DECLARE
     obj record;
@@ -70,10 +77,13 @@ ALTER DEFAULT PRIVILEGES FOR ROLE gramnuri_migrator IN SCHEMA public
 COMMIT;
 
 -- Verification: tables/sequences/indexes in public owned by gramnuri_migrator;
--- database and schema still owned by cluster_admin.
+-- database and schema still owned by cluster_admin; cluster_admin is a member
+-- of gramnuri_migrator.
 SELECT 'database' AS object, pg_get_userbyid(datdba) AS owner FROM pg_database WHERE datname = 'gramnuri_db'
 UNION ALL
-SELECT 'schema public', pg_get_userbyid(nspowner) FROM pg_namespace WHERE nspname = 'public';
+SELECT 'schema public', pg_get_userbyid(nspowner) FROM pg_namespace WHERE nspname = 'public'
+UNION ALL
+SELECT 'cluster_admin member of gramnuri_migrator', pg_has_role('cluster_admin', 'gramnuri_migrator', 'MEMBER')::text;
 
 SELECT c.relkind, pg_get_userbyid(c.relowner) AS owner, count(*)
 FROM pg_class c

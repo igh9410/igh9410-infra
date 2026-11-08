@@ -62,14 +62,24 @@ Order matters. Do dev first, then prod.
 6. Merge the infra PR that adds the `db-migration` component to the overlays.
    For prod, sync `applications-app-of-apps` and then `prod-gramnuri-api` manually.
 
-After the handover, do not run migrations against dev/prod as `cluster_admin`
-(`make migrate-up` with the old `.env` credentials). It no longer owns the tables,
-so `ALTER TABLE` on existing tables fails, but because it still owns schema `public`
-it can create tables (owned by `cluster_admin`, which the migrator then cannot alter)
-and drop tables. A partial run leaves ownership drift. Keep `cluster_admin` as a
-break-glass admin account only.
+After the handover, `cluster_admin` stays a near-superuser on `gramnuri_db`: it is a
+member of `gramnuri_migrator`, so it inherits ALTER/DROP on the migrator-owned tables,
+and it still owns the database and schema. One rule: objects it creates are owned by
+whoever is the current role, so switch to the migrator first, or the migrator (and the
+PreSync Job) cannot alter them later:
 
-To check or run migrations from a laptop, use the migrator credentials over Tailscale:
+```sql
+SET ROLE gramnuri_migrator;   -- before CREATE TABLE/INDEX/SEQUENCE ...
+```
+
+For `make migrate-up` as `cluster_admin`, add the role to the connection string. Pass it
+as a make argument: the Makefile `include`s `.env`, which overrides an environment variable.
+
+```sh
+make migrate-up DATABASE_URL='postgresql://cluster_admin:<password>@dev-gramnuri-db.taild7ce30.ts.net:5432/gramnuri_db?options=-c%20role%3Dgramnuri_migrator'
+```
+
+Alternatively, use the migrator credentials directly over Tailscale:
 
 ```sh
 MIGRATION_DATABASE_URL='postgresql://gramnuri_migrator:<password>@dev-gramnuri-db.taild7ce30.ts.net:5432/gramnuri_db' \
