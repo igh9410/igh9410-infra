@@ -8,7 +8,7 @@ deployment instead of `make migrate-up` from a laptop.
 | Piece | Where | Notes |
 | --- | --- | --- |
 | Migration-only role `gramnuri_migrator` | `argocd/values/{dev,prod}-gramnuri-db.yaml` (`cluster.roles`) | CNPG managed role: login, no superuser/createrole/createdb, connection limit 3. Owns the tables and sequences in `public` and has `CREATE` on it. The database and schema stay owned by `cluster_admin`, so it cannot drop them. |
-| Role password | `apps/gramnuri-api/terraform/{dev,prod}/db-migrator.tf` | `random_password` written to `gramnuri-migrator-credentials` (basic-auth, CNPG namespace) and `gramnuri-migrator-secrets` (`MIGRATION_DATABASE_URL`, app namespace). |
+| Role password | `scripts/gramnuri-db-migrator-secrets.sh` | Generated locally and written to `gramnuri-migrator-credentials` (basic-auth, CNPG namespace) and `gramnuri-migrator-secrets` (`MIGRATION_DATABASE_URL`, app namespace). Deliberately not in Terraform, so the password never lands in Terraform state. |
 | Migration Job | `apps/gramnuri-api/components/db-migration/` | ArgoCD `PreSync` hook running `gramnuri-api migrate up` from the same image tag as the Deployment. |
 | API role `gramnuri_db_user` | unchanged | DML only (SELECT/INSERT/UPDATE/DELETE). Gets access to new tables through default privileges set in the handover script. |
 
@@ -30,15 +30,13 @@ Order matters. Do dev first, then prod.
 
 1. Merge the gramnuri PR that adds the `migrate` subcommand, and let the new image reach the environment
    (dev: automatic; prod: GitHub release, then manual sync). The image must contain the subcommand before the Job is added.
-2. Merge the infra PR that adds the role and Terraform (this file's PR).
+2. Merge the infra PR that adds the role (this file's PR).
    ArgoCD syncs `<env>-gramnuri-db` and CNPG creates `gramnuri_migrator` once the Secret exists.
-3. Create the secrets:
+3. Create the secrets (idempotent; re-running reuses the existing password):
 
    ```sh
-   cd apps/gramnuri-api/terraform/<env>
-   terraform init -backend-config=backend.conf
-   terraform plan    # expect only: random_password.db_migrator + 2 kubernetes_secret
-   terraform apply
+   scripts/gramnuri-db-migrator-secrets.sh <env> --dry-run   # server-side validation only
+   scripts/gramnuri-db-migrator-secrets.sh <env>
    ```
 
 4. Confirm the role exists and is reconciled:
@@ -78,7 +76,7 @@ MIGRATION_DATABASE_URL='postgresql://gramnuri_migrator:<password>@dev-gramnuri-d
   go run ./cmd/gramnuri-api migrate status
 ```
 
-The password is in the `gramnuri-migrator-credentials` Secret (CNPG namespace) or the Terraform state.
+The password is only in the `gramnuri-migrator-credentials` Secret (CNPG namespace).
 
 ## Operating
 
@@ -92,5 +90,5 @@ $K -n dev run gramnuri-migrate-status --rm -i --restart=Never \
   --overrides='{"spec":{"imagePullSecrets":[{"name":"ghcr-image-pull-secrets"}],"containers":[{"name":"m","image":"ghcr.io/igh9410/gramnuri-api:<tag>","args":["migrate","status"],"envFrom":[{"secretRef":{"name":"gramnuri-migrator-secrets"}}]}]}}'
 ```
 
-Rotate the migrator password with `terraform apply -replace=random_password.db_migrator`.
+Rotate the migrator password with `scripts/gramnuri-db-migrator-secrets.sh <env> --rotate`.
 CNPG picks up the new password through the `cnpg.io/reload` label on the Secret.

@@ -286,7 +286,7 @@ cluster:
     # Migration-only role used by the gramnuri-api PreSync migration Job.
     # It owns the gramnuri_db tables (DDL) but not the database or schema, so it
     # cannot drop either; the API keeps using gramnuri_db_user (DML grants only).
-    # The password Secret is created by apps/gramnuri-api/terraform/<env>/db-migrator.tf.
+    # The password Secret is created by scripts/gramnuri-db-migrator-secrets.sh (kept out of Git and Terraform state).
     - name: "gramnuri_migrator"
       ensure: "present"
       comment: "gramnuri-api schema migrations (managed by CNPG)"
