@@ -156,3 +156,9 @@ variable "access_allowed_emails" {
   type        = list(string)
   sensitive   = true
 }
+
+variable "access_bypass_ips" {
+  description = "Home IPs/CIDRs (e.g. 203.0.113.10/32) that bypass Cloudflare Access for admin UIs"
+  type        = list(string)
+  sensitive   = true
+}
