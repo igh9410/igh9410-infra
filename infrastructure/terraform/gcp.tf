@@ -72,34 +72,3 @@ resource "kubernetes_secret" "gcp_secret_manager_credentials" {
     "secret-access-credentials" = base64decode(google_service_account_key.eso.private_key)
   }
 }
-
-# Application secrets synced into the cluster by ExternalSecrets.
-#
-# Terraform only creates the secret containers. Values are NOT managed here:
-# each secret holds one JSON object (one top-level key per env var, nested JSON
-# allowed) and is edited in the GCP console or with
-#   gcloud secrets versions add <secret> --data-file=-
-# Free tier: 6 active versions per billing account, so disable or destroy the
-# previous version after adding a new one.
-locals {
-  app_secrets = {
-    "gramnuri-api-dev"  = { app = "gramnuri-api", env = "dev" }
-    "gramnuri-api-prod" = { app = "gramnuri-api", env = "prod" }
-    "gramnuri-web-dev"  = { app = "gramnuri-web", env = "dev" }
-    "gramnuri-web-prod" = { app = "gramnuri-web", env = "prod" }
-  }
-}
-
-resource "google_secret_manager_secret" "app" {
-  for_each = local.app_secrets
-
-  project   = google_project.project.project_id
-  secret_id = each.key
-  labels    = each.value
-
-  replication {
-    auto {}
-  }
-
-  depends_on = [google_project_service.services]
-}

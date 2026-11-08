@@ -18,7 +18,7 @@ patches:
     patch: |-
       - op: replace
         path: /spec/dataFrom/0/extract/key
-        value: gramnuri-web-dev
+        value: dev-gramnuri-web
 images:
   - name: ghcr.io/igh9410/gramnuri-web
     newTag: "277fbf17c585eebc31dfaec8d28ef108750a69ee"

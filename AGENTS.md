@@ -52,12 +52,13 @@ Use Terraform or external secret creation workflows to create Kubernetes Secrets
 
 Application runtime secrets (e.g. `gramnuri-secrets`, `gramnuri-client-secrets`) are synced from GCP Secret Manager (project `igh9410-infra`) by External Secrets Operator:
 
-- `infrastructure/terraform/gcp.tf` creates the ESO service-account key, the bootstrap Secret `external-secrets/gcp-secret-manager-credentials`, and the **empty** Secret Manager secrets (`local.app_secrets`, named `<app>-<env>`). Terraform never writes secret values or versions.
+- `infrastructure/terraform/gcp.tf` creates the ESO service-account key and the bootstrap Secret `external-secrets/gcp-secret-manager-credentials`.
+- Each app's `apps/{app}/terraform/{env}/secrets.tf` creates its own **empty** Secret Manager secret, named `<env>-<app>` (e.g. `dev-gramnuri-api`; GCP secret IDs cannot contain `/`). Terraform never writes secret values or versions.
 - `infrastructure/external-secrets/` holds the `gcp-secret-manager` ClusterSecretStore, limited to the `dev` and `prod` namespaces.
-- `apps/{app}/base/externalsecret.yaml` declares the ExternalSecret. Each overlay patches `spec.dataFrom[0].extract.key` to `<app>-<env>`.
-- Each Secret Manager secret holds one JSON object with one top-level key per env var. Nested objects (e.g. `FIREBASE_CREDENTIALS_JSON`) are written to the Kubernetes Secret as a JSON string.
-- To change values, add a version in the GCP console or run `gcloud secrets versions add <app>-<env> --data-file=-`. Then disable or destroy the previous version. The free tier covers only 6 active versions per billing account. ESO picks up the change within `refreshInterval` (1h); restart the workload to load it.
-- To add a new app secret, add an entry to `local.app_secrets`, apply, set its value, then add an ExternalSecret to the app.
+- `apps/{app}/base/externalsecret.yaml` declares the ExternalSecret. Each overlay patches `spec.dataFrom[0].extract.key` to `<env>-<app>`.
+- Each Secret Manager secret holds one JSON object whose top-level keys are exactly the env var names the app reads (e.g. `R2_BUCKET_NAME`). They become Secret keys of the same name and reach the container through `envFrom`. Nested objects (e.g. `FIREBASE_CREDENTIALS_JSON`) are written to the Kubernetes Secret as a JSON string.
+- To change values, add a version in the GCP console or run `gcloud secrets versions add <env>-<app> --data-file=-`. Then disable or destroy the previous version. The free tier covers only 6 active versions per billing account. ESO picks up the change within `refreshInterval` (1h); restart the workload to load it.
+- To add a new app secret, add a `google_secret_manager_secret` to the app's Terraform, apply, set its value, then add an ExternalSecret to the app.
 
 ## Namespaces And Naming
 

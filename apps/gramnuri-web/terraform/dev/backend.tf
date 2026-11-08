@@ -4,6 +4,10 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "~> 5"
     }
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 7.0"
+    }
   }
 
   backend "s3" {

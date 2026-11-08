@@ -1,8 +1,3 @@
-variable "environment" {
-  description = "Environment"
-  type        = string
-}
-
 variable "cloudflare_api_key" {
   description = "Cloudflare API Key"
   type        = string
@@ -38,8 +33,8 @@ variable "cloudflare_account_id" {
   sensitive   = true
 }
 
-variable "kubeconfig_path" {
-  description = "Path to the kubeconfig file"
+variable "gcp_project_id" {
+  description = "GCP project that holds Secret Manager"
   type        = string
-  default     = "~/.kube/config"
+  default     = "igh9410-infra"
 }

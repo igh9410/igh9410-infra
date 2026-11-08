@@ -1,0 +1,22 @@
+provider "google" {
+  project = var.gcp_project_id
+}
+
+# Runtime secrets for gramnuri-web in dev, synced into the Secret
+# gramnuri-client-secrets by apps/gramnuri-web/base/externalsecret.yaml.
+#
+# Terraform only creates the secret. The value is managed in the GCP console or
+# with: gcloud secrets versions add dev-gramnuri-web --data-file=-
+# It is one JSON object whose top-level keys are the env var names, e.g.
+#   { "R2_BUCKET_NAME": "...", "FIREBASE_CREDENTIALS_JSON": { ...nested... } }
+resource "google_secret_manager_secret" "app" {
+  secret_id = "dev-gramnuri-web"
+  labels = {
+    app = "gramnuri-web"
+    env = "dev"
+  }
+
+  replication {
+    auto {}
+  }
+}

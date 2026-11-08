@@ -14,3 +14,9 @@ variable "cloudflare_api_key" {
   type        = string
   sensitive   = true
 }
+
+variable "gcp_project_id" {
+  description = "GCP project that holds Secret Manager"
+  type        = string
+  default     = "igh9410-infra"
+}
