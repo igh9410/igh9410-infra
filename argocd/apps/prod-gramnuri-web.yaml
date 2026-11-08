@@ -14,10 +14,9 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: prod
+  # Manual sync only: production rollouts (and their PreSync DB migrations)
+  # are started explicitly from the ArgoCD UI/CLI after the image tag lands in Git.
   syncPolicy:
-    automated:
-      prune: false
-      selfHeal: false
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
