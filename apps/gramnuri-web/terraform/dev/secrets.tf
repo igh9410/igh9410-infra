@@ -9,6 +9,11 @@ provider "google" {
 # with: gcloud secrets versions add dev-gramnuri-web --data-file=-
 # It is one JSON object whose top-level keys are the env var names, e.g.
 #   { "R2_BUCKET_NAME": "...", "FIREBASE_CREDENTIALS_JSON": { ...nested... } }
+resource "google_project_service" "secretmanager" {
+  service            = "secretmanager.googleapis.com"
+  disable_on_destroy = false
+}
+
 resource "google_secret_manager_secret" "app" {
   secret_id = "dev-gramnuri-web"
   labels = {
@@ -19,4 +24,13 @@ resource "google_secret_manager_secret" "app" {
   replication {
     auto {}
   }
+
+  depends_on = [google_project_service.secretmanager]
+}
+
+# Read access for ESO on this secret only.
+resource "google_secret_manager_secret_iam_member" "eso" {
+  secret_id = google_secret_manager_secret.app.id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${var.eso_service_account}"
 }

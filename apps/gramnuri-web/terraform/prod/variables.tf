@@ -16,7 +16,13 @@ variable "cloudflare_api_key" {
 }
 
 variable "gcp_project_id" {
-  description = "GCP project that holds Secret Manager"
+  description = "GCP project that holds this environment's secrets (landskipify)"
   type        = string
-  default     = "igh9410-infra"
+  default     = "landskipify"
+}
+
+variable "eso_service_account" {
+  description = "External Secrets Operator service account (created in infrastructure/terraform/gcp.tf)"
+  type        = string
+  default     = "external-secrets-operator@igh9410-infra.iam.gserviceaccount.com"
 }

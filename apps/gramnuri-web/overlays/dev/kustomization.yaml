@@ -19,6 +19,9 @@ patches:
       - op: replace
         path: /spec/dataFrom/0/extract/key
         value: dev-gramnuri-web
+      - op: replace
+        path: /spec/secretStoreRef/name
+        value: gcp-secret-manager-dev
 images:
   - name: ghcr.io/igh9410/gramnuri-web
     newTag: "277fbf17c585eebc31dfaec8d28ef108750a69ee"
