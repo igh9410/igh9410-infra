@@ -37,7 +37,7 @@ resource "google_service_account" "eso_sa" {
   account_id   = "external-secrets-operator"
   display_name = "External Secrets Operator Service Account"
   project      = google_project.project.project_id
-  
+
   depends_on = [google_project_service.services]
 }
 
@@ -48,4 +48,58 @@ resource "google_project_iam_member" "eso_secret_accessor" {
   member  = "serviceAccount:${google_service_account.eso_sa.email}"
 
   depends_on = [google_service_account.eso_sa]
+}
+
+# Key for ESO to authenticate to Secret Manager from the homelab cluster.
+# Workload Identity Federation would need a publicly reachable OIDC issuer for
+# the cluster, so a single bootstrap key is used instead.
+# Rotate with: terraform apply -replace=google_service_account_key.eso
+resource "google_service_account_key" "eso" {
+  service_account_id = google_service_account.eso_sa.name
+}
+
+# Bootstrap Secret referenced by the gcp-secret-manager ClusterSecretStore
+# (infrastructure/external-secrets/cluster-secret-store.yaml).
+resource "kubernetes_secret" "gcp_secret_manager_credentials" {
+  metadata {
+    name      = "gcp-secret-manager-credentials"
+    namespace = "external-secrets"
+  }
+
+  type = "Opaque"
+
+  data = {
+    "secret-access-credentials" = base64decode(google_service_account_key.eso.private_key)
+  }
+}
+
+# Application secrets synced into the cluster by ExternalSecrets.
+#
+# Terraform only creates the secret containers. Values are NOT managed here:
+# each secret holds one JSON object (one top-level key per env var, nested JSON
+# allowed) and is edited in the GCP console or with
+#   gcloud secrets versions add <secret> --data-file=-
+# Free tier: 6 active versions per billing account, so disable or destroy the
+# previous version after adding a new one.
+locals {
+  app_secrets = {
+    "gramnuri-api-dev"  = { app = "gramnuri-api", env = "dev" }
+    "gramnuri-api-prod" = { app = "gramnuri-api", env = "prod" }
+    "gramnuri-web-dev"  = { app = "gramnuri-web", env = "dev" }
+    "gramnuri-web-prod" = { app = "gramnuri-web", env = "prod" }
+  }
+}
+
+resource "google_secret_manager_secret" "app" {
+  for_each = local.app_secrets
+
+  project   = google_project.project.project_id
+  secret_id = each.key
+  labels    = each.value
+
+  replication {
+    auto {}
+  }
+
+  depends_on = [google_project_service.services]
 }

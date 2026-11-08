@@ -12,6 +12,13 @@ patches:
     target:
       kind: HTTPRoute
       name: gramnuri-web-httproute
+  - target:
+      kind: ExternalSecret
+      name: gramnuri-client-secrets
+    patch: |-
+      - op: replace
+        path: /spec/dataFrom/0/extract/key
+        value: gramnuri-web-dev
 images:
   - name: ghcr.io/igh9410/gramnuri-web
     newTag: "277fbf17c585eebc31dfaec8d28ef108750a69ee"
