@@ -25,6 +25,16 @@ resource "cloudflare_zero_trust_access_policy" "bypass_everyone" {
   ]
 }
 
+# Skip the Access login when browsing from the home network
+resource "cloudflare_zero_trust_access_policy" "bypass_home_ips" {
+  account_id = var.cloudflare_account_id
+  name       = "bypass-home-ips"
+  decision   = "bypass"
+  include = [
+    for ip in var.access_bypass_ips : { ip = { ip = ip } }
+  ]
+}
+
 resource "cloudflare_zero_trust_access_application" "admin" {
   for_each = local.access_protected_apps
 
@@ -37,7 +47,8 @@ resource "cloudflare_zero_trust_access_application" "admin" {
     { type = "public", uri = each.value }
   ]
   policies = [
-    { id = cloudflare_zero_trust_access_policy.admin_emails.id, precedence = 1 }
+    { id = cloudflare_zero_trust_access_policy.bypass_home_ips.id, precedence = 1 },
+    { id = cloudflare_zero_trust_access_policy.admin_emails.id, precedence = 2 }
   ]
 }
 
