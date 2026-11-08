@@ -35,6 +35,7 @@ Follow the existing repo patterns for ArgoCD Application definitions:
 
 - `project: default`
 - automated sync with `prune: true` and `selfHeal: true`
+  - Exception: prod gramnuri apps (`argocd/apps/prod-gramnuri-*.yaml`) are manual sync. Omit `syncPolicy.automated` entirely; do not use `automated.enabled: false`, because the Argo CD UI shows any non-null `automated` block as auto-sync enabled
 - `revisionHistoryLimit: 10`
 
 Match the existing source type used by the component:
