@@ -284,8 +284,8 @@ cluster:
   # See: https://cloudnative-pg.io/documentation/current/declarative_role_management/
   roles:
     # Migration-only role used by the gramnuri-api PreSync migration Job.
-    # It owns the gramnuri_db schema objects (DDL); the API keeps using
-    # gramnuri_db_user, which only has DML grants.
+    # It owns the gramnuri_db tables (DDL) but not the database or schema, so it
+    # cannot drop either; the API keeps using gramnuri_db_user (DML grants only).
     # The password Secret is created by apps/gramnuri-api/terraform/<env>/db-migrator.tf.
     - name: "gramnuri_migrator"
       ensure: "present"

@@ -1,5 +1,5 @@
--- One-time ownership handover of gramnuri_db from cluster_admin to the
--- migration-only role gramnuri_migrator (CNPG managed role, see
+-- One-time ownership handover of the gramnuri_db tables from cluster_admin to
+-- the migration-only role gramnuri_migrator (CNPG managed role, see
 -- argocd/values/<env>-gramnuri-db.yaml). Run once per environment as the
 -- postgres superuser, after the role exists and before the first migration Job:
 --
@@ -15,11 +15,17 @@
 --
 -- Why superuser: changing ownership away from another role cannot be done by
 -- the migration role itself, so this cannot live in a goose migration.
+--
+-- Least privilege: the database and the public schema stay owned by
+-- cluster_admin, so the migrator cannot DROP DATABASE or DROP SCHEMA. It only
+-- gets CREATE on public plus ownership of the tables/sequences, which is all
+-- DDL migrations need. A future migration that runs CREATE SCHEMA would also
+-- need: GRANT CREATE ON DATABASE gramnuri_db TO gramnuri_migrator;
 
 BEGIN;
 
-ALTER DATABASE gramnuri_db OWNER TO gramnuri_migrator;
-ALTER SCHEMA public OWNER TO gramnuri_migrator;
+-- Create (and own) new objects in public, without owning the schema itself.
+GRANT USAGE, CREATE ON SCHEMA public TO gramnuri_migrator;
 
 DO $$
 DECLARE
@@ -63,7 +69,12 @@ ALTER DEFAULT PRIVILEGES FOR ROLE gramnuri_migrator IN SCHEMA public
 
 COMMIT;
 
--- Verification: everything in public should now be owned by gramnuri_migrator.
+-- Verification: tables/sequences/indexes in public owned by gramnuri_migrator;
+-- database and schema still owned by cluster_admin.
+SELECT 'database' AS object, pg_get_userbyid(datdba) AS owner FROM pg_database WHERE datname = 'gramnuri_db'
+UNION ALL
+SELECT 'schema public', pg_get_userbyid(nspowner) FROM pg_namespace WHERE nspname = 'public';
+
 SELECT c.relkind, pg_get_userbyid(c.relowner) AS owner, count(*)
 FROM pg_class c
 JOIN pg_namespace n ON n.oid = c.relnamespace

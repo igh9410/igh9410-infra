@@ -7,7 +7,7 @@ deployment instead of `make migrate-up` from a laptop.
 
 | Piece | Where | Notes |
 | --- | --- | --- |
-| Migration-only role `gramnuri_migrator` | `argocd/values/{dev,prod}-gramnuri-db.yaml` (`cluster.roles`) | CNPG managed role: login, no superuser/createrole/createdb, connection limit 3. Owns the `gramnuri_db` schema objects. |
+| Migration-only role `gramnuri_migrator` | `argocd/values/{dev,prod}-gramnuri-db.yaml` (`cluster.roles`) | CNPG managed role: login, no superuser/createrole/createdb, connection limit 3. Owns the tables and sequences in `public` and has `CREATE` on it. The database and schema stay owned by `cluster_admin`, so it cannot drop them. |
 | Role password | `apps/gramnuri-api/terraform/{dev,prod}/db-migrator.tf` | `random_password` written to `gramnuri-migrator-credentials` (basic-auth, CNPG namespace) and `gramnuri-migrator-secrets` (`MIGRATION_DATABASE_URL`, app namespace). |
 | Migration Job | `apps/gramnuri-api/components/db-migration/` | ArgoCD `PreSync` hook running `gramnuri-api migrate up` from the same image tag as the Deployment. |
 | API role `gramnuri_db_user` | unchanged | DML only (SELECT/INSERT/UPDATE/DELETE). Gets access to new tables through default privileges set in the handover script. |
@@ -49,7 +49,7 @@ Order matters. Do dev first, then prod.
    $K -n $NS get cluster <env>-gramnuri-db-cluster -o jsonpath='{.status.managedRolesStatus}'
    ```
 
-5. Hand over ownership of the existing objects from `cluster_admin` (superuser, idempotent):
+5. Hand over ownership of the existing tables and sequences from `cluster_admin` and grant `CREATE` on `public` (superuser, idempotent):
 
    ```sh
    POD=$($K -n $NS get pods -l cnpg.io/instanceRole=primary -o name | head -1)
@@ -59,6 +59,7 @@ Order matters. Do dev first, then prod.
 
    This cannot be a goose migration: taking ownership away from another role requires superuser.
    It deliberately avoids `REASSIGN OWNED`, which would also move `artskorner_db` in the prod cluster.
+   A future migration that runs `CREATE SCHEMA` additionally needs `GRANT CREATE ON DATABASE gramnuri_db TO gramnuri_migrator`.
 
 6. Merge the infra PR that adds the `db-migration` component to the overlays.
    For prod, sync `applications-app-of-apps` and then `prod-gramnuri-api` manually.
