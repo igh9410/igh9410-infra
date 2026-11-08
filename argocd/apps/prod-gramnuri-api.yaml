@@ -17,10 +17,9 @@ spec:
   syncPolicy:
     # Manual sync only: production rollouts (and their PreSync DB migrations)
     # are started explicitly from the ArgoCD UI/CLI after the image tag lands in Git.
-    automated:
-      enabled: false
-      prune: false
-      selfHeal: false
+    # Do not add an `automated` block here, not even with `enabled: false`: the
+    # Argo CD UI treats any non-null `automated` as auto-sync enabled, so every
+    # applications-app-of-apps sync made these apps look (and toggle) as auto-sync.
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
