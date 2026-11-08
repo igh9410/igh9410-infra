@@ -3,6 +3,8 @@ kind: Kustomization
 namespace: prod
 resources:
   - ../../base
+components:
+  - ../../components/db-migration
 patches:
   - path: deployment-patch.yaml
     target:
