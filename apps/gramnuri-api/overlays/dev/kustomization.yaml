@@ -14,4 +14,4 @@ patches:
       name: gramnuri-api-httproute
 images:
   - name: ghcr.io/igh9410/gramnuri-api
-    newTag: b7c4012f78922d6cecaa42436acddfd4b9bc39fe
+    newTag: 3166cb21c62676707d6440760f50be988ebb7cbf
