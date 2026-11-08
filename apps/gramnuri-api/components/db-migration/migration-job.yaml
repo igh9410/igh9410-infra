@@ -1,0 +1,53 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: gramnuri-api-db-migration
+  labels:
+    app: gramnuri-api-db-migration
+  annotations:
+    # Run before the Deployment is applied. If the Job fails, the sync fails and
+    # the running pods are left untouched. Migrations must stay backward-compatible
+    # with the previous release, since old pods serve traffic while they run.
+    argocd.argoproj.io/hook: "PreSync"
+    # Keep the last run (and its logs) until the next sync replaces it.
+    argocd.argoproj.io/hook-delete-policy: "BeforeHookCreation"
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 600
+  template:
+    metadata:
+      labels:
+        app: gramnuri-api-db-migration
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: db-migration
+          image: ghcr.io/igh9410/gramnuri-api
+          # `migrate` subcommand of the API binary; migrations are embedded in it.
+          args: ["migrate", "up"]
+          # MIGRATION_DATABASE_URL for the migration-only role gramnuri_migrator.
+          envFrom:
+            - secretRef:
+                name: gramnuri-migrator-secrets
+          resources:
+            limits:
+              cpu: 200m
+              memory: 128Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            # distroless "nonroot"; a numeric UID is required for runAsNonRoot
+            # because the image declares the user by name.
+            runAsUser: 65532
+            runAsGroup: 65532
+            capabilities:
+              drop: ["ALL"]
+      imagePullSecrets:
+        - name: ghcr-image-pull-secrets
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        kubernetes.io/os: linux
