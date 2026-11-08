@@ -1,0 +1,24 @@
+# Prod-only: convert the base gramnuri-api Deployment into an Argo Rollout so
+# the pod template stays defined once in base/deployment.yaml. Requires
+# `options.allowKindChange` on this patch in kustomization.yaml.
+- op: replace
+  path: /apiVersion
+  value: "argoproj.io/v1alpha1"
+- op: replace
+  path: /kind
+  value: "Rollout"
+# 50:50 canary through the Gateway API plugin, held for 5 minutes before promotion.
+- op: add
+  path: /spec/strategy
+  value:
+    canary:
+      canaryService: "gramnuri-api-canary"
+      stableService: "gramnuri-api"
+      trafficRouting:
+        plugins:
+          argoproj-labs/gatewayAPI:
+            httpRoute: "gramnuri-api-httproute"
+      steps:
+        - setWeight: 50
+        - pause:
+            duration: "5m"
