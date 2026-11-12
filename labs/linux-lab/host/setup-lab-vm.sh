@@ -42,7 +42,10 @@ if ! command -v k3s >/dev/null 2>&1; then
 fi
 
 echo "==> Waiting for the node to become Ready"
-until sudo k3s kubectl get nodes >/dev/null 2>&1; do sleep 2; done
+# `get nodes` succeeds as soon as the API server is up, before the node has
+# registered, and `wait --all` errors out on an empty list. Wait for a node
+# object to exist first.
+until [[ -n "$(sudo k3s kubectl get nodes -o name 2>/dev/null)" ]]; do sleep 2; done
 sudo k3s kubectl wait --for=condition=Ready node --all --timeout=180s
 
 echo "==> Writing ~/.kube/config with a single context named linux-lab"
