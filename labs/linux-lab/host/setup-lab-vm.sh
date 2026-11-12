@@ -52,6 +52,14 @@ echo "==> Writing ~/.kube/config with a single context named linux-lab"
 mkdir -p "${HOME}/.kube"
 sudo k3s kubectl config view --raw >"${HOME}/.kube/config"
 chmod 600 "${HOME}/.kube/config"
+# k3s symlinks /usr/local/bin/kubectl to itself, and that kubectl reads
+# /etc/rancher/k3s/k3s.yaml unless KUBECONFIG is set, so writes such as
+# rename-context fail on a root-owned lock file. Point it at our copy, here
+# and in future shells.
+export KUBECONFIG="${HOME}/.kube/config"
+if ! grep -qs 'export KUBECONFIG="${HOME}/.kube/config"' "${HOME}/.bashrc"; then
+  echo 'export KUBECONFIG="${HOME}/.kube/config"' >>"${HOME}/.bashrc"
+fi
 if kubectl config get-contexts -o name | grep -qx default; then
   kubectl config rename-context default linux-lab
 fi
