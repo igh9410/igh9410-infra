@@ -26,4 +26,4 @@ patches:
 # apps/gramnuri-admin in the gramnuri repository.
 images:
   - name: ghcr.io/igh9410/gramnuri-admin
-    newTag: "dev-latest"
+    newTag: "2b99542683f64f78860b2712602ea223265f0b82"
