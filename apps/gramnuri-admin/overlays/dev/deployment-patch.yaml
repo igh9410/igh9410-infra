@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gramnuri-admin
+spec:
+  template:
+    spec:
+      containers:
+        - name: gramnuri-admin
+          image: ghcr.io/igh9410/gramnuri-admin
+          envFrom:
+            - secretRef:
+                name: gramnuri-admin-secrets
