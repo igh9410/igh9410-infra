@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prod-gramnuri-admin
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/igh9410/igh9410-infra.git
+    targetRevision: main
+    path: apps/gramnuri-admin/overlays/prod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: prod
+  syncPolicy:
+    # Manual sync only, like every prod gramnuri app. Do not add an
+    # `automated` block, not even with `enabled: false` (see AGENTS.md).
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - ApplyOutOfSyncOnly=true
+  revisionHistoryLimit: 10

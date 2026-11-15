@@ -1,0 +1,29 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: dev
+resources:
+  - ../../base
+patches:
+  - path: deployment-patch.yaml
+    target:
+      kind: Deployment
+      name: gramnuri-admin
+  - path: httproute-patch.yaml
+    target:
+      kind: HTTPRoute
+      name: gramnuri-admin-httproute
+  - target:
+      kind: ExternalSecret
+      name: gramnuri-admin-secrets
+    patch: |-
+      - op: replace
+        path: /spec/dataFrom/0/extract/key
+        value: dev-gramnuri-web
+      - op: replace
+        path: /spec/secretStoreRef/name
+        value: gcp-secret-manager-dev
+# newTag is written by the deploy-kustomize-app workflow on each build of
+# apps/gramnuri-admin in the gramnuri repository.
+images:
+  - name: ghcr.io/igh9410/gramnuri-admin
+    newTag: "dev-latest"

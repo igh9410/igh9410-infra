@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gramnuri-admin
+  labels:
+    app: gramnuri-admin
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      # Surge a new pod before removing an old one so a rollout never drops capacity.
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: gramnuri-admin
+  template:
+    metadata:
+      labels:
+        app: gramnuri-admin
+    spec:
+      terminationGracePeriodSeconds: 120
+      containers:
+        - name: gramnuri-admin
+          image: ghcr.io/igh9410/gramnuri-admin
+          ports:
+            - name: http
+              containerPort: 3000
+          env:
+            - name: TMPDIR
+              value: /tmp
+            - name: COREPACK_HOME
+              value: /tmp/corepack
+            - name: PNPM_HOME
+              value: /tmp/pnpm
+          lifecycle:
+            preStop:
+              sleep:
+                seconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          startupProbe:
+            httpGet:
+              path: /healthcheck
+              port: http
+            failureThreshold: 10
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: http
+            initialDelaySeconds: 2
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: http
+            periodSeconds: 30
+      imagePullSecrets:
+        - name: ghcr-image-pull-secrets
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: gramnuri-admin
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: gramnuri-admin
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        kubernetes.io/os: linux

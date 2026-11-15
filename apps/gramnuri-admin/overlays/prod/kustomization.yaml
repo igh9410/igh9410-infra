@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: prod
+resources:
+  - ../../base
+patches:
+  - path: deployment-patch.yaml
+    target:
+      kind: Deployment
+      name: gramnuri-admin
+  - target:
+      kind: ExternalSecret
+      name: gramnuri-admin-secrets
+    patch: |-
+      - op: replace
+        path: /spec/dataFrom/0/extract/key
+        value: prod-gramnuri-web
+      - op: replace
+        path: /spec/secretStoreRef/name
+        value: gcp-secret-manager-prod
+# The base HTTPRoute already uses admin.landskipifyai.com.
+# newTag is written by the prod deploy workflow.
+images:
+  - name: ghcr.io/igh9410/gramnuri-admin
+    newTag: "dev-latest"

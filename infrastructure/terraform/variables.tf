@@ -157,6 +157,12 @@ variable "access_allowed_emails" {
   sensitive   = true
 }
 
+variable "landskipify_admin_emails" {
+  description = "Emails allowed through Cloudflare Access to the Landskipify admin sites (admin.landskipifyai.com, dev-admin.landskipifyai.com)"
+  type        = list(string)
+  sensitive   = true
+}
+
 variable "access_bypass_ips" {
   description = "Home IPs/CIDRs (e.g. 203.0.113.10/32) that bypass Cloudflare Access for admin UIs"
   type        = list(string)
