@@ -24,4 +24,4 @@ patches:
         value: gcp-secret-manager-dev
 images:
   - name: ghcr.io/igh9410/gramnuri-web
-    newTag: "972585e14a25c8e772556e27577e462035df57ab"
+    newTag: "75763b5752fbfbb74aacacd6d9c0caa25d32d2fd"
