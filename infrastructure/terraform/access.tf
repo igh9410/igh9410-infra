@@ -91,6 +91,35 @@ resource "cloudflare_zero_trust_access_application" "landskipify_admin" {
   ]
 }
 
+# Pre-launch gate for the prod Landskipify site: until launch only the
+# Landskipify admins (and the home network) can open it. Each hostname is its
+# own Access app because an apex domain does not cover www. Delete this block
+# to launch. api.landskipifyai.com stays open: the browser calls it directly
+# with fetch, which cannot follow an Access login redirect.
+locals {
+  landskipify_prelaunch_apps = {
+    "landskipify-prod-prelaunch"     = "landskipifyai.com"
+    "landskipify-prod-prelaunch-www" = "www.landskipifyai.com"
+  }
+}
+
+resource "cloudflare_zero_trust_access_application" "landskipify_prelaunch" {
+  for_each = local.landskipify_prelaunch_apps
+
+  account_id       = var.cloudflare_account_id
+  name             = each.key
+  type             = "self_hosted"
+  domain           = each.value
+  session_duration = "24h"
+  destinations = [
+    { type = "public", uri = each.value }
+  ]
+  policies = [
+    { id = cloudflare_zero_trust_access_policy.bypass_home_ips.id, precedence = 1 },
+    { id = cloudflare_zero_trust_access_policy.landskipify_admin_emails.id, precedence = 2 }
+  ]
+}
+
 # GitHub push webhook for ArgoCD; the more specific path takes precedence over
 # the argocd app above. ArgoCD still validates the request's HMAC signature.
 resource "cloudflare_zero_trust_access_application" "argocd_webhook" {
