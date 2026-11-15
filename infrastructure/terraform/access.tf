@@ -57,12 +57,6 @@ resource "cloudflare_zero_trust_access_application" "admin" {
 # get through to ArgoCD and Grafana. Access is a second gate: the admin app
 # still requires its own admin session from an admin_users account.
 # The DNS records live in apps/gramnuri-admin/terraform/{dev,prod}.
-variable "landskipify_admin_emails" {
-  description = "Emails allowed through Cloudflare Access to the Landskipify admin sites"
-  type        = list(string)
-  sensitive   = true
-}
-
 locals {
   landskipify_admin_apps = {
     "gramnuri-admin-dev"  = "dev-admin.landskipifyai.com"
